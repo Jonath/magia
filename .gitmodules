@@ -1,0 +1,3 @@
+[submodule "grimoire"]
+	path = grimoire
+	url = https://github.com/Enalye/grimoire
