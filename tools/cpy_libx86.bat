@@ -1,0 +1,1 @@
+copy ..\\libx86\\*.dll ..\\binx86
