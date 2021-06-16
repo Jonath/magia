@@ -1,0 +1,8 @@
+main {
+    print("Hello World");
+    //let font = TrueTypeFont("script/Vera.ttf", 12, 0);
+    loop {
+        print("Hello World", 100f, 100f);
+        yield
+    }
+}

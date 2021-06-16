@@ -6,8 +6,8 @@
 		"Enalye"
 	],
 	"dependencies": {
-		"bindbc-opengl": "~>0.12.0",
-		"bindbc-sdl": "~>0.15.0",
+		"bindbc-opengl": "~>0.17.1",
+		"bindbc-sdl": "~>0.21.4",
 		"grimoire": {
 			"version": "~master",
 			"path": "../grimoire"
@@ -16,12 +16,10 @@
 	"versions": [
 		"GL_41",
 		"GL_ARB",
-		"SDL_2010",
-		"BindSDL_Image",
-		"SDLImage202",
-		"FI_318",
-		"BindSDL_TTF",
-		"BindSDL_Mixer"
+		"SDL_202",
+		"SDL_Image_204",
+		"SDL_TTF_2014",
+		"SDL_Mixer_204"
 	],
 	"targetName": "magia",
 	"targetType": "executable",
