@@ -2,6 +2,7 @@ module magia.render;
 
 public {
     import magia.render.window;
+    import magia.render.drawable;
     import magia.render.texture;
     import magia.render.canvas;
     import magia.render.sprite;

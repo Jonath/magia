@@ -8,6 +8,8 @@
 
 module magia.core.color;
 
+import grimoire;
+
 import std.math;
 import std.typecons;
 import std.random;
@@ -135,6 +137,13 @@ struct Color {
         _r = clamp(red, 0, 255) / 255f;
         _g = clamp(green, 0, 255) / 255f;
         _b = clamp(blue, 0, 255) / 255f;
+    }
+
+    /// Initialise with a GrObject
+    this(GrObject object) {
+        _r = clamp(object.getFloat("r"), 0f, 1f);
+        _g = clamp(object.getFloat("g"), 0f, 1f);
+        _b = clamp(object.getFloat("b"), 0f, 1f);
     }
 
     /// Sets the RGB values, between 0 and 1.

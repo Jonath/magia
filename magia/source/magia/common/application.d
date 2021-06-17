@@ -62,7 +62,7 @@ void runApplication() {
     initializeEvents();
     _tickStartFrame = Clock.currStdTime();
 
-    setDefaultFont(new TrueTypeFont(veraFontData));
+    initFont();
 
     // Script
     GrLibrary stdlib = grLoadStdLibrary();

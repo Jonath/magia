@@ -9,26 +9,41 @@ package(magia.script) void loadMagiaLibText(GrLibrary library) {
     GrType trueTypeFontType = library.addForeign("TrueTypeFont", [], "Font");
     GrType bitmapFontType = library.addForeign("BitmapFont", [], "Font");
 
-    library.addPrimitive(&_trueTypeFont, "TrueTypeFont", ["p", "s", "o"],
-            [grString, grInt, grInt], [trueTypeFontType]);
-    library.addPrimitive(&_print1, "print", ["s", "x", "y"], [
-            grString, grFloat, grFloat
-            ]);
-    library.addPrimitive(&_print2, "print", ["s", "x", "y", "f"], [
+    library.addPrimitive(&_trueTypeFont, "TrueTypeFont", [
+            grString, grInt, grInt
+            ], [trueTypeFontType]);
+
+    library.addPrimitive(&_setFont1, "setFont", []);
+    library.addPrimitive(&_setFont2, "setFont", [fontType]);
+    library.addPrimitive(&_getFont, "getFont", [], [fontType]);
+
+    library.addPrimitive(&_print1, "print", [grString, grFloat, grFloat]);
+    library.addPrimitive(&_print2, "print", [
             grString, grFloat, grFloat, fontType
             ]);
 }
 
 private void _trueTypeFont(GrCall call) {
-    TrueTypeFont font = new TrueTypeFont(call.getString("p"), call.getInt("s"), call.getInt("o"));
-    call.setUserData(font);
+    TrueTypeFont font = new TrueTypeFont(call.getString(0), call.getInt(1), call.getInt(2));
+    call.setForeign(font);
+}
+
+private void _setFont1(GrCall call) {
+    setDefaultFont(null);
+}
+
+private void _setFont2(GrCall call) {
+    setDefaultFont(call.getForeign!Font(0));
+}
+
+private void _getFont(GrCall call) {
+    call.setForeign(getDefaultFont());
 }
 
 private void _print1(GrCall call) {
-    drawText(call.getString("s"), call.getFloat("x"), call.getFloat("y"));
+    drawText(call.getString(0), call.getFloat(1), call.getFloat(2));
 }
 
 private void _print2(GrCall call) {
-    drawText(call.getString("s"), call.getFloat("x"), call.getFloat("y"),
-            call.getUserData!Font("f"));
+    drawText(call.getString(0), call.getFloat(1), call.getFloat(2), call.getForeign!Font(3));
 }

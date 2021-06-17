@@ -21,6 +21,9 @@ static {
 		Vec2u _windowSize;
 		Vec2f _screenSize, _centerScreen;
 		DisplayMode _displayMode = DisplayMode.windowed;
+		GLuint _currentShaderProgram;
+		Color _baseColor = Color.white;
+		float _baseAlpha = 1f;
 	}
 }
 
@@ -64,7 +67,7 @@ enum DisplayMode {
 void createWindow(const Vec2u windowSize, string title) {
 	enforce(loadSDL() >= SDLSupport.sdl202);
 	enforce(loadSDLImage() >= SDLImageSupport.sdlImage200);
-	enforce(loadSDLTTF() >= SDLTTFSupport.sdlTTF2012);
+	enforce(loadSDLTTF() >= SDLTTFSupport.sdlTTF2014);
 	enforce(loadSDLMixer() >= SDLMixerSupport.sdlMixer200);
 
 	enforce(SDL_Init(SDL_INIT_EVERYTHING) == 0,
@@ -311,4 +314,27 @@ bool isVisible(const Vec2f targetPosition, const Vec2f targetSize) {
 				targetPosition.y + targetSize.y * .5f))
 			&& ((canvasRef.position.y + canvasRef.size.y * .5f) > (
 				targetPosition.y - targetSize.y * .5f)));
+}
+
+void setShaderProgram(GLuint shaderProgram) {
+	if (shaderProgram != _currentShaderProgram) {
+		_currentShaderProgram = shaderProgram;
+		glUseProgram(_currentShaderProgram);
+	}
+}
+
+void setBaseColor(Color color) {
+	_baseColor = color;
+}
+
+Color getBaseColor() {
+	return _baseColor;
+}
+
+void setBaseAlpha(float alpha) {
+	_baseAlpha = alpha;
+}
+
+float getBaseAlpha() {
+	return _baseAlpha;
 }

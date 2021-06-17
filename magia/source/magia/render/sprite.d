@@ -5,10 +5,10 @@ import std.conv;
 import bindbc.sdl, bindbc.sdl.image;
 
 import magia.core;
-import magia.render.window, magia.render.texture;
+import magia.render.window, magia.render.drawable, magia.render.texture;
 
 /// Renders a **Texture** with its own properties.
-final class Sprite {
+final class Sprite : Drawable {
     @property {
         /// Is the texture loaded ?
         bool isValid() const {
@@ -116,14 +116,13 @@ final class Sprite {
     }
 
     /// Render the sprite there.
-    void draw(const Vec2f position) {
-        assert(texture, "Texture is null");
+    override void draw(const Vec2f position) {
         Vec2f finalSize = size * scale * transformScale();
         texture.draw(transformRenderSpace(position), finalSize, clip, angle, flip, anchor, blend, color, alpha);
     }
 
     /// Ditto
-    void drawRotated(const Vec2f position) {
+    /*void drawRotated(const Vec2f position) {
         assert(texture, "Texture is null");
         Vec2f finalSize = size * scale * transformScale();
         Vec2f dist = (anchor - Vec2f.half) * size * scale;
@@ -145,7 +144,7 @@ final class Sprite {
         Vec2f finalSize = size * scale * transformScale();
         texture.draw(transformRenderSpace(pivot + pivotOffset.rotated(pivotAngle)),
                 finalSize, clip, angle, flip, anchor, blend, color, alpha);
-    }
+    }*/
 
     /// Is this inside the sprite region ? \
     /// Note: Does not take angle into account. may not work properly.

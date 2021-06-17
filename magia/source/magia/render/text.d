@@ -3,15 +3,15 @@ module magia.render.text;
 import std.conv : to;
 
 import magia.core;
-import magia.render.font;
+import magia.render.font, magia.render.window;
 
 /// Render text on screen
 void drawText(string text, float x, float y, Font font = null) {
-    if(!font)
+    if (!font)
         font = getDefaultFont();
     const _charScale = 1;
-    Color color = Color.white;
-    const alpha = 1f;
+    Color color = getBaseColor();
+    const alpha = getBaseAlpha();
     const _charSpacing = 0;
     Vec2f pos = Vec2f(x, y);
     dchar prevChar;

@@ -246,7 +246,7 @@ final class Texture {
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, _texId);
-        glUseProgram(_shaderProgram);
+        setShaderProgram(_shaderProgram);
 
         renderSize = (transformScale() * renderSize) / screenSize();
         position = transformRenderSpace(position) / screenSize();

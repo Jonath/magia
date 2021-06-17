@@ -2,18 +2,27 @@ module magia.render.font.font;
 
 import magia.core;
 import magia.render.texture;
-import magia.render.font.glyph;
+import magia.render.font.glyph, magia.render.font.truetype, magia.render.font.vera;
 
 private {
-    Font _defaultFont;
+    Font _defaultFont, _veraFont;
+}
+
+/// Initialize the default font
+void initFont() {
+    _veraFont = new TrueTypeFont(veraFontData);
+    _defaultFont = _veraFont;
 }
 
 void setDefaultFont(Font font) {
+    if (!font) {
+        _defaultFont = _veraFont;
+        return;
+    }
     _defaultFont = font;
 }
 
 Font getDefaultFont() {
-    assert(_defaultFont, "Default font not set");
     return _defaultFont;
 }
 

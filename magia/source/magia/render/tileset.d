@@ -10,7 +10,7 @@ import std.conv;
 import bindbc.sdl, bindbc.sdl.image;
 
 import magia.core;
-import magia.render.window, magia.render.texture, magia.render.sprite;
+import magia.render.window, magia.render.drawable, magia.render.texture, magia.render.sprite;
 
 /// Series of aligned tiles.
 final class Tileset {
@@ -42,8 +42,8 @@ final class Tileset {
     Vec2i margin;
 
     /// Number of tiles on the horizontal axis.
-    int columns = 1,/// Number of tiles on the vertical axis.
-    lines = 1;
+    int columns = 1, /// Number of tiles on the vertical axis.
+        lines = 1;
 
     /// Source material.
     Texture texture;
@@ -149,7 +149,8 @@ final class Tileset {
 
         Vec4i currentClip = Vec4i(clip.x + coord.x * (clip.z + margin.x),
                 clip.y + coord.y * (clip.w + margin.y), clip.z, clip.w);
-        texture.draw(transformRenderSpace(position - dist), finalSize, currentClip, angle, flip, Vec2f.half, blend, color, alpha);
+        texture.draw(transformRenderSpace(position - dist), finalSize,
+                currentClip, angle, flip, Vec2f.half, blend, color, alpha);
     }
 
     /// Ditto
@@ -165,6 +166,7 @@ final class Tileset {
             throw new Exception("Tileset id out of bounds");
         Vec4i currentClip = Vec4i(clip.x + coord.x * (clip.z + margin.x),
                 clip.y + coord.y * (clip.w + margin.y), clip.z, clip.w);
-        texture.draw(transformRenderSpace(position), finalSize, currentClip, angle, flip, anchor, blend, color, alpha);
+        texture.draw(transformRenderSpace(position), finalSize, currentClip,
+                angle, flip, anchor, blend, color, alpha);
     }
 }
