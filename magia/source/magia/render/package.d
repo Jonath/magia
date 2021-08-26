@@ -11,4 +11,5 @@ public {
     import magia.render.font;
     import magia.render.primitive;
     import magia.render.text;
+    import magia.render.triangle;
 }

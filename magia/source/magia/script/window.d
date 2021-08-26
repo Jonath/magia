@@ -14,7 +14,7 @@ package(magia.script) void loadMagiaLibWindow(GrLibrary library) {
     library.addPrimitive(&_getAlpha, "getAlpha", [], [grFloat]);
 }
 
-private void _setColor1(GrCall call) {
+private void _setColor1(GrCall) {
     setBaseColor(Color.white);
 }
 
@@ -31,7 +31,7 @@ private void _getColor(GrCall call) {
     call.setObject(object);
 }
 
-private void _setAlpha1(GrCall call) {
+private void _setAlpha1(GrCall) {
     setBaseAlpha(1f);
 }
 

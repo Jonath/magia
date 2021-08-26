@@ -116,8 +116,6 @@ final class Texture {
     }
 
     package void load(SDL_Surface* surface) {
-
-
         _width = surface.w;
         _height = surface.h;
 

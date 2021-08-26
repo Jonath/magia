@@ -12,8 +12,13 @@ import bindbc.opengl, bindbc.sdl, bindbc.sdl.image, bindbc.sdl.mixer, bindbc.sdl
 import magia.core, magia.common, magia.render.canvas, magia.render.primitive;
 
 static {
+	/// SDL window
 	SDL_Window* _sdlWindow;
+
+	/// SDL context
 	SDL_GLContext _glContext;
+
+	/// Window clear color
 	Color _windowClearColor;
 
 	private {
@@ -63,7 +68,7 @@ enum DisplayMode {
 	windowed
 }
 
-/// Create the application window.
+/// Loads all libraries and creates the application window
 void createWindow(const Vec2u windowSize, string title) {
 	enforce(loadSDL() >= SDLSupport.sdl202);
 	enforce(loadSDLImage() >= SDLImageSupport.sdlImage200);
@@ -119,8 +124,9 @@ void createWindow(const Vec2u windowSize, string title) {
 
 /// Cleanup the application window.
 void destroyWindow() {
-	if (_sdlWindow)
+	if (_sdlWindow) {
 		SDL_DestroyWindow(_sdlWindow);
+	}
 }
 
 /// Change the actual window title.
@@ -135,13 +141,8 @@ void setWindowClearColor(Color color) {
 
 /// Update the window size. \
 /// If `isLogical` is set, the actual window won't be resized, only the canvas will.
-void setWindowSize(const Vec2u windowSize, bool isLogical = false) {
+void setWindowSize(const Vec2u windowSize) {
 	resizeWindow(windowSize);
-	/*
-	if(isLogical)
-		SDL_RenderSetLogicalSize(_sdlRenderer, windowSize.x, windowSize.y);
-	else
-		*/
 	SDL_SetWindowSize(_sdlWindow, windowSize.x, windowSize.y);
 }
 
@@ -208,7 +209,6 @@ void setWindowDisplay(DisplayMode displayMode) {
 	Event event;
 	event.type = EventType.resize;
 	event.window.size = newSize;
-	//handleGuiElementEvent(event);
 }
 
 /// Current display mode.
@@ -221,13 +221,14 @@ void setWindowBordered(bool bordered) {
 	SDL_SetWindowBordered(_sdlWindow, bordered ? SDL_TRUE : SDL_FALSE);
 }
 
-/// Show/Hide the window. \
-/// Shown by default obviously.
+/// Show/Hide the window.
+/// Shown by default.
 void showWindow(bool show) {
-	if (show)
+	if (show) {
 		SDL_ShowWindow(_sdlWindow);
-	else
+	} else {
 		SDL_HideWindow(_sdlWindow);
+	}
 }
 
 /// Render everything on screen.
@@ -253,8 +254,9 @@ void pushCanvas(Canvas canvas, bool clear = true) {
 	glBindFramebuffer(GL_FRAMEBUFFER, canvasRef.frameId);
 	canvas._isTargetOnStack = true;
 
-	if (clear)
+	if (clear) {
 		canvas.clear();
+	}
 }
 
 /// Called after pushCanvas to remove the render canvas from the stack.
@@ -263,6 +265,7 @@ void popCanvas() {
 	assert(_canvases.length > 1, "Attempt to pop the main canvas.");
 	_canvases[$ - 1].canvas._isTargetOnStack = false;
 	_canvases.length--;
+
 	if (_canvases.length == 1) {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glViewport(0, 0, _windowSize.x, _windowSize.y);
@@ -298,6 +301,7 @@ Vec2f transformScale() {
 	return canvasRef.renderSize / canvasRef.size;
 }
 
+/// Get the canvas size.
 Vec2f transformSize() {
 	const CanvasReference* canvasRef = &_canvases[$ - 1];
 	return canvasRef.size;
@@ -316,6 +320,7 @@ bool isVisible(const Vec2f targetPosition, const Vec2f targetSize) {
 				targetPosition.y - targetSize.y * .5f)));
 }
 
+/// Sets shader main entry point
 void setShaderProgram(GLuint shaderProgram) {
 	if (shaderProgram != _currentShaderProgram) {
 		_currentShaderProgram = shaderProgram;

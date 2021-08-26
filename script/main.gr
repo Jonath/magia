@@ -1,15 +1,19 @@
 main {
-    print("Hello World");
+    //print("Hello World");
     //let font = TrueTypeFont("script/Vera.ttf", 12, 0);
+    
+    Triangle t = triangle();
+
     int i;
     loop {
-    setColor(Color(0f, 1f, 0f));
-        print("Hello World", 100f, 500f);
+        setColor(Color(0f, 1f, 0f));
+        /*print("Hello World", 100f, 500f);
         setColor();
-        rectangle(200f, 200f, 50f, 20f);
-    setColor(Color(0f, 1f, 1f));
-        rectangle(200f, 400f, 70f, 20f);
-        i ++;
+        rectangle(200f, 200f, 50f, 20f);*/
+        setColor(Color(0f, 1f, 1f));
+        //rectangle(200f, 400f, 70f, 20f);
+        t:draw(0f, 0f);
+        i++;
         yield
     }
 }
