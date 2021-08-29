@@ -12,4 +12,5 @@ public {
     import magia.render.primitive;
     import magia.render.text;
     import magia.render.triangle;
+    import magia.render.shader;
 }

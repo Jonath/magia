@@ -71,7 +71,7 @@ void runApplication() {
     GrCompiler compiler = new GrCompiler;
     compiler.addLibrary(stdlib);
     compiler.addLibrary(magialib);
-    GrBytecode bytecode = compiler.compileFile("script/main.gr", GrCompiler.Flags.none);
+    GrBytecode bytecode = compiler.compileFile("assets/script/main.gr", GrCompiler.Flags.none);
     if (!bytecode)
         throw new Exception(compiler.getError().prettify());
 
