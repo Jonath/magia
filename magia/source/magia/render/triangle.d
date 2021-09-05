@@ -17,6 +17,7 @@ final class Triangle : Drawable {
         EBO _ebo;
 
         Shader _shaderProgram;
+        GLuint _scaleId;
     }
 
     /// Ctr
@@ -53,6 +54,8 @@ final class Triangle : Drawable {
         _vbo.unbind();
         _vao.unbind();
         _ebo.unbind();
+
+        _scaleId = glGetUniformLocation(_shaderProgram.id, "scale");
     }
 
     /// Unload
@@ -66,6 +69,7 @@ final class Triangle : Drawable {
     /// Render the triangle
     override void draw(const Vec2f position) {
         _shaderProgram.activate();
+        glUniform1f(_scaleId, 0.5f);
         _vao.bind();
         glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, null);
     }
