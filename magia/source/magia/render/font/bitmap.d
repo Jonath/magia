@@ -7,7 +7,7 @@ module magia.render.font.bitmap;
 
 import bindbc.sdl, bindbc.sdl.ttf;
 import magia.core;
-import magia.render.texture;
+import magia.render.oldtexture;
 import magia.render.font.font, magia.render.font.glyph;
 
 /// Font from a texture atlas.

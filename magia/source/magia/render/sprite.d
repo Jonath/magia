@@ -5,7 +5,7 @@ import std.conv;
 import bindbc.sdl, bindbc.sdl.image;
 
 import magia.core;
-import magia.render.window, magia.render.drawable, magia.render.texture;
+import magia.render.window, magia.render.drawable, magia.render.oldtexture;
 
 /// Renders a **Texture** with its own properties.
 final class Sprite : Drawable {

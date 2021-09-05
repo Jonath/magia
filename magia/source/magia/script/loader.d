@@ -4,7 +4,7 @@ import grimoire;
 
 import magia.script.window, magia.script.drawable, magia.script.texture,
     magia.script.primitive, magia.script.sprite, magia.script.text,
-    magia.script.triangle;
+    magia.script.shape;
 
 /// Loads all sub libraries
 GrLibrary loadMagiaLibrary() {
@@ -15,6 +15,6 @@ GrLibrary loadMagiaLibrary() {
     loadMagiaLibPrimitive(library);
     loadMagiaLibSprite(library);
     loadMagiaLibText(library);
-    loadMagiaLibTriangle(library);
+    loadMagiaLibShape(library);
     return library;
 }

@@ -1,5 +1,6 @@
 main {
-    Triangle t = triangle();
+    //Triangle t = triangle();
+    Rectangle r = rectangle();
 
     int i;
     loop {
@@ -9,7 +10,8 @@ main {
         rectangle(200f, 200f, 50f, 20f);
         setColor(Color(0f, 1f, 1f));
         rectangle(200f, 400f, 70f, 20f);
-        t:draw(0f, 0f);
+        //t:draw(0f, 0f);
+        r:draw(0f, 0f);
         i++;
         yield
     }

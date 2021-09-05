@@ -1,7 +1,7 @@
 module magia.render.font.font;
 
 import magia.core;
-import magia.render.texture;
+import magia.render.oldtexture;
 import magia.render.font.glyph, magia.render.font.truetype, magia.render.font.vera;
 
 private {

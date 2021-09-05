@@ -98,7 +98,7 @@ void createWindow(const Vec2u windowSize, string title) {
 	glViewport(0, 0, windowSize.x, windowSize.y);
 
 	glDepthFunc(GL_NEVER);
-	glCullFace(GL_FRONT);
+	//glCullFace(GL_FRONT);
 	glFrontFace(GL_CCW);
 	glEnable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

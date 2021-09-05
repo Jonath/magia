@@ -22,7 +22,7 @@ final class Triangle : Drawable {
 
     /// Ctr
     this() {
-        _shaderProgram = new Shader("triangle.vert", "triangle.frag");
+        _shaderProgram = new Shader("default.vert", "default.frag");
 
         // Triangle vertices
         GLfloat[] vertices = [

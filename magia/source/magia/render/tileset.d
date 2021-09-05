@@ -10,7 +10,7 @@ import std.conv;
 import bindbc.sdl, bindbc.sdl.image;
 
 import magia.core;
-import magia.render.window, magia.render.drawable, magia.render.texture, magia.render.sprite;
+import magia.render.window, magia.render.drawable, magia.render.oldtexture, magia.render.sprite;
 
 /// Series of aligned tiles.
 final class Tileset {

@@ -1,7 +1,7 @@
 module magia.render.font.glyph;
 
 import magia.core;
-import magia.render.texture, magia.render.window;
+import magia.render.oldtexture, magia.render.window;
 
 /// Information about a single character
 struct Glyph {
