@@ -1,18 +1,80 @@
 {
-	"name": "magia",
-	"description": "Magia 2D Game Engine",
-	"copyright": "Copyright © 2021, Enalye",
 	"authors": [
 		"Enalye"
 	],
+	"buildTypes": {
+		"debug": {
+			"buildOptions": [
+				"debugMode",
+				"debugInfo"
+			]
+		},
+		"release": {
+			"buildOptions": [
+				"releaseMode",
+				"inline",
+				"noBoundsCheck",
+				"optimize"
+			]
+		},
+		"unittest": {
+			"buildOptions": [
+				"debugMode",
+				"debugInfo",
+				"unittests"
+			]
+		}
+	},
+	"configurations": [
+		{
+			"name": "linux-build",
+			"platforms": [
+				"linux"
+			],
+			"postBuildCommands": [
+				"cp ../lib$ARCH/*.dll ../bin"
+			],
+			"targetPath": "../bin",
+			"targetType": "executable"
+		},
+		{
+			"name": "windows-build",
+			"platforms": [
+				"windows"
+			],
+			"targetPath": "../bin$ARCH",
+			"targetType": "executable"
+		},
+		{
+			"lflags": [
+				"-subsystem:windows",
+				"-entry:mainCRTStartup"
+			],
+			"name": "windows-release",
+			"platforms": [
+				"windows"
+			],
+			"postBuildCommands": [
+				"copy ..\\lib$ARCH\\*.dll ..\\release$ARCH\\game"
+			],
+			"targetPath": "../release$ARCH/game",
+			"targetType": "executable"
+		}
+	],
+	"copyright": "Copyright © 2021, Enalye",
 	"dependencies": {
 		"bindbc-opengl": "~>0.17.1",
 		"bindbc-sdl": "~>0.21.4",
+		"gl3n": "~>1.4.1",
 		"grimoire": {
-			"version": "~master",
-			"path": "../grimoire"
+			"path": "../grimoire",
+			"version": ">=0.0.0"
 		}
 	},
+	"description": "Magia 2D Game Engine",
+	"name": "magia",
+	"targetName": "magia",
+	"targetType": "executable",
 	"versions": [
 		"GL_41",
 		"GL_ARB",
@@ -21,45 +83,5 @@
 		"SDL_TTF_2014",
 		"SDL_Mixer_204"
 	],
-	"targetName": "magia",
-	"targetType": "executable",
-	"workingDirectory": "..",
-	"buildTypes": {
-		"unittest": {
-			"buildOptions": ["unittests", "debugMode", "debugInfo"]
-		},
-		"debug": {
-			"buildOptions": ["debugMode", "debugInfo"]
-		},
-		"release": {
-			"buildOptions": ["releaseMode", "optimize", "inline", "noBoundsCheck"]
-		}
-	},
-	"configurations": [
-		{
-			"name": "linux-build",
-			"platforms": ["linux"],
-			"targetPath": "../bin",
-			"postBuildCommands": [
-				"cp ../lib$ARCH/*.dll ../bin"
-			]
-		},
-		{
-			"name": "windows-build",
-			"platforms": ["windows"],
-			"targetPath": "../bin$ARCH"
-		},
-		{
-			"name": "windows-release",
-			"platforms": ["windows"],
-			"targetPath": "../release$ARCH/game",
-			"lflags":[
-				"-subsystem:windows",
-				"-entry:mainCRTStartup"
-			],
-			"postBuildCommands": [
-				"copy ..\\lib$ARCH\\*.dll ..\\release$ARCH\\game"
-			]
-		}
-	]
+	"workingDirectory": ".."
 }

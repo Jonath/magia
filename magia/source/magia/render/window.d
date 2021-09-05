@@ -90,16 +90,13 @@ void createWindow(const Vec2u windowSize, string title) {
 	_glContext = SDL_GL_CreateContext(_sdlWindow);
 	enforce(loadOpenGL() == GLSupport.gl41, "failed to load opengl");
 
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
-
 	SDL_GL_MakeCurrent(_sdlWindow, _glContext);
 
 	glViewport(0, 0, windowSize.x, windowSize.y);
 
-	glDepthFunc(GL_NEVER);
-	//glCullFace(GL_FRONT);
+	glCullFace(GL_FRONT);
 	glFrontFace(GL_CCW);
+	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
