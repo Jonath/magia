@@ -25,12 +25,13 @@ final class Triangle : Drawable {
 
         // Triangle vertices
         GLfloat[] vertices = [
-            -0.5f, -0.5f * sqrt(3f) / 3, 0.0f,
-            0.5f, -0.5f * sqrt(3f) / 3, 0.0f,
-            0.0f, 0.5f * sqrt(3f) * 2 / 3, 0.0f,
-            -0.5f / 2, 0.5f * sqrt(3f) / 6, 0.0f,
-            0.5f / 2, 0.5f * sqrt(3f) / 6, 0.0f,
-            0.0f, -0.5f * sqrt(3f) / 3, 0.0f
+            //         COORDINATES             /      COLORS
+            -0.5f,     -0.5f * sqrt(3f) / 3,     0.0f,   0.8f, 0.3f,  0.02f,
+             0.5f,     -0.5f * sqrt(3f) / 3,     0.0f,   0.8f, 0.3f,  0.02f,
+             0.0f,      0.5f * sqrt(3f) * 2 / 3, 0.0f,   1.0f, 0.6f,  0.32f,
+            -0.5f / 2,  0.5f * sqrt(3f) / 6,     0.0f,   0.9f, 0.45f, 0.17f,
+             0.5f / 2,  0.5f * sqrt(3f) / 6,     0.0f,   0.9f, 0.45f, 0.17f,
+             0.0f,     -0.5f * sqrt(3f) / 3,     0.0f,   0.8f, 0.3f,  0.02f
         ];
 
         // Triangle indices
@@ -46,7 +47,8 @@ final class Triangle : Drawable {
         _vbo = new VBO(vertices);
         _ebo = new EBO(indices);
 
-        _vao.linkVBO(_vbo, 0);
+        _vao.linkAttributes(_vbo, 0, 3, GL_FLOAT, 6 * float.sizeof, null);
+        _vao.linkAttributes(_vbo, 1, 3, GL_FLOAT, 6 * float.sizeof, cast(void *)(3 * float.sizeof));
 
         _vbo.unbind();
         _vao.unbind();
