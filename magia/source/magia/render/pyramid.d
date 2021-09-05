@@ -7,7 +7,7 @@ import bindbc.opengl;
 import gl3n.linalg;
 
 import magia.core;
-import magia.render.window, magia.render.drawable;
+import magia.render.window, magia.render.drawable, magia.render.camera;
 import magia.render.vao, magia.render.vbo, magia.render.ebo, magia.render.shader, magia.render.texture;
 
 /// Renders a **Pyramid** with its own properties.

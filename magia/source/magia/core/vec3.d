@@ -171,6 +171,11 @@ struct Vec3(T) {
         return px * px + py * py + pz * pz;
     }
 
+    /// Cross product of the 2 vectors.
+    Vec3!T cross(const Vec3!T v) const {
+        return Vec3!T(y * v.z - z * v.y, z * v.x - x * v.y, x * v.y - y * v.x);
+    }
+
     /// The smaller vector possible between the two.
     Vec3!T min(const Vec3!T v) const {
         return Vec3!T(x < v.x ? x : v.x, y < v.y ? y : v.y, z < v.z ? z : v.z);
