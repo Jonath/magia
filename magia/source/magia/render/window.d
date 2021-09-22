@@ -49,6 +49,10 @@ static {
 	Vec2f centerScreen() {
 		return _centerScreen;
 	}
+	/// SDL window
+	SDL_Window * window() {
+		return _sdlWindow;
+	}
 }
 
 private struct CanvasReference {

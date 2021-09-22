@@ -176,6 +176,11 @@ struct Vec3(T) {
         return Vec3!T(y * v.z - z * v.y, z * v.x - x * v.y, x * v.y - y * v.x);
     }
 
+    /// Dot product of the 2 vectors.
+    T dot (const Vec3!T v) const {
+        return x * v.x + y * v.y + z * v.z;
+    }
+
     /// The smaller vector possible between the two.
     Vec3!T min(const Vec3!T v) const {
         return Vec3!T(x < v.x ? x : v.x, y < v.y ? y : v.y, z < v.z ? z : v.z);

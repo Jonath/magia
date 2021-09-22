@@ -17,6 +17,7 @@ final class Pyramid : Drawable {
         VBO _vbo;
         EBO _ebo;
 
+        Camera  _camera;
         Shader  _shaderProgram;
         Texture _texture;
         GLuint  _scaleId;
@@ -64,12 +65,10 @@ final class Pyramid : Drawable {
         _vao.unbind();
         _ebo.unbind();
 
-        _scaleId = glGetUniformLocation(_shaderProgram.id, "scale");
+        _camera = new Camera(screenWidth, screenHeight, Vec3f(0f, 0f, 2f));
 
         _texture = new Texture("bricks.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
         _texture.forwardToShader(_shaderProgram, "tex0", 0);
-
-        _rotation = 0.0f;
     }
 
     /// Unload
@@ -85,27 +84,12 @@ final class Pyramid : Drawable {
     override void draw(const Vec2f position) {
         _shaderProgram.activate();
 
-        mat4 model = mat4.identity;
-        mat4 view = mat4.identity;
-        mat4 proj = mat4.identity;
-        model = model.rotate(_rotation, vec3(0.0f, 1.0f, 0.0f));
-        view = view.translate(0.0f, -0.5f, -2.0f);
-        proj = proj.perspective(800, 600, 45, 0.1f, 100f);
-
-        const int modelLoc = glGetUniformLocation(_shaderProgram.id, "model");
-        glUniformMatrix4fv(modelLoc, 1, GL_TRUE, model.value_ptr);
-
-        const int viewLoc = glGetUniformLocation(_shaderProgram.id, "view");
-        glUniformMatrix4fv(viewLoc, 1, GL_TRUE, view.value_ptr);
-
-        const int projLoc = glGetUniformLocation(_shaderProgram.id, "proj");
-        glUniformMatrix4fv(projLoc, 1, GL_TRUE, proj.value_ptr);
+        _camera.processInputs();
+        _camera.matrix(45f, 0.1f, 100f, _shaderProgram, "camMatrix");
 
         glUniform1f(_scaleId, 0.5f);
         _texture.bind();
         _vao.bind();
         glDrawElements(GL_TRIANGLES, cast(int) _indices.length, GL_UNSIGNED_INT, null);
-
-        _rotation += 0.05f;
     }
 }

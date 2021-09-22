@@ -300,6 +300,9 @@ enum EventType: uint {
 	keyDelete,
 	keyEnter,
 	keyDir,
+	mouseUpdate,
+	mouseUp,
+	mouseDown,
 	quit,
 	resize,
 	callback,
@@ -476,6 +479,32 @@ bool processEvents() {
 				//handleGuiElementEvent(event);
 			}
 			break;
+		case SDL_MOUSEMOTION:
+            _mousePosition.set(cast(float) sdlEvent.motion.x, cast(float) sdlEvent.motion.y);
+            event.type = EventType.mouseUpdate;
+            break;
+        case SDL_MOUSEBUTTONDOWN:
+            _mousePosition.set(cast(float) sdlEvent.motion.x, cast(float) sdlEvent.motion.y);
+
+            if (sdlEvent.button.button >= _buttons.length) {
+                break;
+            }
+
+            _buttons[sdlEvent.button.button] = true;
+
+            event.type = EventType.mouseDown;
+            break;
+        case SDL_MOUSEBUTTONUP:
+            _mousePosition.set(cast(float) sdlEvent.motion.x, cast(float) sdlEvent.motion.y);
+
+            if (sdlEvent.button.button >= _buttons.length) {
+                break;
+            }
+
+            _buttons[sdlEvent.button.button] = false;
+
+            event.type = EventType.mouseUp;
+            break;
 		case SDL_WINDOWEVENT:
 			switch (sdlEvent.window.event) {
 				case SDL_WINDOWEVENT_RESIZED:
