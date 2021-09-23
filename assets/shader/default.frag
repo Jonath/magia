@@ -26,4 +26,5 @@ void main() {
     float specular = 0.50f * specAmount;
 
     FragColor = texture(tex0, texCoord) * lightColor * (diffuse + ambient + specular);
+    FragColor.a = 1.0f;
 }

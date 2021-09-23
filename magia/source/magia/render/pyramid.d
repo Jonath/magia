@@ -71,14 +71,14 @@ final class Pyramid : Drawable {
         // Pyramid light vertices
         GLfloat[] lightVertices = [
             //  COORDINATES
-            -0.1f, -0.1f,  0.1f,
-	        -0.1f, -0.1f, -0.1f,
-	         0.1f, -0.1f, -0.1f,
-	         0.1f, -0.1f,  0.1f,
-	        -0.1f,  0.1f,  0.1f,
-            -0.1f,  0.1f, -0.1f,
-             0.1f,  0.1f, -0.1f,
-             0.1f,  0.1f,  0.1f,
+            -0.01f, -0.01f,  0.01f,
+            -0.01f, -0.01f, -0.01f,
+             0.01f, -0.01f, -0.01f,
+             0.01f, -0.01f,  0.01f,
+            -0.01f,  0.01f,  0.01f,
+            -0.01f,  0.01f, -0.01f,
+             0.01f,  0.01f, -0.01f,
+             0.01f,  0.01f,  0.01f,
         ];
 
         // Pyramid light indices
@@ -162,6 +162,7 @@ final class Pyramid : Drawable {
         _lightEBO.remove();
         _texture.remove();
         _shaderProgram.remove();
+        _lightShader.remove();
     }
 
     /// Render the pyramid
