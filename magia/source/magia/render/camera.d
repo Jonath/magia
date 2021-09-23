@@ -22,6 +22,9 @@ class Camera {
         /// Where is up? (by default the Y axis)
         vec3 _cameraUp = vec3(0.0f, 1.0f, 0.0f);
 
+        /// Camera matrix
+        mat4 _cameraMatrix = mat4.identity;
+
         /// Width of the camera viewport
         int _width;
 
@@ -33,6 +36,16 @@ class Camera {
 
         /// How well the speed of the camera scales up when it moves continuously
         float _sensitivity = 20f;
+
+        /// To avoid the camera jumping around while holding down the left mouse button
+        bool firstClick = false;
+    }
+
+    @property {
+        /// Gets position
+        vec3 position() {
+            return _position;
+        }
     }
 
     /// Constructor
@@ -43,18 +56,20 @@ class Camera {
     }
 
     /// Setting up camera matrices operations
-    void matrix(float FOVdeg, float nearPlane, float farPlane, Shader shader, const char* uniform) {
+    void updateMatrix(float FOVdeg, float nearPlane, float farPlane) {
         mat4 view = mat4.identity;
         mat4 proj = mat4.identity;
         
         view = mat4.look_at(_position, _position + _orientation, _cameraUp);
         proj = mat4.perspective(_width, _height, FOVdeg, nearPlane, farPlane);
 
-        mat4 matrix = proj * view;
-        glUniformMatrix4fv(glGetUniformLocation(shader.id, uniform), 1, GL_TRUE, matrix.value_ptr);
+        _cameraMatrix = proj * view;
     }
 
-    bool firstClick = false;
+    /// Sets camera matrix in shader
+    void passToShader(Shader shader, const char* uniform) {
+        glUniformMatrix4fv(glGetUniformLocation(shader.id, uniform), 1, GL_TRUE, _cameraMatrix.value_ptr);
+    }
 
     /// Camera movement handler
     void processInputs() {
