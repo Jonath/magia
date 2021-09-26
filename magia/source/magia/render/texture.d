@@ -3,14 +3,12 @@ module magia.render.texture;
 import std.string, std.exception;
 import bindbc.opengl, bindbc.sdl;
 import magia.render.shader;
+import std.stdio;
 
 /// Class holding texture data
 class Texture {
     /// Texture index
     GLuint id;
-
-    /// Texture type
-    GLenum type;
 
     private {
         /// Surface used to load the texture
@@ -18,12 +16,21 @@ class Texture {
 
         /// Teture image attributes
         int _width, _height;
+
+        /// Texture type
+        GLenum _type;
+
+        /// Slot
+        GLuint _slot;
     }
 
     /// Ctr
-    this(string path, GLenum texType, GLenum slot, GLenum format, GLenum pixelType) {
+    this(string path, GLenum texType, GLuint slot, GLenum format, GLenum pixelType) {
         // Setup type
-        type = texType;
+        _type = texType;
+
+        // Setup slot
+        _slot = slot;
 
         // Load from path
         _surface = IMG_Load(toStringz("assets/texture/" ~ path));
@@ -35,46 +42,48 @@ class Texture {
 
         // Generate texture and bind data
         glGenTextures(1, &id);
-        glActiveTexture(slot);
-        glBindTexture(texType, id);
+        glActiveTexture(GL_TEXTURE0 + _slot);
+        glBindTexture(_type, id);
 
         // Setup filters
-        glTexParameteri(texType, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(texType, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(_type, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(_type, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
         // Setup wrap
-        glTexParameteri(texType, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(texType, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(_type, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(_type, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
         // Create texture
-        glTexImage2D(texType, 0, GL_RGBA, _width, _height, 0, format, pixelType, _surface.pixels);
+        glTexImage2D(_type, 0, GL_RGBA, _width, _height, 0, format, pixelType, _surface.pixels);
 
         // Generate mipmaps
-        glGenerateMipmap(texType);
+        glGenerateMipmap(_type);
 
         // Free texture handler
         SDL_FreeSurface(_surface);
         _surface = null;
 
         // Unbind data
-        glBindTexture(texType, 0);
+        glBindTexture(_type, 0);
     }
 
     /// Pass texture onto shader
     void forwardToShader(Shader shader, string uniform, GLuint unit) {
-        GLuint tex0Uni = glGetUniformLocation(shader.id, toStringz(uniform));
+        GLuint texUni = glGetUniformLocation(shader.id, toStringz(uniform));
+
         shader.activate();
-        glUniform1i(tex0Uni, unit);
+        glUniform1i(texUni, unit);
     }
 
     /// Bind texture
     void bind() {
-        glBindTexture(type, id);
+        glActiveTexture(GL_TEXTURE0 + _slot);
+        glBindTexture(_type, id);
     }
 
     /// Unbind texture
     void unbind() {
-        glBindTexture(type, 0);
+        glBindTexture(_type, 0);
     }
 
     /// Release texture

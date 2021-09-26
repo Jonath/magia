@@ -2,15 +2,15 @@ module magia.script.shape;
 
 import grimoire;
 
-import magia.core, magia.render;
+import magia.shape, magia.render;
 
 package(magia.script) void loadMagiaLibShape(GrLibrary library) {
     GrType triangleType = library.addForeign("Triangle", [], "Drawable");
-    GrType rectangleType = library.addForeign("Rectangle", [], "Drawable");
+    GrType quadType = library.addForeign("Quad", [], "Drawable");
     GrType pyramidType = library.addForeign("Pyramid", [], "Drawable");
 
     library.addPrimitive(&_triangle1, "triangle", [], [triangleType]);
-    library.addPrimitive(&_rectangle1, "rectangle", [], [rectangleType]);
+    library.addPrimitive(&_quad1, "quad", [], [quadType]);
     library.addPrimitive(&_pyramid1, "pyramid", [], [pyramidType]);
 }
 
@@ -19,9 +19,9 @@ private void _triangle1(GrCall call) {
     call.setForeign(triangle);
 }
 
-private void _rectangle1(GrCall call) {
-    Rectangle rectangle = new Rectangle();
-    call.setForeign(rectangle);
+private void _quad1(GrCall call) {
+    Quad quad = new Quad();
+    call.setForeign(quad);
 }
 
 private void _pyramid1(GrCall call) {
