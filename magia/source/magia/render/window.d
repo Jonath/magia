@@ -72,12 +72,27 @@ enum DisplayMode {
 	windowed
 }
 
+/// Set to true to debug load
+const bool debugLoad = false;
+
 /// Loads all libraries and creates the application window
 void createWindow(const Vec2u windowSize, string title) {
-	enforce(loadSDL() >= SDLSupport.sdl202);
-	enforce(loadSDLImage() >= SDLImageSupport.sdlImage200);
-	enforce(loadSDLTTF() >= SDLTTFSupport.sdlTTF2014);
-	enforce(loadSDLMixer() >= SDLMixerSupport.sdlMixer200);
+	SDLSupport sdlSupport = loadSDL();
+	SDLImageSupport imageSupport = loadSDLImage();
+	SDLTTFSupport ttfSupport = loadSDLTTF();
+	SDLMixerSupport mixerSupport = loadSDLMixer();
+
+	if (debugLoad) {
+		writeln(sdlSupport);
+		writeln(imageSupport);
+		writeln(ttfSupport);
+		writeln(mixerSupport);
+	}
+	
+	enforce(sdlSupport >= SDLSupport.sdl202, "Failed to load SDL");
+	enforce(imageSupport >= SDLImageSupport.sdlImage200, "Failed to load SDLImage");
+	enforce(ttfSupport >= SDLTTFSupport.sdlTTF2014, "Failed to load SDLTTF");
+	enforce(mixerSupport >= SDLMixerSupport.sdlMixer200, "Failed to load SDLMixer");
 
 	enforce(SDL_Init(SDL_INIT_EVERYTHING) == 0,
 			"could not initialize SDL: " ~ fromStringz(SDL_GetError()));
