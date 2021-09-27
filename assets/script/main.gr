@@ -1,8 +1,8 @@
 main {
     //Triangle t = triangle();
     //Rectangle r = rectangle();
-    Pyramid p = pyramid();
-    //Quad q = quad();
+    //Pyramid p = pyramid();
+    Quad q = quad();
 
     int i;
     loop {
@@ -14,8 +14,8 @@ main {
         //rectangle(200f, 400f, 70f, 20f);
         //t:draw(0f, 0f);
         //r:draw(0f, 0f);
-        p:draw(0f, 0f);
-        //q:draw(0f, 0f);
+        //p:draw(0f, 0f);
+        q:draw(0f, 0f);
         i++;
         yield
     }

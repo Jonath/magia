@@ -95,14 +95,14 @@ final class Pyramid : Drawable {
         ];
 
         Texture[] textures = [
-            new Texture("bricks.png", "diffuse", GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE)
+            new Texture("bricks.png", "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE)
         ];
+
+        _pyramidMesh = new Mesh(vertices, indices, textures);
+        _lightMesh = new Mesh(lightVertices, lightIndices);
         
         _shaderProgram = new Shader("default.vert", "default.frag");
-        _pyramidMesh = new Mesh(vertices, indices, textures);
-
         _lightShader = new Shader("light.vert", "light.frag");
-        _lightMesh = new Mesh(lightVertices, lightIndices);
 
         vec4 lightColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
         vec3 lightPos = vec3(0.5f, 0.5f, 0.5f);
