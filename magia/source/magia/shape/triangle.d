@@ -10,7 +10,7 @@ import magia.render.window, magia.render.drawable;
 import magia.render.vao, magia.render.vbo, magia.render.ebo, magia.render.shader;
 
 /// Renders a **Triangle** with its own properties.
-final class Triangle : Drawable {
+/*final class Triangle : Drawable {
     private {
         VAO _vao;
         VBO _vbo;
@@ -20,7 +20,7 @@ final class Triangle : Drawable {
         GLuint _scaleId;
     }
 
-    /// Ctr
+    /// Constructor
     this() {
         _shaderProgram = new Shader("default.vert", "default.frag");
 
@@ -73,4 +73,4 @@ final class Triangle : Drawable {
         _vao.bind();
         glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, null);
     }
-}
+}*/

@@ -1,17 +1,20 @@
 module magia.render.vbo;
 
 import bindbc.opengl;
+import gl3n.linalg;
+
+import magia.render.vertex;
 
 /// Class holding a Vertex Buffer Object
 class VBO {
     /// Index
     GLuint id;
 
-    /// Ctr
-    this(GLfloat[] vertices) {
+    /// Constructor
+    this(Vertex[] vertices) {
         glGenBuffers(1, &id);
         glBindBuffer(GL_ARRAY_BUFFER, id);
-        glBufferData(GL_ARRAY_BUFFER, vertices.length * GLfloat.sizeof, vertices.ptr, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, vertices.length * Vertex.sizeof, vertices.ptr, GL_STATIC_DRAW);
     }
 
     /// Bind VBO

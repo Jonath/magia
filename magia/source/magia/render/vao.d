@@ -10,7 +10,7 @@ class VAO {
     /// Index
     GLuint id;
 
-    /// Ctr
+    /// Constructor
     this() {
         glGenVertexArrays(1, &id);
     }

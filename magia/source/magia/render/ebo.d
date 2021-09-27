@@ -7,7 +7,7 @@ class EBO {
     /// Index
     GLuint id;
 
-    /// Ctr
+    /// Constructor
     this(GLuint[] indices) {
         glGenBuffers(1, &id);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);

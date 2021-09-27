@@ -11,7 +11,7 @@ class Shader {
     /// Index
     GLuint id;
 
-    /// Ctr
+    /// Constructor
     this(string vertexFile, string fragmentFile) {
         const char* vertexSource = toStringz(readText("assets/shader/" ~ vertexFile));
         const char* fragmentSource = toStringz(readText("assets/shader/" ~ fragmentFile));

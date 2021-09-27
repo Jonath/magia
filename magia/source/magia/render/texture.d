@@ -10,6 +10,9 @@ class Texture {
     /// Texture index
     GLuint id;
 
+    /// Texture type
+    string type;
+
     private {
         /// Surface used to load the texture
         SDL_Surface* _surface = null;
@@ -17,17 +20,14 @@ class Texture {
         /// Teture image attributes
         int _width, _height;
 
-        /// Texture type
-        GLenum _type;
-
         /// Slot
         GLuint _slot;
     }
 
-    /// Ctr
-    this(string path, GLenum texType, GLuint slot, GLenum format, GLenum pixelType) {
+    /// Constructor
+    this(string path, string texType, GLuint slot, GLenum format, GLenum pixelType) {
         // Setup type
-        _type = texType;
+        type = texType;
 
         // Setup slot
         _slot = slot;
@@ -43,28 +43,28 @@ class Texture {
         // Generate texture and bind data
         glGenTextures(1, &id);
         glActiveTexture(GL_TEXTURE0 + _slot);
-        glBindTexture(_type, id);
+        glBindTexture(GL_TEXTURE_2D, id);
 
         // Setup filters
-        glTexParameteri(_type, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(_type, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
         // Setup wrap
-        glTexParameteri(_type, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(_type, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
         // Create texture
-        glTexImage2D(_type, 0, GL_RGBA, _width, _height, 0, format, pixelType, _surface.pixels);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, format, pixelType, _surface.pixels);
 
         // Generate mipmaps
-        glGenerateMipmap(_type);
+        glGenerateMipmap(GL_TEXTURE_2D);
 
         // Free texture handler
         SDL_FreeSurface(_surface);
         _surface = null;
 
         // Unbind data
-        glBindTexture(_type, 0);
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     /// Pass texture onto shader
@@ -78,12 +78,12 @@ class Texture {
     /// Bind texture
     void bind() {
         glActiveTexture(GL_TEXTURE0 + _slot);
-        glBindTexture(_type, id);
+        glBindTexture(GL_TEXTURE_2D, id);
     }
 
     /// Unbind texture
     void unbind() {
-        glBindTexture(_type, 0);
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     /// Release texture

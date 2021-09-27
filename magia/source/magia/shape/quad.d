@@ -11,7 +11,7 @@ import magia.render.window, magia.render.drawable, magia.render.camera;
 import magia.render.vao, magia.render.vbo, magia.render.ebo, magia.render.shader, magia.render.texture;
 
 /// Renders a **Quad** with its own properties.
-final class Quad : Drawable {
+/*final class Quad : Drawable {
     private {
         VAO _VAO, _lightVAO;
         VBO _VBO, _lightVBO;
@@ -29,7 +29,7 @@ final class Quad : Drawable {
         float _rotation;
     }
 
-    /// Ctr
+    /// Constructor
     this() {
         _shaderProgram = new Shader("default.vert", "default.frag");
 
@@ -128,6 +128,7 @@ final class Quad : Drawable {
                                          lightPos.x, lightPos.y, lightPos.z);
 
         _camera = new Camera(screenWidth, screenHeight, Vec3f(0f, 0f, 2f));
+
         _texture = new Texture("planks.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
         _texture.forwardToShader(_shaderProgram, "tex0", 0);
 
@@ -170,4 +171,4 @@ final class Quad : Drawable {
         _lightVAO.bind();
         glDrawElements(GL_TRIANGLES, cast(int) _lightIndices.length, GL_UNSIGNED_INT, null);
     }
-}
+}*/
