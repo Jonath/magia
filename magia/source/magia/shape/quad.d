@@ -75,8 +75,8 @@ final class Quad : Drawable {
         ];
 
         Texture[] textures = [
-            new Texture("planks.png", "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
-            new Texture("planksSpec.png", "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
+            new Texture("planks.png", "diffuse", 0),
+            new Texture("planksSpec.png", "specular", 1)
         ];
 
         _quadMesh = new Mesh(vertices, indices, textures);

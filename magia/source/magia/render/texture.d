@@ -25,7 +25,7 @@ class Texture {
     }
 
     /// Constructor
-    this(string path, string texType, GLuint slot, GLenum format, GLenum pixelType) {
+    this(string path, string texType, GLuint slot) {
         // Setup type
         type = texType;
 
@@ -53,8 +53,17 @@ class Texture {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-        // Create texture
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, format, pixelType, _surface.pixels);
+        // For now, consider diffuses as RGBA, speculars as R
+        GLenum format;
+        if (texType == "diffuse") {
+            format = GL_RGBA;
+        } else if (texType == "specular") {
+            format = GL_RED;
+        } else {
+            new Exception("Unsupported texture format for " ~ texType ~ " texture type");
+        }
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, format, GL_UNSIGNED_BYTE, _surface.pixels);
 
         // Generate mipmaps
         glGenerateMipmap(GL_TEXTURE_2D);

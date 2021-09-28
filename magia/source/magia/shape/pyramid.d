@@ -95,7 +95,7 @@ final class Pyramid : Drawable {
         ];
 
         Texture[] textures = [
-            new Texture("bricks.png", "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE)
+            new Texture("bricks.png", "diffuse", 0)
         ];
 
         _pyramidMesh = new Mesh(vertices, indices, textures);

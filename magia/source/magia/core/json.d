@@ -30,102 +30,146 @@ bool hasJson(JSONValue json, string tag) {
 
 /// Get the node
 JSONValue getJson(JSONValue json, string tag) {
-    if ((tag in json.object) is null)
+    if (!(tag in json.object)) {
         throw new Exception("JSON: \'" ~ tag ~ "\'' does not exist in JSON.");
+    }
+
     return json.object[tag];
 }
 
+/// Get a JSONValue array associated to tag (throws if not found)
 JSONValue[] getJsonArray(JSONValue json, string tag) {
-    if ((tag in json.object) is null)
+    if (!(tag in json.object)) {
         throw new Exception("JSON: \'" ~ tag ~ "\'' does not exist in JSON.");
+    }
+
     return json.object[tag].array;
 }
 
+/// Get a string array associated to tag (throws if not found)
 string[] getJsonArrayStr(JSONValue json, string tag) {
-    if ((tag in json.object) is null)
+    if (!(tag in json.object)) {
         throw new Exception("JSON: \'" ~ tag ~ "\'' does not exist in JSON.");
+    }
+
     string[] array;
-    foreach (JSONValue value; json.object[tag].array)
+    foreach (JSONValue value; json.object[tag].array) {
         array ~= value.str;
+    }
+
     return array;
 }
 
-string[] getJsonArrayStr(JSONValue json, string tag, string[] defValue) {
-    if ((tag in json.object) is null)
-        return defValue;
+/// Get a string array associated to tag (default if not found)
+string[] getJsonArrayStr(JSONValue json, string tag, string[] defaultValue) {
+    if (!(tag in json.object)) {
+        return defaultValue;
+    }
+
     string[] array;
-    foreach (JSONValue value; json.object[tag].array)
+    foreach (JSONValue value; json.object[tag].array) {
         array ~= value.str;
+    }
+
     return array;
 }
 
+/// Get a int array associated to tag (throws if not found)
 int[] getJsonArrayInt(JSONValue json, string tag) {
-    if ((tag in json.object) is null)
+    if (!(tag in json.object)) {
         throw new Exception("JSON: \'" ~ tag ~ "\'' does not exist in JSON.");
+    }
+
     int[] array;
     foreach (JSONValue value; json.object[tag].array) {
-        if (value.type() == JSONType.integer)
+        if (value.type() == JSONType.integer) {
             array ~= cast(int) value.integer;
-        else
+        } else {
             array ~= to!int(value.str);
+        }
     }
+
     return array;
 }
 
-int[] getJsonArrayInt(JSONValue json, string tag, int[] defValue) {
-    if ((tag in json.object) is null)
-        return defValue;
+/// Get a int array associated to tag (default if not found)
+int[] getJsonArrayInt(JSONValue json, string tag, int[] defaultValue) {
+    if (!(tag in json.object)) {
+        return defaultValue;
+    }
+
     int[] array;
     foreach (JSONValue value; json.object[tag].array) {
-        if (value.type() == JSONType.integer)
+        if (value.type() == JSONType.integer) {
             array ~= cast(int) value.integer;
-        else
+        } else {
             array ~= to!int(value.str);
+        }
     }
+
     return array;
 }
 
+/// Get a float array associated to tag (throws if not found)
 float[] getJsonArrayFloat(JSONValue json, string tag) {
-    if ((tag in json.object) is null)
+    if (!(tag in json.object)) {
         throw new Exception("JSON: \'" ~ tag ~ "\'' does not exist in JSON.");
+    }
+
     float[] array;
     foreach (JSONValue value; json.object[tag].array) {
-        if (value.type() == JSONType.integer)
+        if (value.type() == JSONType.integer) {
             array ~= value.floating;
-        else
+        } else {
             array ~= to!float(value.str);
+        }
     }
+
     return array;
 }
 
-float[] getJsonArrayFloat(JSONValue json, string tag, float[] defValue) {
-    if ((tag in json.object) is null)
-        return defValue;
+/// Get a int array associated to tag (default if not found)
+float[] getJsonArrayFloat(JSONValue json, string tag, float[] defaultValue) {
+    if (!(tag in json.object)) {
+        return defaultValue;
+    }
+
     float[] array;
     foreach (JSONValue value; json.object[tag].array) {
-        if (value.type() == JSONType.integer)
+        if (value.type() == JSONType.integer) {
             array ~= value.floating;
-        else
+        } else {
             array ~= to!float(value.str);
+        }
     }
+
     return array;
 }
 
+/// Get a string associated to tag (throws if not found)
 string getJsonStr(JSONValue json, string tag) {
-    if ((tag in json.object) is null)
+    if (!(tag in json.object)) {
         throw new Exception("JSON: \'" ~ tag ~ "\'' does not exist in JSON.");
+    }
+
     return json.object[tag].str;
 }
 
-string getJsonStr(JSONValue json, string tag, string defValue) {
-    if ((tag in json.object) is null)
-        return defValue;
+/// Get a string associated to tag (default if not found)
+string getJsonStr(JSONValue json, string tag, string defaultValue) {
+    if (!(tag in json.object)) {
+        return defaultValue;
+    }
+
     return json.object[tag].str;
 }
 
+/// Get a int associated to tag (throws if not found)
 int getJsonInt(JSONValue json, string tag) {
-    if ((tag in json.object) is null)
+    if (!(tag in json.object)) {
         throw new Exception("JSON: \'" ~ tag ~ "\'' does not exist in JSON.");
+    }
+
     JSONValue value = json.object[tag];
     switch (value.type()) with (JSONType) {
     case integer:
@@ -141,11 +185,13 @@ int getJsonInt(JSONValue json, string tag) {
     }
 }
 
-int getJsonInt(JSONValue json, string tag, int defValue) {
-    if ((tag in json.object) is null)
-        return defValue;
-    JSONValue value = json.object[tag];
+/// Get a int associated to tag (default if not found)
+int getJsonInt(JSONValue json, string tag, int defaultValue) {
+    if (!(tag in json.object)) {
+        return defaultValue;
+    }
 
+    JSONValue value = json.object[tag];
     switch (value.type()) with (JSONType) {
     case integer:
         return cast(int) value.integer;
@@ -160,9 +206,12 @@ int getJsonInt(JSONValue json, string tag, int defValue) {
     }
 }
 
+/// Get a float associated to tag (throws if not found)
 float getJsonFloat(JSONValue json, string tag) {
-    if ((tag in json.object) is null)
+    if (!(tag in json.object)) {
         throw new Exception("JSON: \'" ~ tag ~ "\'' does not exist in JSON.");
+    }
+
     JSONValue value = json.object[tag];
     switch (value.type()) with (JSONType) {
     case integer:
@@ -178,9 +227,12 @@ float getJsonFloat(JSONValue json, string tag) {
     }
 }
 
-float getJsonFloat(JSONValue json, string tag, float defValue) {
-    if ((tag in json.object) is null)
-        return defValue;
+/// Get a default associated to tag (default if not found)
+float getJsonFloat(JSONValue json, string tag, float defaultValue) {
+    if (!(tag in json.object)) {
+        return defaultValue;
+    }
+
     JSONValue value = json.object[tag];
     switch (value.type()) with (JSONType) {
     case integer:
@@ -196,26 +248,34 @@ float getJsonFloat(JSONValue json, string tag, float defValue) {
     }
 }
 
+/// Get a bool associated to tag (throws if not found)
 bool getJsonBool(JSONValue json, string tag) {
-    if ((tag in json.object) is null)
+    if (!(tag in json.object)) {
         throw new Exception("JSON: \'" ~ tag ~ "\'' does not exist in JSON.");
+    }
+
     JSONValue value = json.object[tag];
-    if (value.type() == JSONType.true_)
+    if (value.type() == JSONType.true_) {
         return true;
-    else if (value.type() == JSONType.false_)
+    } else if (value.type() == JSONType.false_) {
         return false;
-    else
+    } else {
         throw new Exception("JSON: \'" ~ tag ~ "\' is not a boolean value.");
+    }
 }
 
-bool getJsonBool(JSONValue json, string tag, bool defValue) {
-    if ((tag in json.object) is null)
-        return defValue;
+/// Get a bool associated to tag (default if not found)
+bool getJsonBool(JSONValue json, string tag, bool defaultValue) {
+    if (!(tag in json.object)) {
+        return defaultValue;
+    }
+
     JSONValue value = json.object[tag];
-    if (value.type() == JSONType.true_)
+    if (value.type() == JSONType.true_) {
         return true;
-    else if (value.type() == JSONType.false_)
+    } else if (value.type() == JSONType.false_) {
         return false;
-    else
+    } else {
         throw new Exception("JSON: \'" ~ tag ~ "\' is not a boolean value.");
+    }
 }
