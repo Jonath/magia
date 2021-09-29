@@ -30,6 +30,12 @@ class Model {
         // Mesh data
         Mesh[] _meshes;
 
+        // Transformations
+        vec3[] translations;
+        quat[] rotations;
+        vec3[] scales;
+        mat4[] transforms;
+
         static const uint uintType = 5125;
         static const uint ushortType = 5123;
         static const uint shortType = 5122;
@@ -208,21 +214,61 @@ class Model {
 
     /// Load mesh (only supports one primitive and one texture per mesh for now)
     void loadMesh(uint meshId) {
-        // @TODO JSON headache
-        /*uint positionId = _json["meshes"][meshId]["primitives"][0]["attributes"]["POSITION"];
-        uint normalId = _json["meshes"][meshId]["primitives"][0]["attributes"]["NORMAL"];
-        uint texUVId = _json["meshes"][meshId]["primitives"][0]["attributes"]["TEXCOORD_0"];
-        uint indicesId = _json["meshes"][meshId]["primitives"][0]["attributes"]["indices"];
+        JSONValue jsonMesh = _json["bufferViews"][meshId];
+        JSONValue jsonPrimitive = jsonMesh["primitives"][0];
+        JSONValue jsonAttributes = jsonPrimitive["attributes"];
+
+        uint positionId = getJsonInt(jsonAttributes, "POSITION");
+        uint normalId = getJsonInt(jsonAttributes, "NORMAL");
+        uint texUVId = getJsonInt(jsonAttributes, "TEXCOORD_0");
+        uint indicesId = getJsonInt(jsonAttributes, "indices");
 
         vec3[] positions = groupFloatsVec3(getFloats(_json["accessors"][positionId]));
         vec3[] normals = groupFloatsVec3(getFloats(_json["accessors"][normalId]));
-        vec2[] texUVs = groupFloatsVec3(getFloats(_json["accessors"][texUVId]));
+        vec2[] texUVs = groupFloatsVec2(getFloats(_json["accessors"][texUVId]));
 
-        Vertex[] vertices = assembleVertices(positions, normals. texUVs);
+        Vertex[] vertices = assembleVertices(positions, normals, texUVs);
         GLuint[] indices = getIndices(_json["accessors"][indicesId]);
         Texture[] textures = getTextures();
 
-        _meshes ~= new Mesh(vertices, indices, textures);*/
+        _meshes ~= new Mesh(vertices, indices, textures);
+    }
+
+    /// Traverse given node
+    void traverseNode(uint nextNode, mat4 matrix = mat4.identity) {
+        JSONValue node = _json["nodes"][nextNode];
+
+        vec3 translation = vec3(0.0f, 0.0f, 0.0f);
+        quat rotation = quat.identity;
+        vec3 scale = vec3(1.0f, 1.0f, 1.0f);
+        mat4 matNode = mat4.identity;
+
+        float[] translationArray = getJsonArrayFloat(node, "translation", []);
+        if (translationArray.length == 3) {
+            translation = vec3(translationArray[0], translationArray[1], translationArray[2]);
+        }
+
+        // Check standardisation!
+        float[] rotationArray = getJsonArrayFloat(node, "rotation", []);
+        if (rotationArray.length == 4) {
+            rotation = quat(rotationArray[3], rotationArray[0], rotationArray[1], rotationArray[2]);
+        }
+
+        float[] scaleArray = getJsonArrayFloat(node, "scale", []);
+        if (scaleArray.length == 3) {
+            scale = vec3(scaleArray[0], scaleArray[1], scaleArray[2]);
+        }
+
+        float[] matrixArray = getJsonArrayFloat(node, "matrix", []);
+        if (matrixArray.length == 16) {
+            int arrayId = 0;
+            for (int i = 0 ; i < 4; ++i) {
+                for (int j = 0 ; j < 4; ++j) {
+                    matNode[i][j] = matrixArray[arrayId];
+                    ++arrayId;
+                }
+            }
+        }
     }
 
     /// Load all meshes

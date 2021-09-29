@@ -3,6 +3,7 @@ module magia.render.mesh;
 import std.conv;
 
 import bindbc.opengl;
+import gl3n.linalg;
 
 import magia.render.vao;
 import magia.render.vbo;
@@ -50,7 +51,7 @@ class Mesh {
     }
 
     /// Draw call
-    void draw(Shader shader, Camera camera) {
+    void draw(Shader shader, Camera camera, vec3 translation = vec3(0.0f, 0.0f, 0.0f), quat rotation = quat.identity, vec3 scale = vec3(1.0f, 1.0f, 1.0f)) {
         shader.activate();
         _VAO.bind();
 
@@ -78,6 +79,20 @@ class Mesh {
         glUniform3f(glGetUniformLocation(shader.id, "camPos"),
                     camera.position.x, camera.position.x, camera.position.z);
         camera.passToShader(shader, "camMatrix");
+
+        mat4 localTranslation = mat4.identity;
+        mat4 localRotation = mat4.identity;
+        mat4 localScale = mat4.identity;
+
+        localTranslation = localTranslation.translate(translation);
+        localRotation = rotation.to_matrix!(4, 4);
+        localScale[0][0] = scale.x;
+        localScale[1][1] = scale.y;
+        localScale[2][2] = scale.z;
+
+        glUniformMatrix4fv(glGetUniformLocation(shader.id, "translation"), 1, GL_TRUE, localTranslation.value_ptr);
+        glUniformMatrix4fv(glGetUniformLocation(shader.id, "rotation"), 1, GL_TRUE, localRotation.value_ptr);
+        glUniformMatrix4fv(glGetUniformLocation(shader.id, "scale"), 1, GL_TRUE, localScale.value_ptr);
 
         glDrawElements(GL_TRIANGLES, cast(int) _indices.length, GL_UNSIGNED_INT, null);
     }
