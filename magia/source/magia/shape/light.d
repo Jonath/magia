@@ -17,7 +17,7 @@ import magia.render.vertex;
 import magia.render.window;
 
 /// Renders a **Light** with its own properties.
-final class Light : Drawable {
+final class Light : Drawable3D {
     private {
         Mesh _mesh;
         Camera _camera;
@@ -83,7 +83,7 @@ final class Light : Drawable {
     }
 
     /// Render the quad
-    override void draw(const Vec2f position) {
+    override void draw() {
         _camera.processInputs();
         _camera.updateMatrix(45f, 0.1f, 100f);
         _mesh.draw(_shader, _camera);

@@ -17,7 +17,7 @@ import magia.render.vertex;
 import magia.render.window;
 
 /// Renders a **Quad** with its own properties.
-final class Quad : Drawable {
+final class Quad : Drawable3D {
     private {
         Mesh _quadMesh, _lightMesh;
 
@@ -117,7 +117,7 @@ final class Quad : Drawable {
     }
 
     /// Render the quad
-    override void draw(const Vec2f position) {
+    override void draw() {
         _camera.processInputs();
         _camera.updateMatrix(45f, 0.1f, 100f);
 

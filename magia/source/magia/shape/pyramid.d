@@ -17,7 +17,7 @@ import magia.render.vertex;
 import magia.render.window;
 
 /// Renders a **Pyramid** with its own properties.
-final class Pyramid : Drawable {
+final class Pyramid : Drawable3D {
     private {
         Mesh _pyramidMesh, _lightMesh;
 
@@ -136,7 +136,7 @@ final class Pyramid : Drawable {
     }
 
     /// Render the pyramid
-    override void draw(const Vec2f position) {
+    override void draw() {
         _camera.processInputs();
         _camera.updateMatrix(45f, 0.1f, 100f);
 

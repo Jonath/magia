@@ -43,7 +43,7 @@ class Model {
 
     /// Constructor
     this(string fileName) {
-        _json = parseJSON(readText("model/" ~ fileName));
+        _json = parseJSON(readText("assets/model/" ~ fileName ~ ".gltf"));
         _data = getData();
         traverseNode(0);
     }
@@ -51,7 +51,7 @@ class Model {
     /// Get data
     ubyte[] getData() {
         string uri = _json["buffers"][0]["uri"].get!string;
-        return cast(ubyte[]) read("model/" ~ uri);
+        return cast(ubyte[]) read("assets/model/" ~ uri);
     }
 
     /// Get all floats from a JSONValue accessor
@@ -260,7 +260,7 @@ class Model {
             rotation = quat(rotationArray[3], rotationArray[0], rotationArray[1], rotationArray[2]);
         }
 
-        float[] scaleArray = getJsonArrayFloat(node, "scale", []);
+        /*float[] scaleArray = getJsonArrayFloat(node, "scale", []);
         if (scaleArray.length == 3) {
             scale = vec3(scaleArray[0], scaleArray[1], scaleArray[2]);
         }
@@ -306,7 +306,7 @@ class Model {
                 const uint childrenId = children[i].get!uint;
                 traverseNode(childrenId, matNextNode);
             }
-        }
+        }*/
     }
 
     /// Load all meshes

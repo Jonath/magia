@@ -118,10 +118,10 @@ float[] getJsonArrayFloat(JSONValue json, string tag) {
 
     float[] array;
     foreach (JSONValue value; json.object[tag].array) {
-        if (value.type() == JSONType.integer) {
-            array ~= value.floating;
-        } else {
+        if (value.type() == JSONType.string) {
             array ~= to!float(value.str);
+        } else {
+            array ~= value.floating;
         }
     }
 
@@ -136,10 +136,19 @@ float[] getJsonArrayFloat(JSONValue json, string tag, float[] defaultValue) {
 
     float[] array;
     foreach (JSONValue value; json.object[tag].array) {
-        if (value.type() == JSONType.integer) {
-            array ~= value.floating;
-        } else {
+        writeln("value.type(): " ~ to!string(value.type()));
+        final switch(value.type()) {
+            case JSONType.string:
+                array ~= to!float(value.str);
+                break;
+            case JSONType.integer:
+                array ~= to!float(value.str);
+                break;
+        }
+        if (value.type() == JSONType.string) {
             array ~= to!float(value.str);
+        } else {
+            array ~= value.floating;
         }
     }
 
