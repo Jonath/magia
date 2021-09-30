@@ -26,6 +26,9 @@ final class Pyramid : Drawable {
         GLuint _scaleId;
 
         float _rotation;
+
+        mat4 _pyramidModel;
+        mat4 _lightModel;
     }
 
     /// Constructor
@@ -106,20 +109,18 @@ final class Pyramid : Drawable {
 
         vec4 lightColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
         vec3 lightPos = vec3(0.5f, 0.5f, 0.5f);
-        mat4 lightModel = mat4.identity;
-        lightModel = lightModel.translate(lightPos);
+        _lightModel = mat4.identity;
+        _lightModel = _lightModel.translate(lightPos);
 
         vec3 pyramidPos = vec3(0.0f, 0.0f, 0.0f);
-	    mat4 pyramidModel = mat4.identity;
-	    pyramidModel = pyramidModel.translate(pyramidPos);
+	    _pyramidModel = mat4.identity;
+	    _pyramidModel = _pyramidModel.translate(pyramidPos);
 
         _lightShader.activate();
-        glUniformMatrix4fv(glGetUniformLocation(_lightShader.id, "model"), 1, GL_TRUE, lightModel.value_ptr);
         glUniform4f(glGetUniformLocation(_lightShader.id, "lightColor"),
                                          lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 
         _shaderProgram.activate();
-        glUniformMatrix4fv(glGetUniformLocation(_shaderProgram.id, "model"), 1, GL_TRUE, pyramidModel.value_ptr);
         glUniform4f(glGetUniformLocation(_shaderProgram.id, "lightColor"),
                                          lightColor.x, lightColor.y, lightColor.z, lightColor.w);
         glUniform3f(glGetUniformLocation(_shaderProgram.id, "lightPos"),
@@ -139,7 +140,7 @@ final class Pyramid : Drawable {
         _camera.processInputs();
         _camera.updateMatrix(45f, 0.1f, 100f);
 
-        _pyramidMesh.draw(_shaderProgram, _camera);
-        _lightMesh.draw(_lightShader, _camera);
+        _pyramidMesh.draw(_shaderProgram, _camera, _pyramidModel);
+        _lightMesh.draw(_lightShader, _camera, _lightModel);
     }
 }

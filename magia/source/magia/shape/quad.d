@@ -26,6 +26,9 @@ final class Quad : Drawable {
         GLuint _scaleId;
 
         float _rotation;
+
+        mat4 _quadModel;
+        mat4 _lightModel;
     }
 
     /// Constructor
@@ -87,20 +90,18 @@ final class Quad : Drawable {
 
         vec4 lightColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
         vec3 lightPos = vec3(0.5f, 0.5f, 0.5f);
-        mat4 lightModel = mat4.identity;
-        lightModel = lightModel.translate(lightPos);
+        _lightModel = mat4.identity;
+        _lightModel = _lightModel.translate(lightPos);
 
         vec3 quadPos = vec3(0.0f, 0.0f, 0.0f);
-	    mat4 quadModel = mat4.identity;
-	    quadModel = quadModel.translate(quadPos);
+	    _quadModel = mat4.identity;
+	    _quadModel = _quadModel.translate(quadPos);
 
         _lightShader.activate();
-        glUniformMatrix4fv(glGetUniformLocation(_lightShader.id, "model"), 1, GL_TRUE, lightModel.value_ptr);
         glUniform4f(glGetUniformLocation(_lightShader.id, "lightColor"),
                                          lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 
         _shaderProgram.activate();
-        glUniformMatrix4fv(glGetUniformLocation(_shaderProgram.id, "model"), 1, GL_TRUE, quadModel.value_ptr);
         glUniform4f(glGetUniformLocation(_shaderProgram.id, "lightColor"),
                                          lightColor.x, lightColor.y, lightColor.z, lightColor.w);
         glUniform3f(glGetUniformLocation(_shaderProgram.id, "lightPos"),
@@ -120,7 +121,7 @@ final class Quad : Drawable {
         _camera.processInputs();
         _camera.updateMatrix(45f, 0.1f, 100f);
 
-        _quadMesh.draw(_shaderProgram, _camera);
-        _lightMesh.draw(_lightShader, _camera);
+        _quadMesh.draw(_shaderProgram, _camera, _quadModel);
+        _lightMesh.draw(_lightShader, _camera, _lightModel);
     }
 }

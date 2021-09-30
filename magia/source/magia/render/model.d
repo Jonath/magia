@@ -31,10 +31,10 @@ class Model {
         Mesh[] _meshes;
 
         // Transformations
-        vec3[] translations;
-        quat[] rotations;
-        vec3[] scales;
-        mat4[] transforms;
+        vec3[] _translations;
+        quat[] _rotations;
+        vec3[] _scales;
+        mat4[] _transforms;
 
         static const uint uintType = 5125;
         static const uint ushortType = 5123;
@@ -45,6 +45,7 @@ class Model {
     this(string fileName) {
         _json = parseJSON(readText("model/" ~ fileName));
         _data = getData();
+        traverseNode(0);
     }
 
     /// Get data
@@ -153,6 +154,7 @@ class Model {
         return values;
     }
 
+    /// Group given float array as a vec2
     vec2[] groupFloatsVec2(float[] floats) {
         vec2[] values;
         for (uint i = 0; i < floats.length; i) {
@@ -161,6 +163,7 @@ class Model {
         return values;
     }
 
+    /// Group given float array as a vec3
     vec3[] groupFloatsVec3(float[] floats) {
         vec3[] values;
         for (uint i = 0; i < floats.length; i) {
@@ -169,6 +172,7 @@ class Model {
         return values;
     }
 
+    /// Group given float array as a vec4
     vec4[] groupFloatsVec4(float[] floats) {
         vec4[] values;
         for (uint i = 0; i < floats.length; i) {
@@ -177,6 +181,7 @@ class Model {
         return values;
     }
 
+    /// Assemble all vertices
     Vertex[] assembleVertices(vec3[] positions, vec3[] normals, vec2[] texUVs) {
         Vertex[] vertices;
         for (uint i = 0; i < positions.length; ++i) {
@@ -186,9 +191,10 @@ class Model {
         return vertices;
     }
 
+    /// Load textures
     Texture[] getTextures() {
         uint textureId = 0;
-        string[] textureFiles = getJsonArrayStr(_json, "images");
+        const string[] textureFiles = getJsonArrayStr(_json, "images");
         for (uint i = 0; i < textureFiles.length; ++i) {
             string path = _json["images"][i]["uri"].get!string;
 
@@ -218,10 +224,10 @@ class Model {
         JSONValue jsonPrimitive = jsonMesh["primitives"][0];
         JSONValue jsonAttributes = jsonPrimitive["attributes"];
 
-        uint positionId = getJsonInt(jsonAttributes, "POSITION");
-        uint normalId = getJsonInt(jsonAttributes, "NORMAL");
-        uint texUVId = getJsonInt(jsonAttributes, "TEXCOORD_0");
-        uint indicesId = getJsonInt(jsonAttributes, "indices");
+        const uint positionId = getJsonInt(jsonAttributes, "POSITION");
+        const uint normalId = getJsonInt(jsonAttributes, "NORMAL");
+        const uint texUVId = getJsonInt(jsonAttributes, "TEXCOORD_0");
+        const uint indicesId = getJsonInt(jsonAttributes, "indices");
 
         vec3[] positions = groupFloatsVec3(getFloats(_json["accessors"][positionId]));
         vec3[] normals = groupFloatsVec3(getFloats(_json["accessors"][normalId]));
@@ -261,19 +267,51 @@ class Model {
 
         float[] matrixArray = getJsonArrayFloat(node, "matrix", []);
         if (matrixArray.length == 16) {
-            int arrayId = 0;
-            for (int i = 0 ; i < 4; ++i) {
-                for (int j = 0 ; j < 4; ++j) {
+            uint arrayId = 0;
+            for (uint i = 0 ; i < 4; ++i) {
+                for (uint j = 0 ; j < 4; ++j) {
                     matNode[i][j] = matrixArray[arrayId];
                     ++arrayId;
                 }
+            }
+        }
+
+        mat4 localTranslation = mat4.identity;
+        mat4 localRotation = mat4.identity;
+        mat4 localScale = mat4.identity;
+
+        localTranslation = localTranslation.translate(translation);
+        localRotation = rotation.to_matrix!(4, 4);
+        localScale[0][0] = scale.x;
+        localScale[1][1] = scale.y;
+        localScale[2][2] = scale.z;
+
+        mat4 matNextNode = matrix * matNode * localTranslation * localRotation * localScale;
+
+        // Load current node mesh
+        if (hasJson(node, "mesh")) {
+            _translations ~= translation;
+            _rotations ~= rotation;
+            _scales ~= scale;
+            _transforms ~= matNextNode;
+
+            loadMesh(getJsonInt(node, "mesh"));
+        }
+
+        // Traverse children recursively
+        if (hasJson(node, "children")) {
+            const JSONValue[] children = getJsonArray(node, "children");
+
+            for (uint i = 0; i < children.length; ++i) {
+                const uint childrenId = children[i].get!uint;
+                traverseNode(childrenId, matNextNode);
             }
         }
     }
 
     /// Load all meshes
     void load() {
-        JSONValue[] jsonMeshes = getJsonArray(_json, "meshes");
+        const JSONValue[] jsonMeshes = getJsonArray(_json, "meshes");
         for(uint i = 0; i < jsonMeshes.length; ++i) {
             loadMesh(i);
         }
@@ -281,6 +319,8 @@ class Model {
 
     /// Draw the model
     void draw(Shader shader, Camera camera) {
-        
+        for (uint i = 0; i < _meshes.length; ++i) {
+            _meshes[i].draw(shader, camera, _transforms[i]);
+        }
     }
 }

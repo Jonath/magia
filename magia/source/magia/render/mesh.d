@@ -51,7 +51,7 @@ class Mesh {
     }
 
     /// Draw call
-    void draw(Shader shader, Camera camera, vec3 translation = vec3(0.0f, 0.0f, 0.0f), quat rotation = quat.identity, vec3 scale = vec3(1.0f, 1.0f, 1.0f)) {
+    void draw(Shader shader, Camera camera, mat4 model = mat4.identity, vec3 translation = vec3(0.0f, 0.0f, 0.0f), quat rotation = quat.identity, vec3 scale = vec3(1.0f, 1.0f, 1.0f)) {
         shader.activate();
         _VAO.bind();
 
@@ -93,6 +93,7 @@ class Mesh {
         glUniformMatrix4fv(glGetUniformLocation(shader.id, "translation"), 1, GL_TRUE, localTranslation.value_ptr);
         glUniformMatrix4fv(glGetUniformLocation(shader.id, "rotation"), 1, GL_TRUE, localRotation.value_ptr);
         glUniformMatrix4fv(glGetUniformLocation(shader.id, "scale"), 1, GL_TRUE, localScale.value_ptr);
+	    glUniformMatrix4fv(glGetUniformLocation(shader.id, "model"), 1, GL_TRUE, model.value_ptr);
 
         glDrawElements(GL_TRIANGLES, cast(int) _indices.length, GL_UNSIGNED_INT, null);
     }
