@@ -194,9 +194,11 @@ class Model {
     /// Load textures
     Texture[] getTextures() {
         uint textureId = 0;
-        const string[] textureFiles = getJsonArrayStr(_json, "images");
-        for (uint i = 0; i < textureFiles.length; ++i) {
-            string path = _json["images"][i]["uri"].get!string;
+
+        const JSONValue[] jsonTextures = getJsonArray(_json, "images");
+
+        foreach (const JSONValue jsonTexture; jsonTextures) {
+            const string path = "assets/model/" ~ getJsonStr(jsonTexture, "uri");
 
             if (!canFind(_loadedTextureNames, path)) {
                 _loadedTextureNames ~= path;
@@ -220,14 +222,14 @@ class Model {
 
     /// Load mesh (only supports one primitive and one texture per mesh for now)
     void loadMesh(uint meshId) {
-        JSONValue jsonMesh = _json["bufferViews"][meshId];
+        JSONValue jsonMesh = _json["meshes"][meshId];
         JSONValue jsonPrimitive = jsonMesh["primitives"][0];
         JSONValue jsonAttributes = jsonPrimitive["attributes"];
 
         const uint positionId = getJsonInt(jsonAttributes, "POSITION");
         const uint normalId = getJsonInt(jsonAttributes, "NORMAL");
         const uint texUVId = getJsonInt(jsonAttributes, "TEXCOORD_0");
-        const uint indicesId = getJsonInt(jsonAttributes, "indices");
+        const uint indicesId = getJsonInt(jsonPrimitive, "indices");
 
         vec3[] positions = groupFloatsVec3(getFloats(_json["accessors"][positionId]));
         vec3[] normals = groupFloatsVec3(getFloats(_json["accessors"][normalId]));
@@ -254,13 +256,12 @@ class Model {
             translation = vec3(translationArray[0], translationArray[1], translationArray[2]);
         }
 
-        // Check standardisation!
         float[] rotationArray = getJsonArrayFloat(node, "rotation", []);
         if (rotationArray.length == 4) {
             rotation = quat(rotationArray[3], rotationArray[0], rotationArray[1], rotationArray[2]);
         }
 
-        /*float[] scaleArray = getJsonArrayFloat(node, "scale", []);
+        float[] scaleArray = getJsonArrayFloat(node, "scale", []);
         if (scaleArray.length == 3) {
             scale = vec3(scaleArray[0], scaleArray[1], scaleArray[2]);
         }
@@ -306,7 +307,7 @@ class Model {
                 const uint childrenId = children[i].get!uint;
                 traverseNode(childrenId, matNextNode);
             }
-        }*/
+        }
     }
 
     /// Load all meshes

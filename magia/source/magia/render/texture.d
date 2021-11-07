@@ -32,13 +32,15 @@ class Texture {
         // Setup slot
         _slot = slot;
 
-        // Load from path
-        _surface = IMG_Load(toStringz("assets/texture/" ~ path));
+        _surface = IMG_Load(toStringz(path));
         enforce(_surface, "can't load image `" ~ path ~ "`");
+
+        writeln("Load worked");
 
         // Read data from handler
         _width = _surface.w;
         _height = _surface.h;
+        writeln("Read resolution: ", _width, " ; ", _height);
 
         // Generate texture and bind data
         glGenTextures(1, &id);
@@ -63,7 +65,9 @@ class Texture {
             new Exception("Unsupported texture format for " ~ texType ~ " texture type");
         }
 
+        writeln("Before pixel mapping");
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, format, GL_UNSIGNED_BYTE, _surface.pixels);
+        writeln("Mapped pixels");
 
         // Generate mipmaps
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -71,9 +75,12 @@ class Texture {
         // Free texture handler
         SDL_FreeSurface(_surface);
         _surface = null;
+        writeln("Free");
 
         // Unbind data
         glBindTexture(GL_TEXTURE_2D, 0);
+
+        writeln("End load");
     }
 
     /// Pass texture onto shader

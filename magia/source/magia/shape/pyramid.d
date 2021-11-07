@@ -97,8 +97,9 @@ final class Pyramid : Drawable3D {
             4, 6, 7
         ];
 
+        // Was bricks.png
         Texture[] textures = [
-            new Texture("bricks.png", "diffuse", 0)
+            new Texture("assets/texture/bricks.png", "diffuse", 0)
         ];
 
         _pyramidMesh = new Mesh(vertices, indices, textures);

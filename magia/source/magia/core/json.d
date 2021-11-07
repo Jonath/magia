@@ -46,20 +46,6 @@ JSONValue[] getJsonArray(JSONValue json, string tag) {
     return json.object[tag].array;
 }
 
-/// Get a string array associated to tag (throws if not found)
-string[] getJsonArrayStr(JSONValue json, string tag) {
-    if (!(tag in json.object)) {
-        throw new Exception("JSON: \'" ~ tag ~ "\'' does not exist in JSON.");
-    }
-
-    string[] array;
-    foreach (JSONValue value; json.object[tag].array) {
-        array ~= value.str;
-    }
-
-    return array;
-}
-
 /// Get a string array associated to tag (default if not found)
 string[] getJsonArrayStr(JSONValue json, string tag, string[] defaultValue) {
     if (!(tag in json.object)) {
@@ -68,6 +54,7 @@ string[] getJsonArrayStr(JSONValue json, string tag, string[] defaultValue) {
 
     string[] array;
     foreach (JSONValue value; json.object[tag].array) {
+        writeln("value: ", value);
         array ~= value.str;
     }
 
@@ -110,24 +97,6 @@ int[] getJsonArrayInt(JSONValue json, string tag, int[] defaultValue) {
     return array;
 }
 
-/// Get a float array associated to tag (throws if not found)
-float[] getJsonArrayFloat(JSONValue json, string tag) {
-    if (!(tag in json.object)) {
-        throw new Exception("JSON: \'" ~ tag ~ "\'' does not exist in JSON.");
-    }
-
-    float[] array;
-    foreach (JSONValue value; json.object[tag].array) {
-        if (value.type() == JSONType.string) {
-            array ~= to!float(value.str);
-        } else {
-            array ~= value.floating;
-        }
-    }
-
-    return array;
-}
-
 /// Get a int array associated to tag (default if not found)
 float[] getJsonArrayFloat(JSONValue json, string tag, float[] defaultValue) {
     if (!(tag in json.object)) {
@@ -136,19 +105,18 @@ float[] getJsonArrayFloat(JSONValue json, string tag, float[] defaultValue) {
 
     float[] array;
     foreach (JSONValue value; json.object[tag].array) {
-        writeln("value.type(): " ~ to!string(value.type()));
-        final switch(value.type()) {
+        switch(value.type()) {
             case JSONType.string:
                 array ~= to!float(value.str);
                 break;
             case JSONType.integer:
-                array ~= to!float(value.str);
+                array ~= to!float(value.integer);
                 break;
-        }
-        if (value.type() == JSONType.string) {
-            array ~= to!float(value.str);
-        } else {
-            array ~= value.floating;
+            case JSONType.float_:
+                array ~= value.floating;
+                break;
+            default:
+                break;
         }
     }
 
@@ -181,16 +149,16 @@ int getJsonInt(JSONValue json, string tag) {
 
     JSONValue value = json.object[tag];
     switch (value.type()) with (JSONType) {
-    case integer:
-        return cast(int) value.integer;
-    case uinteger:
-        return cast(int) value.uinteger;
-    case float_:
-        return cast(int) value.floating;
-    case string:
-        return to!int(value.str);
-    default:
-        throw new Exception("JSON: No integer value in \'" ~ tag ~ "\'.");
+        case integer:
+            return cast(int) value.integer;
+        case uinteger:
+            return cast(int) value.uinteger;
+        case float_:
+            return cast(int) value.floating;
+        case string:
+            return to!int(value.str);
+        default:
+            throw new Exception("JSON: No integer value in \'" ~ tag ~ "\'.");
     }
 }
 
@@ -202,16 +170,16 @@ int getJsonInt(JSONValue json, string tag, int defaultValue) {
 
     JSONValue value = json.object[tag];
     switch (value.type()) with (JSONType) {
-    case integer:
-        return cast(int) value.integer;
-    case uinteger:
-        return cast(int) value.uinteger;
-    case float_:
-        return cast(int) value.floating;
-    case string:
-        return to!int(value.str);
-    default:
-        throw new Exception("JSON: No integer value in \'" ~ tag ~ "\'.");
+        case integer:
+            return cast(int) value.integer;
+        case uinteger:
+            return cast(int) value.uinteger;
+        case float_:
+            return cast(int) value.floating;
+        case string:
+            return to!int(value.str);
+        default:
+            throw new Exception("JSON: No integer value in \'" ~ tag ~ "\'.");
     }
 }
 
