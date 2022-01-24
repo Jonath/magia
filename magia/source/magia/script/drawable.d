@@ -16,9 +16,9 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     library.addPrimitive(&_update, "update", [cameraType], []);
     library.addPrimitive(&_draw, "draw", [drawableType], []);
     library.addPrimitive(&_light1, "loadLight", [cameraType], [lightType]);
-    library.addPrimitive(&_model1, "loadModel", [cameraType, grString], [modelType]);
-    library.addPrimitive(&_pyramid1, "loadPyramid", [], [pyramidType]);
+    library.addPrimitive(&_model1, "loadModel", [cameraType, lightType, grString], [modelType]);
     library.addPrimitive(&_quad1, "loadQuad", [cameraType, lightType], [quadType]);
+    library.addPrimitive(&_pyramid1, "loadPyramid", [], [pyramidType]);
 }
 
 private void _update(GrCall call) {
@@ -42,16 +42,16 @@ private void _light1(GrCall call) {
 }
 
 private void _model1(GrCall call) {
-    BasicModel model = new BasicModel(call.getForeign!Camera(0), call.getString(1));
+    BasicModel model = new BasicModel(call.getForeign!Camera(0), call.getForeign!Light(1), call.getString(2));
     call.setForeign(model);
-}
-
-private void _pyramid1(GrCall call) {
-    Pyramid pyramid = new Pyramid();
-    call.setForeign(pyramid);
 }
 
 private void _quad1(GrCall call) {
     Quad quad = new Quad(call.getForeign!Camera(0), call.getForeign!Light(1));
     call.setForeign(quad);
+}
+
+private void _pyramid1(GrCall call) {
+    Pyramid pyramid = new Pyramid();
+    call.setForeign(pyramid);
 }

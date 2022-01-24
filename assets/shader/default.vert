@@ -20,7 +20,7 @@ void main() {
     currentPos = vec3(model * translation * rotation * scale * vec4(iPos, 1.0));
     normal = iNormal;
     color = iColor;
-    texCoord = mat2(0.0, -1.0, 1.0, 0.0) * iTexCoord;
+    texCoord = iTexCoord;
 
     gl_Position = camMatrix * vec4(currentPos, 1.0);
 }

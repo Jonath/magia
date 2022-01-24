@@ -23,7 +23,7 @@ final class Quad : Drawable3D {
         Mesh _quadMesh;
 
         Camera _camera;
-        Shader _shaderProgram;
+        Shader _shader;
         GLuint _scaleId;
 
         float _rotation;
@@ -56,16 +56,16 @@ final class Quad : Drawable3D {
         ];
 
         _quadMesh = new Mesh(vertices, indices, textures);
-        _shaderProgram = new Shader("default.vert", "default.frag");
+        _shader = new Shader("default.vert", "default.frag");
 
         vec3 quadPos = vec3(0.0f, 0.0f, 0.0f);
 	    _quadModel = mat4.identity;
 	    _quadModel = _quadModel.translate(quadPos);
 
-        _shaderProgram.activate();
-        glUniform4f(glGetUniformLocation(_shaderProgram.id, "lightColor"),
+        _shader.activate();
+        glUniform4f(glGetUniformLocation(_shader.id, "lightColor"),
                                          light.color.x, light.color.y, light.color.z, light.color.w);
-        glUniform3f(glGetUniformLocation(_shaderProgram.id, "lightPos"),
+        glUniform3f(glGetUniformLocation(_shader.id, "lightPos"),
                                          light.position.x, light.position.y, light.position.z);
 
         _camera = camera;
@@ -73,11 +73,11 @@ final class Quad : Drawable3D {
 
     /// Unload
     void unload() {
-        _shaderProgram.remove();
+        _shader.remove();
     }
 
     /// Render the quad
     override void draw() {
-        _quadMesh.draw(_shaderProgram, _camera, _quadModel);
+        _quadMesh.draw(_shader, _camera, _quadModel);
     }
 }
