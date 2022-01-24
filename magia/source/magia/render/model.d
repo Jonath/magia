@@ -208,12 +208,10 @@ class Model {
                 _loadedTextureNames ~= path;
 
                 if (canFind(path, "baseColor")) {
-                    writeln("Loading diffuse texture at ", path);
                     Texture diffuse = new Texture(path, "diffuse", textureId);
                     _loadedTextures ~= diffuse;
                     ++textureId;
                 } else if (canFind(path, "metallicRoughness")) {
-                    writeln("Loading mettalic texture at ", path);
                     Texture specular = new Texture(path, "specular", textureId);
                     _loadedTextures ~= specular;
                     ++textureId;

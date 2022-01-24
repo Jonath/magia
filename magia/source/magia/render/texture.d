@@ -52,11 +52,17 @@ class Texture {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
+        const uint nbChannels = _surface.format.BitsPerPixel / 8;
+
+        writeln("Loaded texture ", path, " with ", nbChannels, " channels");
+
         // For now, consider diffuses as RGBA, speculars as R
         GLenum format;
-        if (texType == "diffuse") {
+        if (nbChannels == 4) {
+            format = GL_RGBA;
+        } else if (nbChannels == 3) {
             format = GL_RGB;
-        } else if (texType == "specular") {
+        } else if (nbChannels == 1) {
             format = GL_RED;
         } else {
             new Exception("Unsupported texture format for " ~ texType ~ " texture type");

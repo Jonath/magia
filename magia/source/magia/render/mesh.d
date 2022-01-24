@@ -51,7 +51,8 @@ class Mesh {
     }
 
     /// Draw call
-    void draw(Shader shader, Camera camera, mat4 model = mat4.identity, vec3 translation = vec3(0.0f, 0.0f, 0.0f), quat rotation = quat.identity, vec3 scale = vec3(1.0f, 1.0f, 1.0f)) {
+    void draw(Shader shader, Camera camera, mat4 model = mat4.identity, vec3 translation = vec3(0.0f, 0.0f, 0.0f),
+              quat rotation = quat.identity, vec3 scale = vec3(1.0f, 1.0f, 1.0f)) {
         shader.activate();
         _VAO.bind();
 

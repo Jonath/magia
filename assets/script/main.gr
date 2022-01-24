@@ -3,7 +3,7 @@ main {
     //Rectangle r = rectangle();
     //Pyramid p = pyramid();
     Quad q = quad();
-    //BasicModel m = model("sword");
+    BasicModel m = model("sword");
 
     int i;
     loop {
@@ -17,7 +17,7 @@ main {
         //r:draw();
         //p:draw();
         q:draw();
-        //m:draw();
+        m:draw();
         i++;
         yield
     }
