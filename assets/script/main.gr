@@ -1,11 +1,11 @@
-main {
+action onLoad() {
     Camera camera = loadCamera();
     Light light = loadLight(camera);
 
     Quad quad = loadQuad(camera, light);
     BasicModel model = loadModel(camera, light, "bunny/scene");
 
-    int i;
+    integer i;
     loop {
         // Update calls
         camera:update();
@@ -17,6 +17,6 @@ main {
 
         // Next frame
         i++;
-        yield
+        suspends
     }
 }

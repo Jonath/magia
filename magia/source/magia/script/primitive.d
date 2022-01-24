@@ -7,27 +7,27 @@ import magia.core, magia.render;
 package(magia.script) void loadMagiaLibPrimitive(GrLibrary library) {
     GrType colorType = grGetClassType("Color");
     library.addPrimitive(&_rectangle1, "rectangle", [
-            grFloat, grFloat, grFloat, grFloat
-            ]);
+            grReal, grReal, grReal, grReal
+        ]);
     library.addPrimitive(&_rectangle2, "rectangle", [
-            grFloat, grFloat, grFloat, grFloat, colorType
-            ]);
+            grReal, grReal, grReal, grReal, colorType
+        ]);
     library.addPrimitive(&_rectangle3, "rectangle", [
-            grFloat, grFloat, grFloat, grFloat, colorType, grFloat
-            ]);
+            grReal, grReal, grReal, grReal, colorType, grReal
+        ]);
 }
 
 private void _rectangle1(GrCall call) {
-    drawFilledRect(Vec2f(call.getFloat(0), call.getFloat(1)),
-            Vec2f(call.getFloat(2), call.getFloat(3)));
+    drawFilledRect(Vec2f(call.getReal(0), call.getReal(1)),
+        Vec2f(call.getReal(2), call.getReal(3)));
 }
 
 private void _rectangle2(GrCall call) {
-    drawFilledRect(Vec2f(call.getFloat(0), call.getFloat(1)),
-            Vec2f(call.getFloat(2), call.getFloat(3)), Color(call.getObject(4)));
+    drawFilledRect(Vec2f(call.getReal(0), call.getReal(1)),
+        Vec2f(call.getReal(2), call.getReal(3)), Color(call.getObject(4)));
 }
 
 private void _rectangle3(GrCall call) {
-    drawFilledRect(Vec2f(call.getFloat(0), call.getFloat(1)),
-            Vec2f(call.getFloat(2), call.getFloat(3)), Color(call.getObject(4)), call.getFloat(5));
+    drawFilledRect(Vec2f(call.getReal(0), call.getReal(1)),
+        Vec2f(call.getReal(2), call.getReal(3)), Color(call.getObject(4)), call.getReal(5));
 }

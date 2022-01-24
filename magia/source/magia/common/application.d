@@ -71,7 +71,7 @@ void runApplication() {
     GrCompiler compiler = new GrCompiler;
     compiler.addLibrary(stdlib);
     compiler.addLibrary(magialib);
-    GrBytecode bytecode = compiler.compileFile("assets/script/main.gr", GrCompiler.Flags.none);
+    GrBytecode bytecode = compiler.compileFile("assets/script/main.gr", GrOption.none);
     if (!bytecode)
         throw new Exception(compiler.getError().prettify());
 
@@ -79,7 +79,8 @@ void runApplication() {
     _engine.addLibrary(stdlib);
     _engine.addLibrary(magialib);
     _engine.load(bytecode);
-    _engine.spawn();
+    if (_engine.hasAction("onLoad"))
+        _engine.callAction("onLoad");
 
     while (processEvents()) {
         updateEvents(_deltatime);

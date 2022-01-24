@@ -141,9 +141,9 @@ struct Color {
 
     /// Initialise with a GrObject
     this(GrObject object) {
-        _r = clamp(object.getFloat("r"), 0f, 1f);
-        _g = clamp(object.getFloat("g"), 0f, 1f);
-        _b = clamp(object.getFloat("b"), 0f, 1f);
+        _r = clamp(object.getReal("r"), 0f, 1f);
+        _g = clamp(object.getReal("g"), 0f, 1f);
+        _b = clamp(object.getReal("b"), 0f, 1f);
     }
 
     /// Sets the RGB values, between 0 and 1.
