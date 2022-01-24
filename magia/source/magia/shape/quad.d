@@ -32,7 +32,7 @@ final class Quad : Drawable3D {
     }
 
     /// Constructor
-    this() {
+    this(Camera camera) {
         // Quad vertices
         Vertex[] vertices = [
             //     COORDINATES                /     NORMALS         /    COLORS        /    TexCoord   //
@@ -109,7 +109,7 @@ final class Quad : Drawable3D {
         glUniform3f(glGetUniformLocation(_shaderProgram.id, "lightPos"),
                                          lightPos.x, lightPos.y, lightPos.z);
 
-        _camera = new Camera(screenWidth, screenHeight, Vec3f(0f, 0f, 2f));
+        _camera = camera;
     }
 
     /// Unload

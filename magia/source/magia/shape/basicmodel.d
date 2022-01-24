@@ -16,8 +16,8 @@ final class BasicModel : Drawable3D {
     }
 
     /// Constructor
-    this(string fileName) {
-        _camera = new Camera(screenWidth, screenHeight, Vec3f(0f, 0f, 2f));
+    this(Camera camera, string fileName) {
+        _camera = camera;
         _shader = new Shader("default.vert", "default.frag");
         _model = new Model(fileName);
     }

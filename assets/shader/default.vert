@@ -17,7 +17,7 @@ uniform mat4 rotation;
 uniform mat4 scale;
 
 void main() {
-    currentPos = vec3(model * translation * -rotation * scale * vec4(iPos, 1.0));
+    currentPos = vec3(model * translation * rotation * scale * vec4(iPos, 1.0));
     normal = iNormal;
     color = iColor;
     texCoord = mat2(0.0, -1.0, 1.0, 0.0) * iTexCoord;

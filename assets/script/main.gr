@@ -2,8 +2,9 @@ main {
     //Triangle t = triangle();
     //Rectangle r = rectangle();
     //Pyramid p = pyramid();
-    Quad q = quad();
-    BasicModel m = model("bunny/scene");
+    Camera cam = camera();
+    Quad q = quad(cam);
+    BasicModel m = model(cam, "bunny/scene");
 
     int i;
     loop {

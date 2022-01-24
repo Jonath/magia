@@ -3,6 +3,7 @@ module magia.render;
 public {
     import magia.render.animation;
     import magia.render.canvas;
+    import magia.render.camera;
     import magia.render.drawable;
     import magia.render.font;
     import magia.render.model;
