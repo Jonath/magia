@@ -115,13 +115,19 @@ void createWindow(const Vec2u windowSize, string title) {
 
 	glCullFace(GL_FRONT);
 	glFrontFace(GL_CCW);
+
+	// Enable depth buffer
 	glEnable(GL_DEPTH_TEST);
-	//glEnable(GL_CULL_FACE);
+	
+	// Enable culling
+	// glEnable(GL_CULL_FACE);
+
+	// Enable blending
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 
-	glClearColor(0, 0, 0, 1);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// Clear color
+	glClearColor(.08f, .10f, .13f, 1.0f);
 
 	CanvasReference canvasRef;
 	canvasRef.position = cast(Vec2f)(windowSize) / 2;
@@ -251,7 +257,7 @@ void showWindow(bool show) {
 void renderWindow() {
 	SDL_GL_SwapWindow(_sdlWindow);
 
-	glClearColor(0, 0, 0, 1);
+	// Clear back buffer and depth buffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
