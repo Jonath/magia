@@ -36,6 +36,10 @@ class Model {
         vec3[] _scales;
         mat4[] _transforms;
 
+        // Trace
+        bool _trace = true;
+        bool _traceDeep = false;
+
         static const uint uintType = 5125;
         static const uint ushortType = 5123;
         static const uint shortType = 5122;
@@ -204,10 +208,12 @@ class Model {
                 _loadedTextureNames ~= path;
 
                 if (canFind(path, "baseColor")) {
+                    writeln("Loading diffuse texture at ", path);
                     Texture diffuse = new Texture(path, "diffuse", textureId);
                     _loadedTextures ~= diffuse;
                     ++textureId;
                 } else if (canFind(path, "metallicRoughness")) {
+                    writeln("Loading mettalic texture at ", path);
                     Texture specular = new Texture(path, "specular", textureId);
                     _loadedTextures ~= specular;
                     ++textureId;
@@ -222,6 +228,10 @@ class Model {
 
     /// Load mesh (only supports one primitive and one texture per mesh for now)
     void loadMesh(uint meshId) {
+        if (_trace) {
+            writeln("Mesh load");
+        }
+
         JSONValue jsonMesh = _json["meshes"][meshId];
         JSONValue jsonPrimitive = jsonMesh["primitives"][0];
         JSONValue jsonAttributes = jsonPrimitive["attributes"];
@@ -234,6 +244,20 @@ class Model {
         vec3[] positions = groupFloatsVec3(getFloats(_json["accessors"][positionId]));
         vec3[] normals = groupFloatsVec3(getFloats(_json["accessors"][normalId]));
         vec2[] texUVs = groupFloatsVec2(getFloats(_json["accessors"][texUVId]));
+        
+        if (_traceDeep) {
+            foreach(vec3 position; positions) {
+                writeln("Position: ", position);
+            }
+
+            foreach(vec3 normal; normals) {
+                writeln("Normal: ", normal);
+            }
+
+            foreach(vec2 texUV; texUVs) {
+                writeln("Texture UV: ", texUV);
+            }
+        }
 
         Vertex[] vertices = assembleVertices(positions, normals, texUVs);
         GLuint[] indices = getIndices(_json["accessors"][indicesId]);
@@ -256,14 +280,26 @@ class Model {
             translation = vec3(translationArray[0], translationArray[1], translationArray[2]);
         }
 
+        if (_trace) {
+            writeln("Translation: ", translation);
+        }
+
         float[] rotationArray = getJsonArrayFloat(node, "rotation", []);
         if (rotationArray.length == 4) {
             rotation = quat(rotationArray[3], rotationArray[0], rotationArray[1], rotationArray[2]);
         }
 
+        if (_trace) {
+            writeln("Rotation: ", rotation);
+        }
+
         float[] scaleArray = getJsonArrayFloat(node, "scale", []);
         if (scaleArray.length == 3) {
             scale = vec3(scaleArray[0], scaleArray[1], scaleArray[2]);
+        }
+
+        if (_trace) {
+            writeln("Scale: ", scale);
         }
 
         float[] matrixArray = getJsonArrayFloat(node, "matrix", []);
@@ -310,16 +346,10 @@ class Model {
         }
     }
 
-    /// Load all meshes
-    void load() {
-        const JSONValue[] jsonMeshes = getJsonArray(_json, "meshes");
-        for(uint i = 0; i < jsonMeshes.length; ++i) {
-            loadMesh(i);
-        }
-    }
-
     /// Draw the model
     void draw(Shader shader, Camera camera) {
+        //writeln("Draw call");
+
         for (uint i = 0; i < _meshes.length; ++i) {
             _meshes[i].draw(shader, camera, _transforms[i]);
         }

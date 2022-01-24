@@ -35,12 +35,9 @@ class Texture {
         _surface = IMG_Load(toStringz(path));
         enforce(_surface, "can't load image `" ~ path ~ "`");
 
-        writeln("Load worked");
-
         // Read data from handler
         _width = _surface.w;
         _height = _surface.h;
-        writeln("Read resolution: ", _width, " ; ", _height);
 
         // Generate texture and bind data
         glGenTextures(1, &id);
@@ -58,16 +55,14 @@ class Texture {
         // For now, consider diffuses as RGBA, speculars as R
         GLenum format;
         if (texType == "diffuse") {
-            format = GL_RGBA;
+            format = GL_RGB;
         } else if (texType == "specular") {
             format = GL_RED;
         } else {
             new Exception("Unsupported texture format for " ~ texType ~ " texture type");
         }
 
-        writeln("Before pixel mapping");
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, format, GL_UNSIGNED_BYTE, _surface.pixels);
-        writeln("Mapped pixels");
 
         // Generate mipmaps
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -75,12 +70,9 @@ class Texture {
         // Free texture handler
         SDL_FreeSurface(_surface);
         _surface = null;
-        writeln("Free");
 
         // Unbind data
         glBindTexture(GL_TEXTURE_2D, 0);
-
-        writeln("End load");
     }
 
     /// Pass texture onto shader

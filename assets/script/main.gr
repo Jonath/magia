@@ -2,8 +2,8 @@ main {
     //Triangle t = triangle();
     //Rectangle r = rectangle();
     //Pyramid p = pyramid();
-    //Quad q = quad();
-    BasicModel m = model("sword");
+    Quad q = quad();
+    //BasicModel m = model("sword");
 
     int i;
     loop {
@@ -16,8 +16,8 @@ main {
         //t:draw();
         //r:draw();
         //p:draw();
-        //q:draw();
-        m:draw();
+        q:draw();
+        //m:draw();
         i++;
         yield
     }

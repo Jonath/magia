@@ -77,9 +77,11 @@ final class Quad : Drawable3D {
             4, 6, 7
         ];
 
+        string pathPrefix = "assets/texture/";
+
         Texture[] textures = [
-            new Texture("planks.png", "diffuse", 0),
-            new Texture("planksSpec.png", "specular", 1)
+            new Texture(pathPrefix ~ "planks.png", "diffuse", 0),
+            new Texture(pathPrefix ~ "planksSpec.png", "specular", 1)
         ];
 
         _quadMesh = new Mesh(vertices, indices, textures);
