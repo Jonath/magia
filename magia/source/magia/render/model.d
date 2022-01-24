@@ -5,6 +5,7 @@ import std.conv;
 import std.file;
 import std.json;
 import std.stdio;
+import std.typecons;
 
 import bindbc.opengl;
 import gl3n.linalg;
@@ -17,7 +18,7 @@ import magia.render.texture;
 import magia.render.vertex;
 
 /// Class handling model loading
-class Model {
+final class Model {
     private {
         // JSON data
         ubyte[] _data;
@@ -40,6 +41,9 @@ class Model {
         bool _trace = true;
         bool _traceDeep = false;
 
+        // File directory
+        string _fileDirectory;
+
         static const uint uintType = 5125;
         static const uint ushortType = 5123;
         static const uint shortType = 5122;
@@ -47,7 +51,15 @@ class Model {
 
     /// Constructor
     this(string fileName) {
-        _json = parseJSON(readText("assets/model/" ~ fileName ~ ".gltf"));
+        auto split = fileName.findSplitAfter("/");
+        _fileDirectory = "assets/model/" ~ split[0];
+        string filePath = _fileDirectory ~ split[1] ~ ".gltf";
+
+        if (_trace) {
+            writeln("Loading model ", filePath);
+        }
+
+        _json = parseJSON(readText(filePath));
         _data = getData();
         traverseNode(0);
     }
@@ -55,7 +67,7 @@ class Model {
     /// Get data
     ubyte[] getData() {
         string uri = _json["buffers"][0]["uri"].get!string;
-        return cast(ubyte[]) read("assets/model/" ~ uri);
+        return cast(ubyte[]) read(_fileDirectory ~ uri);
     }
 
     /// Get all floats from a JSONValue accessor
@@ -103,6 +115,11 @@ class Model {
         const uint count = getJsonInt(accessor, "count");
         const uint byteOffset = getJsonInt(accessor, "byteOffset", 0);
         const uint componentType = getJsonInt(accessor, "componentType");
+
+        if (_trace) {
+            writeln("Load indices with bufferViewId ", bufferViewId, " count ", count,
+                    " byteOffset ", byteOffset, " componentType ", componentType);
+        }
 
         JSONValue bufferView = _json["bufferViews"][bufferViewId];
         const uint accessorByteOffset = getJsonInt(bufferView, "byteOffset");
@@ -189,6 +206,13 @@ class Model {
     Vertex[] assembleVertices(vec3[] positions, vec3[] normals, vec2[] texUVs) {
         Vertex[] vertices;
         for (uint i = 0; i < positions.length; ++i) {
+            if (_traceDeep) {
+                writeln("Assembling vertex with",
+                        " position ", positions[i],
+                        " normal ", normals[i],
+                        " texture UV ", texUVs[i]);
+            }
+
             Vertex vertex = { positions[i], normals[i], vec3(1.0f, 1.0f, 1.0f), texUVs[i] };
             vertices ~= vertex;
         }
@@ -202,7 +226,7 @@ class Model {
         const JSONValue[] jsonTextures = getJsonArray(_json, "images");
 
         foreach (const JSONValue jsonTexture; jsonTextures) {
-            const string path = "assets/model/" ~ getJsonStr(jsonTexture, "uri");
+            const string path = _fileDirectory ~ getJsonStr(jsonTexture, "uri");
 
             if (!canFind(_loadedTextureNames, path)) {
                 _loadedTextureNames ~= path;
@@ -243,20 +267,6 @@ class Model {
         vec3[] normals = groupFloatsVec3(getFloats(_json["accessors"][normalId]));
         vec2[] texUVs = groupFloatsVec2(getFloats(_json["accessors"][texUVId]));
         
-        if (_traceDeep) {
-            foreach(vec3 position; positions) {
-                writeln("Position: ", position);
-            }
-
-            foreach(vec3 normal; normals) {
-                writeln("Normal: ", normal);
-            }
-
-            foreach(vec2 texUV; texUVs) {
-                writeln("Texture UV: ", texUV);
-            }
-        }
-
         Vertex[] vertices = assembleVertices(positions, normals, texUVs);
         GLuint[] indices = getIndices(_json["accessors"][indicesId]);
         Texture[] textures = getTextures();
@@ -276,28 +286,28 @@ class Model {
         float[] translationArray = getJsonArrayFloat(node, "translation", []);
         if (translationArray.length == 3) {
             translation = vec3(translationArray[0], translationArray[1], translationArray[2]);
-        }
 
-        if (_trace) {
-            writeln("Translation: ", translation);
+            if (_trace) {
+                writeln("Translation: ", translation);
+            }
         }
 
         float[] rotationArray = getJsonArrayFloat(node, "rotation", []);
         if (rotationArray.length == 4) {
             rotation = quat(rotationArray[3], rotationArray[0], rotationArray[1], rotationArray[2]);
-        }
 
-        if (_trace) {
-            writeln("Rotation: ", rotation);
+            if (_trace) {
+                writeln("Rotation: ", rotation);
+            }
         }
 
         float[] scaleArray = getJsonArrayFloat(node, "scale", []);
         if (scaleArray.length == 3) {
             scale = vec3(scaleArray[0], scaleArray[1], scaleArray[2]);
-        }
 
-        if (_trace) {
-            writeln("Scale: ", scale);
+            if (_trace) {
+                writeln("Scale: ", scale);
+            }
         }
 
         float[] matrixArray = getJsonArrayFloat(node, "matrix", []);
@@ -308,6 +318,10 @@ class Model {
                     matNode[i][j] = matrixArray[arrayId];
                     ++arrayId;
                 }
+            }
+
+            if (_trace) {
+                writeln("Matrix: ", matNode);
             }
         }
 
@@ -325,6 +339,10 @@ class Model {
 
         // Load current node mesh
         if (hasJson(node, "mesh")) {
+            if (_trace) {
+                writeln("Load current mesh");
+            }
+
             _translations ~= translation;
             _rotations ~= rotation;
             _scales ~= scale;
@@ -337,6 +355,10 @@ class Model {
         if (hasJson(node, "children")) {
             const JSONValue[] children = getJsonArray(node, "children");
 
+            if (_trace) {
+                writeln("Load children ", children);
+            }
+
             for (uint i = 0; i < children.length; ++i) {
                 const uint childrenId = children[i].get!uint;
                 traverseNode(childrenId, matNextNode);
@@ -346,8 +368,6 @@ class Model {
 
     /// Draw the model
     void draw(Shader shader, Camera camera) {
-        //writeln("Draw call");
-
         for (uint i = 0; i < _meshes.length; ++i) {
             _meshes[i].draw(shader, camera, _transforms[i]);
         }

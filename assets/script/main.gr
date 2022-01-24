@@ -3,7 +3,7 @@ main {
     //Rectangle r = rectangle();
     //Pyramid p = pyramid();
     Quad q = quad();
-    BasicModel m = model("sword");
+    BasicModel m = model("bunny/scene");
 
     int i;
     loop {
