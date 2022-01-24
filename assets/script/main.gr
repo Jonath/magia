@@ -3,7 +3,7 @@ main {
     Light light = loadLight(camera);
 
     Quad quad = loadQuad(camera, light);
-    BasicModel model = loadModel(camera, light, "sword/sword");
+    BasicModel model = loadModel(camera, light, "bunny/scene");
 
     int i;
     loop {

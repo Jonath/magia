@@ -38,7 +38,7 @@ final class Model {
         mat4[] _transforms;
 
         // Trace
-        bool _trace = true;
+        bool _trace = false;
         bool _traceDeep = false;
 
         // File directory
@@ -204,6 +204,12 @@ final class Model {
 
     /// Assemble all vertices
     Vertex[] assembleVertices(vec3[] positions, vec3[] normals, vec2[] texUVs) {
+        if (_trace) {
+            writeln("Vertices size: ", positions.count);
+            writeln("Normals size: ", positions.count);
+            writeln("UVs size: ", positions.count);
+        }
+
         Vertex[] vertices;
         for (uint i = 0; i < positions.length; ++i) {
             if (_traceDeep) {
