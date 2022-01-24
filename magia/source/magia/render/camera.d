@@ -157,4 +157,10 @@ class Camera {
 
         return vec3(q3.x, q3.y, q3.z);
     }
+
+    /// Update the camera
+    void update() {
+        processInputs();
+        updateMatrix(45f, 0.1f, 100f);
+    }
 }

@@ -6,6 +6,7 @@ public {
     import magia.render.camera;
     import magia.render.drawable;
     import magia.render.font;
+    import magia.render.light;
     import magia.render.model;
     import magia.render.oldtexture;
     import magia.render.primitive;

@@ -15,24 +15,24 @@ import magia.render.shader;
 import magia.render.texture;
 import magia.render.vertex;
 import magia.render.window;
+import magia.render.light;
 
 /// Renders a **Quad** with its own properties.
 final class Quad : Drawable3D {
     private {
-        Mesh _quadMesh, _lightMesh;
+        Mesh _quadMesh;
 
         Camera _camera;
-        Shader _shaderProgram, _lightShader;
+        Shader _shaderProgram;
         GLuint _scaleId;
 
         float _rotation;
 
         mat4 _quadModel;
-        mat4 _lightModel;
     }
 
     /// Constructor
-    this(Camera camera) {
+    this(Camera camera, Light light) {
         // Quad vertices
         Vertex[] vertices = [
             //     COORDINATES                /     NORMALS         /    COLORS        /    TexCoord   //
@@ -48,35 +48,6 @@ final class Quad : Drawable3D {
             0, 2, 3
         ];
 
-        // Quad light vertices
-        Vertex[] lightVertices = [
-            //  COORDINATES
-            Vertex(vec3(-0.1f, -0.1f,  0.1f)),
-            Vertex(vec3(-0.1f, -0.1f, -0.1f)),
-            Vertex(vec3( 0.1f, -0.1f, -0.1f)),
-            Vertex(vec3( 0.1f, -0.1f,  0.1f)),
-            Vertex(vec3(-0.1f,  0.1f,  0.1f)),
-            Vertex(vec3(-0.1f,  0.1f, -0.1f)),
-            Vertex(vec3( 0.1f,  0.1f, -0.1f)),
-            Vertex(vec3( 0.1f,  0.1f,  0.1f))
-        ];
-
-        // Quad light indices
-        GLuint[] lightIndices = [
-            0, 1, 2,
-            0, 2, 3,
-            0, 4, 7,
-            0, 7, 3,
-            3, 7, 6,
-            3, 6, 2,
-            2, 6, 5,
-            2, 5, 1,
-            1, 5, 4,
-            1, 4, 0,
-            4, 5, 6,
-            4, 6, 7
-        ];
-
         string pathPrefix = "assets/texture/";
 
         Texture[] textures = [
@@ -85,29 +56,17 @@ final class Quad : Drawable3D {
         ];
 
         _quadMesh = new Mesh(vertices, indices, textures);
-        _lightMesh = new Mesh(lightVertices, lightIndices);
-
         _shaderProgram = new Shader("default.vert", "default.frag");
-        _lightShader = new Shader("light.vert", "light.frag");
-
-        vec4 lightColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-        vec3 lightPos = vec3(0.5f, 0.5f, 0.5f);
-        _lightModel = mat4.identity;
-        _lightModel = _lightModel.translate(lightPos);
 
         vec3 quadPos = vec3(0.0f, 0.0f, 0.0f);
 	    _quadModel = mat4.identity;
 	    _quadModel = _quadModel.translate(quadPos);
 
-        _lightShader.activate();
-        glUniform4f(glGetUniformLocation(_lightShader.id, "lightColor"),
-                                         lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-
         _shaderProgram.activate();
         glUniform4f(glGetUniformLocation(_shaderProgram.id, "lightColor"),
-                                         lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+                                         light.color.x, light.color.y, light.color.z, light.color.w);
         glUniform3f(glGetUniformLocation(_shaderProgram.id, "lightPos"),
-                                         lightPos.x, lightPos.y, lightPos.z);
+                                         light.position.x, light.position.y, light.position.z);
 
         _camera = camera;
     }
@@ -115,15 +74,10 @@ final class Quad : Drawable3D {
     /// Unload
     void unload() {
         _shaderProgram.remove();
-        _lightShader.remove();
     }
 
     /// Render the quad
     override void draw() {
-        _camera.processInputs();
-        _camera.updateMatrix(45f, 0.1f, 100f);
-
         _quadMesh.draw(_shaderProgram, _camera, _quadModel);
-        _lightMesh.draw(_lightShader, _camera, _lightModel);
     }
 }
