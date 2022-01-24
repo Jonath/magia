@@ -1,6 +1,6 @@
 {
 	"authors": [
-		"Enalye"
+		"Jonath", "Enalye"
 	],
 	"buildTypes": {
 		"debug": {
@@ -61,7 +61,7 @@
 			"targetType": "executable"
 		}
 	],
-	"copyright": "Copyright © 2021, Enalye",
+	"copyright": "Copyright © 2021, Jonath, Enalye",
 	"dependencies": {
 		"bindbc-opengl": "~>0.17.1",
 		"bindbc-sdl": "~>0.21.4",
