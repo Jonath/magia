@@ -2,9 +2,11 @@ module magia.scene.scene;
 
 import gl3n.linalg;
 import magia.common, magia.core, magia.render;
+import magia.scene.entity;
 
 private {
     Camera _camera, _defaultCamera;
+    Entity[] _entities;
 }
 
 void setCamera(Camera camera) {
@@ -13,6 +15,10 @@ void setCamera(Camera camera) {
 
 Camera getCamera() {
     return _camera;
+}
+
+void addEntity(Entity entity) {
+    _entities ~= entity;
 }
 
 void initializeScene() {
@@ -83,10 +89,16 @@ void updateScene(float deltaTime) {
     }
 
     _camera.forward = rotate(_camera.forward, -rotY * degToRad, _camera.up);
+
+    foreach(entity; _entities) {
+        entity.update(deltaTime);
+    }
 }
 
 void drawScene() {
-
+    foreach(entity; _entities) {
+        entity.draw();
+    }
 }
 
 /// @TODO: Bouger ça à un endroit plus approprié.
