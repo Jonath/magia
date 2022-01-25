@@ -133,8 +133,8 @@ void createWindow(const Vec2u windowSize, string title) {
 	glFrontFace(GL_CCW);
 
 	// Enable blending
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// Deactivate vsync
 	// SDL_GL_SetSwapInterval(0);

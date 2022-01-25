@@ -58,6 +58,10 @@ vec4 directionalLight() {
     float specAmount = pow(max(dot(viewDir, reflectionDir), 0.0f), 16);
     float specular = specAmount * 0.50f;
 
+    // Discard alpha
+    if (texture(diffuse0, texCoord).a < 0.1)
+        discard;
+
     // Combining lightings, keeping alpha
     vec4 lightColor = (texture(diffuse0, texCoord) * (diffuse + ambient) + texture(specular0, texCoord).r * specular) * lightColor;
     lightColor.a = 1.0f;
@@ -106,6 +110,7 @@ float logisticDepth(float depth, float steepness = 0.5f, float offset = 5.0f) {
 }
 
 void main() {
-	float depth = logisticDepth(gl_FragCoord.z);
-	FragColor = directionalLight() * (1.0f - depth) + vec4(depth * vec3(0.85f, 0.85f, 0.90f), 1.0f);
+	//float depth = logisticDepth(gl_FragCoord.z);
+	//FragColor = directionalLight() * (1.0f - depth) + vec4(depth * vec3(0.85f, 0.85f, 0.90f), 1.0f);
+    FragColor = directionalLight();
 }

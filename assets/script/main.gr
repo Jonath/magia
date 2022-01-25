@@ -8,9 +8,10 @@ action onLoad() {
 
     //Quad quad = loadQuad(light);
     //Model tree = loadModel(light, "tree/scene");
-    //Model ground = loadModel(light, "ground/scene");
+    Model grass = loadModel(light, "grass/scene");
+    Model ground = loadModel(light, "ground/scene");
     //Model bunny = loadModel(light, "bunny/scene");
-    Model statue = loadModel(light, "statue/scene");
+    //Model statue = loadModel(light, "statue/scene");
 
     integer i;
     loop {
@@ -19,9 +20,10 @@ action onLoad() {
 
         //quad:draw();
         //tree:draw();
-        //ground:draw();
+        grass:draw();
+        ground:draw();
         //bunny:draw();
-        statue:draw();
+        //statue:draw();
 
         // Next frame
         i++;
