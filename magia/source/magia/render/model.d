@@ -38,7 +38,7 @@ final class Model {
         mat4[] _transforms;
 
         // Trace
-        bool _trace = false;
+        bool _trace = true;
         bool _traceDeep = false;
 
         // File directory
@@ -237,16 +237,16 @@ final class Model {
             if (!canFind(_loadedTextureNames, path)) {
                 _loadedTextureNames ~= path;
 
-                if (canFind(path, "baseColor")) {
+                if (canFind(path, "baseColor") || canFind(path, "diffuse")) {
                     Texture diffuse = new Texture(path, "diffuse", textureId);
                     _loadedTextures ~= diffuse;
                     ++textureId;
-                } else if (canFind(path, "metallicRoughness")) {
+                } else if (canFind(path, "metallicRoughness") || canFind(path, "specular")) {
                     Texture specular = new Texture(path, "specular", textureId);
                     _loadedTextures ~= specular;
                     ++textureId;
                 } else {
-                    writeln("Warning: texture of unknown type not loaded");
+                    writeln("Warning: unknown texture type, not loaded");
                 }
             }
         }

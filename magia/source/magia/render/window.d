@@ -118,6 +118,7 @@ void createWindow(const Vec2u windowSize, string title) {
 
 	// Enable depth buffer
 	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
 	
 	// Enable culling
 	// glEnable(GL_CULL_FACE);

@@ -75,7 +75,7 @@ final class Light : Drawable3D {
         _shader = new Shader("light.vert", "light.frag");
 
         _color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-        _position = vec3(0f, 0.5f, 0f);
+        _position = vec3(0f, 10f, 0f);
         _model = mat4.identity;
         _model = _model.translate(_position);
 

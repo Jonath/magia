@@ -8,7 +8,7 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     GrType cameraType = library.addForeign("Camera");
     GrType drawableType = library.addForeign("Drawable3D");
     GrType lightType = library.addForeign("Light", [], "Drawable3D");
-    GrType modelType = library.addForeign("BasicModel", [], "Drawable3D");
+    GrType modelType = library.addForeign("Model", [], "Drawable3D");
     GrType pyramidType = library.addForeign("Pyramid", [], "Drawable3D");
     GrType quadType = library.addForeign("Quad", [], "Drawable3D");
 
