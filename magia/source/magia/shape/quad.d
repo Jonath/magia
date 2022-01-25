@@ -8,7 +8,6 @@ import gl3n.linalg;
 
 import magia.core;
 
-import magia.render.camera;
 import magia.render.drawable;
 import magia.render.mesh;
 import magia.render.shader;
@@ -22,7 +21,6 @@ final class Quad : Drawable3D {
     private {
         Mesh _quadMesh;
 
-        Camera _camera;
         Shader _shader;
         GLuint _scaleId;
 
@@ -32,7 +30,7 @@ final class Quad : Drawable3D {
     }
 
     /// Constructor
-    this(Camera camera, Light light) {
+    this(Light light) {
         // Quad vertices
         Vertex[] vertices = [
             //     COORDINATES                /     NORMALS         /    COLORS        /    TexCoord   //
@@ -67,8 +65,6 @@ final class Quad : Drawable3D {
                                          light.color.x, light.color.y, light.color.z, light.color.w);
         glUniform3f(glGetUniformLocation(_shader.id, "lightPos"),
                                          light.position.x, light.position.y, light.position.z);
-
-        _camera = camera;
     }
 
     /// Unload
@@ -78,6 +74,6 @@ final class Quad : Drawable3D {
 
     /// Render the quad
     override void draw() {
-        _quadMesh.draw(_shader, _camera, _quadModel);
+        _quadMesh.draw(_shader, _quadModel);
     }
 }

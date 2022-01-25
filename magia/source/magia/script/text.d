@@ -11,20 +11,20 @@ package(magia.script) void loadMagiaLibText(GrLibrary library) {
 
     library.addPrimitive(&_trueTypeFont, "TrueTypeFont", [
             grString, grInt, grInt
-            ], [trueTypeFontType]);
+        ], [trueTypeFontType]);
 
     library.addPrimitive(&_setFont1, "setFont", []);
     library.addPrimitive(&_setFont2, "setFont", [fontType]);
     library.addPrimitive(&_getFont, "getFont", [], [fontType]);
 
-    library.addPrimitive(&_print1, "print", [grString, grFloat, grFloat]);
+    library.addPrimitive(&_print1, "print", [grString, grReal, grReal]);
     library.addPrimitive(&_print2, "print", [
-            grString, grFloat, grFloat, fontType
-            ]);
+            grString, grReal, grReal, fontType
+        ]);
 }
 
 private void _trueTypeFont(GrCall call) {
-    TrueTypeFont font = new TrueTypeFont(call.getString(0), call.getInt(1), call.getInt(2));
+    TrueTypeFont font = new TrueTypeFont(call.getString(0), call.getInt32(1), call.getInt32(2));
     call.setForeign(font);
 }
 
@@ -41,9 +41,9 @@ private void _getFont(GrCall call) {
 }
 
 private void _print1(GrCall call) {
-    drawText(call.getString(0), call.getFloat(1), call.getFloat(2));
+    drawText(call.getString(0), call.getReal(1), call.getReal(2));
 }
 
 private void _print2(GrCall call) {
-    drawText(call.getString(0), call.getFloat(1), call.getFloat(2), call.getForeign!Font(3));
+    drawText(call.getString(0), call.getReal(1), call.getReal(2), call.getForeign!Font(3));
 }

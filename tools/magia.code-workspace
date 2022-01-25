@@ -4,6 +4,9 @@
             "path": "../magia"
         },
         {
+            "path": "../assets"
+        },
+        {
             "path": "../grimoire"
         }
     ],

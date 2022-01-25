@@ -1,17 +1,18 @@
-main {
-    Camera camera = loadCamera();
-    Light light = loadLight(camera);
+action onLoad() {
+    /*Camera camera = Camera();
+    setCamera(camera);*/
+    let camera = getCamera();
+    camera:position(0., .5, 2.);
 
-    //Quad quad = loadQuad(camera, light);
-    Model tree = loadModel(camera, light, "tree/scene");
-    Model ground = loadModel(camera, light, "ground/scene");
-    //Model bunny = loadModel(camera, light, "bunny/scene");
+    Light light = loadLight();
 
-    int i;
+    //Quad quad = loadQuad(light);
+    Model tree = loadModel(light, "tree/scene");
+    Model ground = loadModel(light, "ground/scene");
+    //Model bunny = loadModel(light, "bunny/scene");
+
+    integer i;
     loop {
-        // Update calls
-        camera:update();
-
         // Draw calls
         light:draw();
         //quad:draw();
@@ -21,6 +22,6 @@ main {
 
         // Next frame
         i++;
-        yield
+        suspends
     }
 }

@@ -10,8 +10,8 @@ package(magia.script) void loadMagiaLibWindow(GrLibrary library) {
     library.addPrimitive(&_setColor2, "setColor", [colorType]);
     library.addPrimitive(&_getColor, "getColor", [], [colorType]);
     library.addPrimitive(&_setAlpha1, "setAlpha", []);
-    library.addPrimitive(&_setAlpha2, "setAlpha", [grFloat]);
-    library.addPrimitive(&_getAlpha, "getAlpha", [], [grFloat]);
+    library.addPrimitive(&_setAlpha2, "setAlpha", [grReal]);
+    library.addPrimitive(&_getAlpha, "getAlpha", [], [grReal]);
 }
 
 private void _setColor1(GrCall) {
@@ -25,9 +25,9 @@ private void _setColor2(GrCall call) {
 private void _getColor(GrCall call) {
     GrObject object = call.createObject("Color");
     Color color = getBaseColor();
-    object.setFloat("r", color.r);
-    object.setFloat("g", color.g);
-    object.setFloat("b", color.b);
+    object.setReal("r", color.r);
+    object.setReal("g", color.g);
+    object.setReal("b", color.b);
     call.setObject(object);
 }
 
@@ -36,9 +36,9 @@ private void _setAlpha1(GrCall) {
 }
 
 private void _setAlpha2(GrCall call) {
-    setBaseAlpha(call.getFloat(0));
+    setBaseAlpha(call.getReal(0));
 }
 
 private void _getAlpha(GrCall call) {
-    call.setFloat(getBaseAlpha());
+    call.setReal(getBaseAlpha());
 }

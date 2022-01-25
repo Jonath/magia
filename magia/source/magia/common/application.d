@@ -15,7 +15,7 @@ import std.datetime;
 
 import grimoire;
 
-import magia.core, magia.render, magia.script;
+import magia.core, magia.render, magia.script, magia.scene;
 
 import magia.common.event;
 import magia.common.settings;
@@ -64,6 +64,8 @@ void runApplication() {
 
     initFont();
 
+    initializeScene();
+
     // Script
     GrLibrary stdlib = grLoadStdLibrary();
     GrLibrary magialib = loadMagiaLibrary();
@@ -71,7 +73,7 @@ void runApplication() {
     GrCompiler compiler = new GrCompiler;
     compiler.addLibrary(stdlib);
     compiler.addLibrary(magialib);
-    GrBytecode bytecode = compiler.compileFile("assets/script/main.gr", GrCompiler.Flags.none);
+    GrBytecode bytecode = compiler.compileFile("assets/script/main.gr", GrOption.none);
     if (!bytecode)
         throw new Exception(compiler.getError().prettify());
 
@@ -79,13 +81,17 @@ void runApplication() {
     _engine.addLibrary(stdlib);
     _engine.addLibrary(magialib);
     _engine.load(bytecode);
-    _engine.spawn();
+    if (_engine.hasAction("onLoad"))
+        _engine.callAction("onLoad");
 
     while (processEvents()) {
         updateEvents(_deltatime);
 
         if (_engine.hasCoroutines)
             _engine.process();
+
+        updateScene(_deltatime);
+        drawScene();
 
         renderWindow();
 
