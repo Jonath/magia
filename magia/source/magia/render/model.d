@@ -11,7 +11,6 @@ import bindbc.opengl;
 import gl3n.linalg;
 
 import magia.core.json;
-import magia.render.camera;
 import magia.render.mesh;
 import magia.render.shader;
 import magia.render.texture;
@@ -373,9 +372,9 @@ final class Model {
     }
 
     /// Draw the model
-    void draw(Shader shader, Camera camera) {
+    void draw(Shader shader) {
         for (uint i = 0; i < _meshes.length; ++i) {
-            _meshes[i].draw(shader, camera, _transforms[i]);
+            _meshes[i].draw(shader, _transforms[i]);
         }
     }
 }

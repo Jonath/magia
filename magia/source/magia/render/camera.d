@@ -46,6 +46,10 @@ class Camera {
         vec3 position() {
             return _position;
         }
+        /// Ditto
+        vec3 position(vec3 position_) {
+            return _position = position_;
+        }
     }
 
     /// Constructor
@@ -59,7 +63,7 @@ class Camera {
     void updateMatrix(float FOVdeg, float nearPlane, float farPlane) {
         mat4 view = mat4.identity;
         mat4 proj = mat4.identity;
-        
+
         view = mat4.look_at(_position, _position + _orientation, _cameraUp);
         proj = mat4.perspective(_width, _height, FOVdeg, nearPlane, farPlane);
 
@@ -68,7 +72,8 @@ class Camera {
 
     /// Sets camera matrix in shader
     void passToShader(Shader shader, const char* uniform) {
-        glUniformMatrix4fv(glGetUniformLocation(shader.id, uniform), 1, GL_TRUE, _cameraMatrix.value_ptr);
+        glUniformMatrix4fv(glGetUniformLocation(shader.id, uniform), 1, GL_TRUE, _cameraMatrix
+                .value_ptr);
     }
 
     /// Camera movement handler
@@ -77,37 +82,37 @@ class Camera {
 
         /// Forward along X axis
         if (isButtonDown(KeyButton.a)) {
-            _position += _speed * -lookRight; 
+            _position += _speed * -lookRight;
         }
 
         /// Backwards along X axis
         if (isButtonDown(KeyButton.d)) {
-            _position += _speed * lookRight; 
+            _position += _speed * lookRight;
         }
 
         /// Backwards along X axis
         if (isButtonDown(KeyButton.w)) {
-            _position += _speed * _cameraUp; 
+            _position += _speed * _cameraUp;
         }
 
         /// Forward along Y axis
         if (isButtonDown(KeyButton.s)) {
-            _position += _speed * -_cameraUp; 
+            _position += _speed * -_cameraUp;
         }
 
         /// Forward along Z axis
         if (isButtonDown(KeyButton.e)) {
-            _position += _speed * _orientation; 
+            _position += _speed * _orientation;
         }
 
         /// Backwards along Z axis
         if (isButtonDown(KeyButton.q)) {
-            _position += _speed * -_orientation; 
+            _position += _speed * -_orientation;
         }
 
         if (isButtonDown(MouseButton.left)) {
             SDL_ShowCursor(SDL_DISABLE);
-             
+
             if (firstClick) {
                 SDL_WarpMouseInWindow(window, screenWidth / 2, screenHeight / 2);
                 firstClick = false;
@@ -121,17 +126,18 @@ class Camera {
             const vec3 newOrientation = rotate(_orientation, -rotX * degToRad, lookRight);
 
             const float limitRotX = 5f * degToRad;
-            
-            const float angleUp   = angle(newOrientation, _cameraUp);
+
+            const float angleUp = angle(newOrientation, _cameraUp);
             const float angleDown = angle(newOrientation, -_cameraUp);
 
-            if (!(angleUp <= limitRotX || angleDown <= limitRotX)) {                
+            if (!(angleUp <= limitRotX || angleDown <= limitRotX)) {
                 _orientation = newOrientation;
             }
 
             _orientation = rotate(_orientation, -rotY * degToRad, _cameraUp);
             firstClick = false;
-        } else {
+        }
+        else {
             SDL_ShowCursor(SDL_ENABLE);
             firstClick = true;
         }

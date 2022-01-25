@@ -1,15 +1,16 @@
 action onLoad() {
-    Camera camera = loadCamera();
-    Light light = loadLight(camera);
+    /*Camera camera = Camera();
+    setCamera(camera);*/
+    let camera = getCamera();
+    camera:position(0., .5, 2.);
 
-    Quad quad = loadQuad(camera, light);
-    BasicModel model = loadModel(camera, light, "bunny/scene");
+    Light light = loadLight();
+
+    Quad quad = loadQuad(light);
+    BasicModel model = loadModel(light, "bunny/scene");
 
     integer i;
     loop {
-        // Update calls
-        camera:update();
-
         // Draw calls
         light:draw();
         quad:draw();

@@ -15,7 +15,7 @@ import std.datetime;
 
 import grimoire;
 
-import magia.core, magia.render, magia.script;
+import magia.core, magia.render, magia.script, magia.scene;
 
 import magia.common.event;
 import magia.common.settings;
@@ -64,6 +64,8 @@ void runApplication() {
 
     initFont();
 
+    initializeScene();
+
     // Script
     GrLibrary stdlib = grLoadStdLibrary();
     GrLibrary magialib = loadMagiaLibrary();
@@ -87,6 +89,9 @@ void runApplication() {
 
         if (_engine.hasCoroutines)
             _engine.process();
+
+        updateScene(_deltatime);
+        drawScene();
 
         renderWindow();
 

@@ -8,7 +8,6 @@ import gl3n.linalg;
 
 import magia.core;
 
-import magia.render.camera;
 import magia.render.drawable;
 import magia.render.mesh;
 import magia.render.shader;
@@ -20,7 +19,6 @@ import magia.render.window;
 final class Light : Drawable3D {
     private {
         Mesh _mesh;
-        Camera _camera;
         Shader _shader;
 
         mat4 _model;
@@ -41,7 +39,7 @@ final class Light : Drawable3D {
     }
 
     /// Constructor
-    this(Camera camera) {
+    this() {
         // Quad light vertices
         Vertex[] vertices = [
             //  COORDINATES
@@ -82,8 +80,6 @@ final class Light : Drawable3D {
         _shader.activate();
         glUniform4f(glGetUniformLocation(_shader.id, "lightColor"),
                                          _color.x, _color.y, _color.z, _color.w);
-
-        _camera = camera;
     }
 
     /// Unload
@@ -93,6 +89,6 @@ final class Light : Drawable3D {
 
     /// Render the quad
     override void draw() {
-        _mesh.draw(_shader, _camera, _model);
+        _mesh.draw(_shader, _model);
     }
 }

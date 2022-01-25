@@ -5,6 +5,7 @@ import std.conv;
 import bindbc.opengl;
 import gl3n.linalg;
 
+import magia.scene;
 import magia.render.vao;
 import magia.render.vbo;
 import magia.render.ebo;
@@ -41,9 +42,9 @@ class Mesh {
         _EBO = new EBO(_indices);
 
         _VAO.linkAttributes(_VBO, 0, 3, GL_FLOAT, Vertex.sizeof, null);
-        _VAO.linkAttributes(_VBO, 1, 3, GL_FLOAT, Vertex.sizeof, cast(void *)(3 * float.sizeof));
-        _VAO.linkAttributes(_VBO, 2, 3, GL_FLOAT, Vertex.sizeof, cast(void *)(6 * float.sizeof));
-        _VAO.linkAttributes(_VBO, 3, 2, GL_FLOAT, Vertex.sizeof, cast(void *)(9 * float.sizeof));
+        _VAO.linkAttributes(_VBO, 1, 3, GL_FLOAT, Vertex.sizeof, cast(void*)(3 * float.sizeof));
+        _VAO.linkAttributes(_VBO, 2, 3, GL_FLOAT, Vertex.sizeof, cast(void*)(6 * float.sizeof));
+        _VAO.linkAttributes(_VBO, 3, 2, GL_FLOAT, Vertex.sizeof, cast(void*)(9 * float.sizeof));
 
         _VAO.unbind();
         _VBO.unbind();
@@ -51,23 +52,24 @@ class Mesh {
     }
 
     /// Draw call
-    void draw(Shader shader, Camera camera, mat4 model = mat4.identity, vec3 translation = vec3(0.0f, 0.0f, 0.0f),
-              quat rotation = quat.identity, vec3 scale = vec3(1.0f, 1.0f, 1.0f)) {
+    void draw(Shader shader, mat4 model = mat4.identity, vec3 translation = vec3(0.0f, 0.0f, 0.0f),
+        quat rotation = quat.identity, vec3 scale = vec3(1.0f, 1.0f, 1.0f)) {
         shader.activate();
         _VAO.bind();
 
         uint nbDiffuseTextures = 0;
         uint nbSpecularTextures = 0;
-        
+
         uint textureId = 0;
-        foreach(Texture texture; _textures) {
+        foreach (Texture texture; _textures) {
             const string type = texture.type;
 
             uint num;
             if (type == "diffuse") {
                 ++nbDiffuseTextures;
                 num = nbDiffuseTextures;
-            } else if ("specular") {
+            }
+            else if ("specular") {
                 ++nbSpecularTextures;
                 num = nbSpecularTextures;
             }
@@ -77,8 +79,9 @@ class Mesh {
             ++textureId;
         }
 
+        Camera camera = getCamera();
         glUniform3f(glGetUniformLocation(shader.id, "camPos"),
-                    camera.position.x, camera.position.x, camera.position.z);
+            camera.position.x, camera.position.x, camera.position.z);
         camera.passToShader(shader, "camMatrix");
 
         mat4 localTranslation = mat4.identity;
@@ -91,10 +94,13 @@ class Mesh {
         localScale[1][1] = scale.y;
         localScale[2][2] = scale.z;
 
-        glUniformMatrix4fv(glGetUniformLocation(shader.id, "translation"), 1, GL_TRUE, localTranslation.value_ptr);
-        glUniformMatrix4fv(glGetUniformLocation(shader.id, "rotation"), 1, GL_TRUE, localRotation.value_ptr);
-        glUniformMatrix4fv(glGetUniformLocation(shader.id, "scale"), 1, GL_TRUE, localScale.value_ptr);
-	    glUniformMatrix4fv(glGetUniformLocation(shader.id, "model"), 1, GL_TRUE, model.value_ptr);
+        glUniformMatrix4fv(glGetUniformLocation(shader.id, "translation"), 1, GL_TRUE, localTranslation
+                .value_ptr);
+        glUniformMatrix4fv(glGetUniformLocation(shader.id, "rotation"), 1, GL_TRUE, localRotation
+                .value_ptr);
+        glUniformMatrix4fv(glGetUniformLocation(shader.id, "scale"), 1, GL_TRUE, localScale
+                .value_ptr);
+        glUniformMatrix4fv(glGetUniformLocation(shader.id, "model"), 1, GL_TRUE, model.value_ptr);
 
         glDrawElements(GL_TRIANGLES, cast(int) _indices.length, GL_UNSIGNED_INT, null);
     }

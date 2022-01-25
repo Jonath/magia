@@ -8,7 +8,6 @@ import gl3n.linalg;
 
 import magia.core;
 
-import magia.render.camera;
 import magia.render.drawable;
 import magia.render.mesh;
 import magia.render.shader;
@@ -21,7 +20,6 @@ final class Pyramid : Drawable3D {
     private {
         Mesh _pyramidMesh, _lightMesh;
 
-        Camera _camera;
         Shader _shaderProgram, _lightShader;
         GLuint _scaleId;
 
@@ -36,26 +34,26 @@ final class Pyramid : Drawable3D {
         // Pyramid vertices
         Vertex[] vertices = [
             //          COORDINATES           /        NORMALS          /           COLORS          /   TEXCOORDS   //
-            Vertex(vec3(-0.5f, 0.0f,  0.5f),   vec3(0.0f,  -1.0f, 0.0f),  vec3(0.83f, 0.70f, 0.44f),  vec2(0.0f, 0.0f)), // Bottom side
-            Vertex(vec3(-0.5f, 0.0f, -0.5f),   vec3(0.0f,  -1.0f, 0.0f),  vec3(0.83f, 0.70f, 0.44f),  vec2(0.0f, 2.5f)), // Bottom side
-            Vertex(vec3( 0.5f, 0.0f, -0.5f),   vec3(0.0f,  -1.0f, 0.0f),  vec3(0.83f, 0.70f, 0.44f),  vec2(2.5f, 2.5f)), // Bottom side
-            Vertex(vec3( 0.5f, 0.0f,  0.5f),   vec3(0.0f,  -1.0f, 0.0f),  vec3(0.83f, 0.70f, 0.44f),  vec2(2.5f, 0.0f)), // Bottom side
+            Vertex(vec3(-0.5f, 0.0f, 0.5f), vec3(0.0f, -1.0f, 0.0f), vec3(0.83f, 0.70f, 0.44f), vec2(0.0f, 0.0f)), // Bottom side
+            Vertex(vec3(-0.5f, 0.0f, -0.5f), vec3(0.0f, -1.0f, 0.0f), vec3(0.83f, 0.70f, 0.44f), vec2(0.0f, 2.5f)), // Bottom side
+            Vertex(vec3(0.5f, 0.0f, -0.5f), vec3(0.0f, -1.0f, 0.0f), vec3(0.83f, 0.70f, 0.44f), vec2(2.5f, 2.5f)), // Bottom side
+            Vertex(vec3(0.5f, 0.0f, 0.5f), vec3(0.0f, -1.0f, 0.0f), vec3(0.83f, 0.70f, 0.44f), vec2(2.5f, 0.0f)), // Bottom side
 
-            Vertex(vec3(-0.5f, 0.0f,  0.5f),   vec3(0.83f, 0.70f, 0.44f), vec3(-0.8f, 0.5f,  0.0f),   vec2(0.0f,  0.0f)), // Left Side
-            Vertex(vec3(-0.5f, 0.0f, -0.5f),   vec3(0.83f, 0.70f, 0.44f), vec3(-0.8f, 0.5f,  0.0f),	  vec2(2.5f,  0.0f)), // Left Side
-            Vertex(vec3( 0.0f, 0.8f,  0.0f),   vec3(0.92f, 0.86f, 0.76f), vec3(-0.8f, 0.5f,  0.0f),	  vec2(1.25f, 2.5f)), // Left Side
+            Vertex(vec3(-0.5f, 0.0f, 0.5f), vec3(0.83f, 0.70f, 0.44f), vec3(-0.8f, 0.5f, 0.0f), vec2(0.0f, 0.0f)), // Left Side
+            Vertex(vec3(-0.5f, 0.0f, -0.5f), vec3(0.83f, 0.70f, 0.44f), vec3(-0.8f, 0.5f, 0.0f), vec2(2.5f, 0.0f)), // Left Side
+            Vertex(vec3(0.0f, 0.8f, 0.0f), vec3(0.92f, 0.86f, 0.76f), vec3(-0.8f, 0.5f, 0.0f), vec2(1.25f, 2.5f)), // Left Side
 
-            Vertex(vec3(-0.5f, 0.0f, -0.5f),   vec3(0.83f, 0.70f, 0.44f), vec3( 0.0f, 0.5f, -0.8f),   vec2(2.5f,  0.0f)), // Non-facing side
-            Vertex(vec3( 0.5f, 0.0f, -0.5f),   vec3(0.83f, 0.70f, 0.44f), vec3( 0.0f, 0.5f, -0.8f),   vec2(0.0f,  0.0f)), // Non-facing side
-            Vertex(vec3( 0.0f, 0.8f,  0.0f),   vec3(0.92f, 0.86f, 0.76f), vec3( 0.0f, 0.5f, -0.8f),	  vec2(1.25f, 2.5f)), // Non-facing side
+            Vertex(vec3(-0.5f, 0.0f, -0.5f), vec3(0.83f, 0.70f, 0.44f), vec3(0.0f, 0.5f, -0.8f), vec2(2.5f, 0.0f)), // Non-facing side
+            Vertex(vec3(0.5f, 0.0f, -0.5f), vec3(0.83f, 0.70f, 0.44f), vec3(0.0f, 0.5f, -0.8f), vec2(0.0f, 0.0f)), // Non-facing side
+            Vertex(vec3(0.0f, 0.8f, 0.0f), vec3(0.92f, 0.86f, 0.76f), vec3(0.0f, 0.5f, -0.8f), vec2(1.25f, 2.5f)), // Non-facing side
 
-            Vertex(vec3( 0.5f, 0.0f, -0.5f),   vec3(0.83f, 0.70f, 0.44f), vec3( 0.8f, 0.5f,  0.0f),	  vec2(0.0f,  0.0f)), // Right side
-            Vertex(vec3( 0.5f, 0.0f,  0.5f),   vec3(0.83f, 0.70f, 0.44f), vec3( 0.8f, 0.5f,  0.0f),	  vec2(2.5f,  0.0f)), // Right side
-            Vertex(vec3( 0.0f, 0.8f,  0.0f),   vec3(0.92f, 0.86f, 0.76f), vec3( 0.8f, 0.5f,  0.0f),	  vec2(1.25f, 2.5f)), // Right side
+            Vertex(vec3(0.5f, 0.0f, -0.5f), vec3(0.83f, 0.70f, 0.44f), vec3(0.8f, 0.5f, 0.0f), vec2(0.0f, 0.0f)), // Right side
+            Vertex(vec3(0.5f, 0.0f, 0.5f), vec3(0.83f, 0.70f, 0.44f), vec3(0.8f, 0.5f, 0.0f), vec2(2.5f, 0.0f)), // Right side
+            Vertex(vec3(0.0f, 0.8f, 0.0f), vec3(0.92f, 0.86f, 0.76f), vec3(0.8f, 0.5f, 0.0f), vec2(1.25f, 2.5f)), // Right side
 
-            Vertex(vec3( 0.5f, 0.0f,  0.5f),   vec3(0.83f, 0.70f, 0.44f), vec3( 0.0f, 0.5f,  0.8f),	  vec2(2.5f,  0.0f)), // Facing side
-            Vertex(vec3(-0.5f, 0.0f,  0.5f),   vec3(0.83f, 0.70f, 0.44f), vec3( 0.0f, 0.5f,  0.8f),   vec2(0.0f,  0.0f)), // Facing side
-            Vertex(vec3( 0.0f, 0.8f,  0.0f),   vec3(0.92f, 0.86f, 0.76f), vec3( 0.0f, 0.5f,  0.8f),   vec2(1.25f, 2.5f))  // Facing side
+            Vertex(vec3(0.5f, 0.0f, 0.5f), vec3(0.83f, 0.70f, 0.44f), vec3(0.0f, 0.5f, 0.8f), vec2(2.5f, 0.0f)), // Facing side
+            Vertex(vec3(-0.5f, 0.0f, 0.5f), vec3(0.83f, 0.70f, 0.44f), vec3(0.0f, 0.5f, 0.8f), vec2(0.0f, 0.0f)), // Facing side
+            Vertex(vec3(0.0f, 0.8f, 0.0f), vec3(0.92f, 0.86f, 0.76f), vec3(0.0f, 0.5f, 0.8f), vec2(1.25f, 2.5f)) // Facing side
         ];
 
         // Pyramid indices
@@ -65,20 +63,21 @@ final class Pyramid : Drawable3D {
             4, 6, 5, // Left side
             7, 9, 8, // Non-facing side
             10, 12, 11, // Right side
-            13, 15, 14 // Facing side
+            13, 15,
+            14 // Facing side
         ];
 
         // Pyramid light vertices
         Vertex[] lightVertices = [
             //  COORDINATES
-            Vertex(vec3(-0.01f, -0.01f,  0.01f)),
+            Vertex(vec3(-0.01f, -0.01f, 0.01f)),
             Vertex(vec3(-0.01f, -0.01f, -0.01f)),
-            Vertex(vec3( 0.01f, -0.01f, -0.01f)),
-            Vertex(vec3( 0.01f, -0.01f,  0.01f)),
-            Vertex(vec3(-0.01f,  0.01f,  0.01f)),
-            Vertex(vec3(-0.01f,  0.01f, -0.01f)),
-            Vertex(vec3( 0.01f,  0.01f, -0.01f)),
-            Vertex(vec3( 0.01f,  0.01f,  0.01f)),
+            Vertex(vec3(0.01f, -0.01f, -0.01f)),
+            Vertex(vec3(0.01f, -0.01f, 0.01f)),
+            Vertex(vec3(-0.01f, 0.01f, 0.01f)),
+            Vertex(vec3(-0.01f, 0.01f, -0.01f)),
+            Vertex(vec3(0.01f, 0.01f, -0.01f)),
+            Vertex(vec3(0.01f, 0.01f, 0.01f)),
         ];
 
         // Pyramid light indices
@@ -104,7 +103,7 @@ final class Pyramid : Drawable3D {
 
         _pyramidMesh = new Mesh(vertices, indices, textures);
         _lightMesh = new Mesh(lightVertices, lightIndices);
-        
+
         _shaderProgram = new Shader("default.vert", "default.frag");
         _lightShader = new Shader("light.vert", "light.frag");
 
@@ -114,20 +113,18 @@ final class Pyramid : Drawable3D {
         _lightModel = _lightModel.translate(lightPos);
 
         vec3 pyramidPos = vec3(0.0f, 0.0f, 0.0f);
-	    _pyramidModel = mat4.identity;
-	    _pyramidModel = _pyramidModel.translate(pyramidPos);
+        _pyramidModel = mat4.identity;
+        _pyramidModel = _pyramidModel.translate(pyramidPos);
 
         _lightShader.activate();
         glUniform4f(glGetUniformLocation(_lightShader.id, "lightColor"),
-                                         lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+            lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 
         _shaderProgram.activate();
         glUniform4f(glGetUniformLocation(_shaderProgram.id, "lightColor"),
-                                         lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+            lightColor.x, lightColor.y, lightColor.z, lightColor.w);
         glUniform3f(glGetUniformLocation(_shaderProgram.id, "lightPos"),
-                                         lightPos.x, lightPos.y, lightPos.z);
-
-        _camera = new Camera(screenWidth, screenHeight, Vec3f(0f, 0f, 2f));
+            lightPos.x, lightPos.y, lightPos.z);
     }
 
     /// Unload
@@ -138,10 +135,7 @@ final class Pyramid : Drawable3D {
 
     /// Render the pyramid
     override void draw() {
-        _camera.processInputs();
-        _camera.updateMatrix(45f, 0.1f, 100f);
-
-        _pyramidMesh.draw(_shaderProgram, _camera, _pyramidModel);
-        _lightMesh.draw(_lightShader, _camera, _lightModel);
+        _pyramidMesh.draw(_shaderProgram, _pyramidModel);
+        _lightMesh.draw(_lightShader, _lightModel);
     }
 }
