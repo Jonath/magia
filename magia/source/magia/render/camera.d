@@ -30,25 +30,33 @@ class Camera {
 
         /// Height of the camera viewport
         int _height;
-
-        /// Speed at which the camera moves (uniform across all axis so far)
-        float _speed = 0.1f;
-
-        /// How well the speed of the camera scales up when it moves continuously
-        float _sensitivity = 20f;
-
-        /// To avoid the camera jumping around while holding down the left mouse button
-        bool firstClick = false;
     }
 
     @property {
-        /// Gets position
+        /// Camera position
         vec3 position() {
             return _position;
         }
         /// Ditto
         vec3 position(vec3 position_) {
             return _position = position_;
+        }
+
+        vec3 right() const {
+            return cross(_orientation, _cameraUp).normalized;
+        }
+
+        vec3 up() const {
+            return _cameraUp;
+        }
+
+        /// The direction the camera is facing towards
+        vec3 forward() const {
+            return _orientation;
+        }
+        /// Ditto
+        vec3 forward(vec3 forward_) {
+            return _orientation = forward_;
         }
     }
 
@@ -76,97 +84,8 @@ class Camera {
                 .value_ptr);
     }
 
-    /// Camera movement handler
-    void processInputs() {
-        const vec3 lookRight = cross(_orientation, _cameraUp).normalized;
-
-        /// Forward along X axis
-        if (isButtonDown(KeyButton.a)) {
-            _position += _speed * -lookRight;
-        }
-
-        /// Backwards along X axis
-        if (isButtonDown(KeyButton.d)) {
-            _position += _speed * lookRight;
-        }
-
-        /// Backwards along X axis
-        if (isButtonDown(KeyButton.w)) {
-            _position += _speed * _cameraUp;
-        }
-
-        /// Forward along Y axis
-        if (isButtonDown(KeyButton.s)) {
-            _position += _speed * -_cameraUp;
-        }
-
-        /// Forward along Z axis
-        if (isButtonDown(KeyButton.e)) {
-            _position += _speed * _orientation;
-        }
-
-        /// Backwards along Z axis
-        if (isButtonDown(KeyButton.q)) {
-            _position += _speed * -_orientation;
-        }
-
-        if (isButtonDown(MouseButton.left)) {
-            SDL_ShowCursor(SDL_DISABLE);
-
-            if (firstClick) {
-                SDL_WarpMouseInWindow(window, screenWidth / 2, screenHeight / 2);
-                firstClick = false;
-            }
-
-            const Vec2f mousePos = getMousePos();
-
-            const float rotX = _sensitivity * (mousePos.y - (_height / 2)) / _height;
-            const float rotY = _sensitivity * (mousePos.x - (_width / 2)) / _width;
-
-            const vec3 newOrientation = rotate(_orientation, -rotX * degToRad, lookRight);
-
-            const float limitRotX = 5f * degToRad;
-
-            const float angleUp = angle(newOrientation, _cameraUp);
-            const float angleDown = angle(newOrientation, -_cameraUp);
-
-            if (!(angleUp <= limitRotX || angleDown <= limitRotX)) {
-                _orientation = newOrientation;
-            }
-
-            _orientation = rotate(_orientation, -rotY * degToRad, _cameraUp);
-            firstClick = false;
-        }
-        else {
-            SDL_ShowCursor(SDL_ENABLE);
-            firstClick = true;
-        }
-    }
-
-    alias Quaternionf = Quaternion!(float);
-
-    /// Returns the angle between two vectors
-    float angle(vec3 a, vec3 b) {
-        return acos(dot(a.normalized, b.normalized));
-    }
-
-    /// Rotates p around axis r by angle
-    vec3 rotate(vec3 p, float angle, vec3 r) {
-        const float halfAngle = angle / 2;
-
-        const float cosRot = cos(halfAngle);
-        const float sinRot = sin(halfAngle);
-
-        const Quaternionf q1 = Quaternionf(0f, p.x, p.y, p.z);
-        const Quaternionf q2 = Quaternionf(cosRot, r.x * sinRot, r.y * sinRot, r.z * sinRot);
-        const Quaternionf q3 = q2 * q1 * q2.conjugated;
-
-        return vec3(q3.x, q3.y, q3.z);
-    }
-
     /// Update the camera
     void update() {
-        processInputs();
         updateMatrix(45f, 0.1f, 100f);
     }
 }
