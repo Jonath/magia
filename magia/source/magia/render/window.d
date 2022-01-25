@@ -5,6 +5,7 @@
  */
 module magia.render.window;
 
+import std.conv;
 import std.stdio;
 import std.string;
 import std.exception;
@@ -29,6 +30,12 @@ static {
 		GLuint _currentShaderProgram;
 		Color _baseColor = Color.white;
 		float _baseAlpha = 1f;
+
+		double previousTime = 0.0;
+		double currentTime = 0.0;
+		double deltaTime;
+
+		uint counter = 0;
 	}
 }
 
@@ -121,11 +128,16 @@ void createWindow(const Vec2u windowSize, string title) {
 	glDepthFunc(GL_LESS);
 	
 	// Enable culling
-	// glEnable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CCW);
 
 	// Enable blending
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
+
+	// Deactivate vsync
+	// SDL_GL_SetSwapInterval(0);
 
 	// Clear color
 	glClearColor(.08f, .10f, .13f, 1.0f);
@@ -256,6 +268,20 @@ void showWindow(bool show) {
 
 /// Render everything on screen.
 void renderWindow() {
+	currentTime = SDL_GetTicks() / 1000;
+	deltaTime = currentTime - previousTime;
+	counter++;
+
+	if (deltaTime >= 1.0 / 30.0) {
+		const double FPS = (1.0 / deltaTime) * counter;
+		const double ms = (deltaTime / counter) * 1000;
+		const string newTitle = "Magia - " ~ to!string(FPS) ~ "FPS / " ~ to!string(ms) ~ "ms";
+		setWindowTitle(newTitle);
+
+		previousTime = currentTime;
+		counter = 0;
+	}
+
 	SDL_GL_SwapWindow(_sdlWindow);
 
 	// Clear back buffer and depth buffer
