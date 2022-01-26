@@ -426,6 +426,8 @@ void initializeEvents() {
     _mousePosition = Vec2f.zero;
     _mouseRelativePosition = Vec2f.zero;
     initializeControllers();
+
+    // Toggle when window is in focus
     SDL_SetRelativeMouseMode(SDL_TRUE);
     SDL_ShowCursor(SDL_DISABLE);
 }

@@ -372,9 +372,10 @@ final class Model {
     }
 
     /// Draw the model
-    void draw(Shader shader) {
+    void draw(Shader shader, vec3 translation = vec3(0.0f, 0.0f, 0.0f),
+              quat rotation = quat.identity, vec3 scale = vec3(1.0f, 1.0f, 1.0f)) {
         for (uint i = 0; i < _meshes.length; ++i) {
-            _meshes[i].draw(shader, _transforms[i]);
+            _meshes[i].draw(shader, _transforms[i], translation, rotation, scale);
         }
     }
 }

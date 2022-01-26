@@ -1,4 +1,4 @@
-module magia.render.transform;
+module magia.core.transform;
 
 import gl3n.linalg;
 

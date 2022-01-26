@@ -22,4 +22,5 @@ public {
     import magia.core.singleton;
     import magia.core.ringbuffer;
     import magia.core.json;
+    import magia.core.transform;
 }

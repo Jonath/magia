@@ -8,10 +8,35 @@ action onLoad() {
 
     //Quad quad = loadQuad(light);
     //Model tree = loadModel(light, "tree/scene");
-    Model grass = loadModel(light, "grass/scene");
+    //Model grass = loadModel(light, "grass/scene");
     Model ground = loadModel(light, "ground/scene");
-    //Model bunny = loadModel(light, "bunny/scene");
+    Model bunny = loadModel(light, "bunny/scene");
     //Model statue = loadModel(light, "statue/scene");
+    Model jupiter = loadModel(light, "jupiter/scene");
+    Model asteroid = loadModel(light, "asteroid/scene");
+
+    integer nbAsteroids = 100;
+    list(vec3) positions;
+    list(quat) rotations;
+    list(vec3) scales;
+
+    // Radius for asteroid belt
+    real radius = 100.0f;
+
+    // Standard deviation from radius
+    real radiusDeviation = 25.0f;
+
+    // Gets stuck?
+    loop(i, nbAsteroids) {
+        real x = random();
+        real y = ((random() % 2) * 2 - 1) * root(1.0f - x * x);
+
+        real finalRadius = radius + random() * radiusDeviation;
+
+        positions ~ vec3(x * finalRadius, random(), y * finalRadius);
+        rotations ~ quat(1.0f, random(), random(), random());
+        scales ~ vec3(0.1 * random(), 0.1 * random(), 0.1 * random());
+    }
 
     integer i;
     loop {
@@ -20,10 +45,16 @@ action onLoad() {
 
         //quad:draw();
         //tree:draw();
-        grass:draw();
+        //grass:draw();
         ground:draw();
-        //bunny:draw();
+        bunny:draw();
         //statue:draw();
+        jupiter:draw();
+        //asteroid:draw(positions[0], rotations[0], scales[0]);
+
+        /*loop(i, nbAsteroids) {
+            asteroid:draw(positions[i], rotations[i], scales[i]);
+        }*/
 
         // Next frame
         i++;
