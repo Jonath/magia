@@ -1,6 +1,7 @@
 module magia.render.mesh;
 
 import std.conv;
+import std.stdio;
 
 import bindbc.opengl;
 import gl3n.linalg;
@@ -87,6 +88,12 @@ class Mesh {
         mat4 localTranslation = mat4.identity;
         mat4 localRotation = mat4.identity;
         mat4 localScale = mat4.identity;
+
+        writeln("Translation: ", translation);
+        writeln("Rotation: ", rotation);
+        writeln("Scale: ", scale);
+        writeln("Model: ", model);
+
 
         localTranslation = localTranslation.translate(translation);
         localRotation = rotation.to_matrix!(4, 4);

@@ -46,10 +46,10 @@ action onLoad() {
         //quad:draw();
         //tree:draw();
         //grass:draw();
-        ground:draw();
-        bunny:draw();
+        //ground:draw();
+        //bunny:draw();
         //statue:draw();
-        jupiter:draw();
+        //jupiter:draw();
         //asteroid:draw(positions[0], rotations[0], scales[0]);
 
         /*loop(i, nbAsteroids) {
