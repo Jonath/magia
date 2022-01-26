@@ -23,18 +23,12 @@ final class Light : Drawable3D {
 
         mat4 _model;
         vec4 _color;
-        vec3 _position;
     }
 
     @property {
         /// Gets position
         vec4 color() {
             return _color;
-        }
-
-        /// Gets position
-        vec3 position() {
-            return _position;
         }
     }
 
@@ -73,8 +67,7 @@ final class Light : Drawable3D {
         _shader = new Shader("light.vert", "light.frag");
 
         _color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-        _position = vec3(0f, 10f, 0f);
-        _transform = Transform(_position);
+        _transform = Transform(vec3(0f, 10f, 0f));
 
         _shader.activate();
         glUniform4f(glGetUniformLocation(_shader.id, "lightColor"),

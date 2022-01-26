@@ -61,7 +61,7 @@ final class Quad : Drawable3D {
         glUniform4f(glGetUniformLocation(_shader.id, "lightColor"),
                                          light.color.x, light.color.y, light.color.z, light.color.w);
         glUniform3f(glGetUniformLocation(_shader.id, "lightPos"),
-                                         light.position.x, light.position.y, light.position.z);
+                                         light.transform.position.x, light.transform.position.y, light.transform.position.z);
     }
 
     /// Unload

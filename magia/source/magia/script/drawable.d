@@ -6,6 +6,8 @@ import gl3n.linalg;
 
 import magia.core, magia.render, magia.shape;
 
+import std.stdio;
+
 package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     GrType vec3Type = library.addClass("vec3", ["x", "y", "z"], [grReal, grReal, grReal]);
     GrType quatType = library.addClass("quat", ["w", "x", "y", "z"], [grReal, grReal, grReal, grReal]);

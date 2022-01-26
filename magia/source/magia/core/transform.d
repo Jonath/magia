@@ -61,9 +61,7 @@ struct Transform {
     /// Default transform
     static @property Transform identity() {
         return Transform(
-            vec3(0.0f, 0.0f, 0.0f),
-            quat.identity,
-            vec3(1.0f, 1.0f, 1.0f)
+            vec3(0.0f, 0.0f, 0.0f)
         );
     }
 }

@@ -10,9 +10,14 @@ abstract class Drawable3D {
 
     
     @property {
-        /// Position
+        /// Transform getter
         void transform(Transform transform) {
             _transform = transform;
+        }
+
+        /// Transform setter
+        Transform transform() const {
+            return _transform;
         }
     }
 

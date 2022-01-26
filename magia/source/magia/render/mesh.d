@@ -1,6 +1,7 @@
 module magia.render.mesh;
 
 import std.conv;
+import std.stdio;
 
 import bindbc.opengl;
 import gl3n.linalg;
@@ -88,18 +89,20 @@ class Mesh {
         mat4 localRotation = mat4.identity;
         mat4 localScale = mat4.identity;
 
+        writeln("Position: ", transform.position);
+        writeln("Rotation: ", transform.rotation);
+        writeln("Scale: ", transform.scale);
+        writeln("Model: ", transform.model);
+
         localTranslation = localTranslation.translate(transform.position);
         localRotation = transform.rotation.to_matrix!(4, 4);
         localScale[0][0] = transform.scale.x;
         localScale[1][1] = transform.scale.y;
         localScale[2][2] = transform.scale.z;
 
-        glUniformMatrix4fv(glGetUniformLocation(shader.id, "translation"), 1, GL_TRUE, localTranslation
-                .value_ptr);
-        glUniformMatrix4fv(glGetUniformLocation(shader.id, "rotation"), 1, GL_TRUE, localRotation
-                .value_ptr);
-        glUniformMatrix4fv(glGetUniformLocation(shader.id, "scale"), 1, GL_TRUE, localScale
-                .value_ptr);
+        glUniformMatrix4fv(glGetUniformLocation(shader.id, "translation"), 1, GL_TRUE, localTranslation.value_ptr);
+        glUniformMatrix4fv(glGetUniformLocation(shader.id, "rotation"), 1, GL_TRUE, localRotation.value_ptr);
+        glUniformMatrix4fv(glGetUniformLocation(shader.id, "scale"), 1, GL_TRUE, localScale.value_ptr);
         glUniformMatrix4fv(glGetUniformLocation(shader.id, "model"), 1, GL_TRUE, transform.model.value_ptr);
 
         glDrawElements(GL_TRIANGLES, cast(int) _indices.length, GL_UNSIGNED_INT, null);
