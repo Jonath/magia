@@ -11,6 +11,7 @@ import bindbc.opengl;
 import gl3n.linalg;
 
 import magia.core.json;
+import magia.core.transform;
 import magia.render.mesh;
 import magia.render.shader;
 import magia.render.texture;
@@ -31,10 +32,7 @@ final class Model {
         Mesh[] _meshes;
 
         // Transformations
-        vec3[] _translations;
-        quat[] _rotations;
-        vec3[] _scales;
-        mat4[] _transforms;
+        Transform[] _transforms;
 
         // Trace
         bool _trace = true;
@@ -348,11 +346,7 @@ final class Model {
                 writeln("Load current mesh");
             }
 
-            _translations ~= translation;
-            _rotations ~= rotation;
-            _scales ~= scale;
-            _transforms ~= matNextNode;
-
+            _transforms ~= Transform(translation, rotation, scale, matNextNode);
             loadMesh(getJsonInt(node, "mesh"));
         }
 
@@ -372,10 +366,10 @@ final class Model {
     }
 
     /// Draw the model
-    void draw(Shader shader, vec3 translation = vec3(0.0f, 0.0f, 0.0f),
-              quat rotation = quat.identity, vec3 scale = vec3(1.0f, 1.0f, 1.0f)) {
+    void draw(Shader shader, Transform transform) {
         for (uint i = 0; i < _meshes.length; ++i) {
-            _meshes[i].draw(shader, _transforms[i], translation, rotation, scale);
+            // @TODO combine transforms
+            _meshes[i].draw(shader, _transforms[i]);
         }
     }
 }

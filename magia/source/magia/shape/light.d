@@ -1,4 +1,4 @@
-module magia.render.light;
+module magia.shape.light;
 
 import std.string;
 import std.stdio;
@@ -74,8 +74,7 @@ final class Light : Drawable3D {
 
         _color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
         _position = vec3(0f, 10f, 0f);
-        _model = mat4.identity;
-        _model = _model.translate(_position);
+        _transform = Transform(_position);
 
         _shader.activate();
         glUniform4f(glGetUniformLocation(_shader.id, "lightColor"),
@@ -89,6 +88,6 @@ final class Light : Drawable3D {
 
     /// Render the quad
     override void draw() {
-        _mesh.draw(_shader, _model);
+        _mesh.draw(_shader, _transform);
     }
 }

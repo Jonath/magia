@@ -13,7 +13,6 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     GrType drawableType = library.addForeign("Drawable3D");
     GrType lightType = library.addForeign("Light", [], "Drawable3D");
     GrType modelType = library.addForeign("Model", [], "Drawable3D");
-    GrType pyramidType = library.addForeign("Pyramid", [], "Drawable3D");
     GrType quadType = library.addForeign("Quad", [], "Drawable3D");
 
     library.addPrimitive(&_vec3, "vec3", [grReal, grReal, grReal], [vec3Type]);
@@ -28,7 +27,6 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     library.addPrimitive(&_quad1, "loadQuad", [lightType], [
             quadType
         ]);
-    library.addPrimitive(&_pyramid1, "loadPyramid", [], [pyramidType]);
 }
 
 private void _vec3(GrCall call) {
@@ -55,7 +53,17 @@ private void _draw1(GrCall call) {
 
 private void _draw2(GrCall call) {
     Drawable3D drawable = call.getForeign!Drawable3D(0);
-    // @TODO get position, rotation, scale
+
+    GrObject position = call.getObject(1);
+    GrObject rotation = call.getObject(2);
+    GrObject scale = call.getObject(3);
+
+    Transform transform =
+        Transform(vec3(position.getReal("x"), position.getReal("y"), position.getReal("z")),
+                  quat(rotation.getReal("w"), rotation.getReal("x"), rotation.getReal("y"), rotation.getReal("z")),
+                  vec3(scale.getReal("x"), scale.getReal("y"), scale.getReal("z")));
+
+    drawable.transform = transform;
     drawable.draw();
 }
 
@@ -73,9 +81,4 @@ private void _model1(GrCall call) {
 private void _quad1(GrCall call) {
     Quad quad = new Quad(call.getForeign!Light(0));
     call.setForeign(quad);
-}
-
-private void _pyramid1(GrCall call) {
-    Pyramid pyramid = new Pyramid();
-    call.setForeign(pyramid);
 }

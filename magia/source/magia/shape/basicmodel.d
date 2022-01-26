@@ -2,12 +2,13 @@ module magia.shape.basicmodel;
 
 import bindbc.opengl;
 
+import magia.core.transform;
 import magia.core.vec3;
 import magia.render.drawable;
-import magia.render.light;
 import magia.render.model;
 import magia.render.shader;
 import magia.render.window;
+import magia.shape.light;
 
 /// Renders a **Pyramid** with its own properties.
 final class BasicModel : Drawable3D {
@@ -35,6 +36,6 @@ final class BasicModel : Drawable3D {
 
     /// Render the model
     override void draw() {
-        _model.draw(_shader);
+        _model.draw(_shader, _transform);
     }
 }

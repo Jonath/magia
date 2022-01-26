@@ -9,11 +9,11 @@ action onLoad() {
     //Quad quad = loadQuad(light);
     //Model tree = loadModel(light, "tree/scene");
     //Model grass = loadModel(light, "grass/scene");
-    Model ground = loadModel(light, "ground/scene");
-    Model bunny = loadModel(light, "bunny/scene");
-    //Model statue = loadModel(light, "statue/scene");
-    Model jupiter = loadModel(light, "jupiter/scene");
-    Model asteroid = loadModel(light, "asteroid/scene");
+    //Model ground = loadModel(light, "ground/scene");
+    //Model bunny = loadModel(light, "bunny/scene");
+    Model statue = loadModel(light, "statue/scene");
+    //Model jupiter = loadModel(light, "jupiter/scene");
+    //Model asteroid = loadModel(light, "asteroid/scene");
 
     integer nbAsteroids = 100;
     list(vec3) positions;
@@ -38,7 +38,7 @@ action onLoad() {
         scales ~ vec3(0.1 * random(), 0.1 * random(), 0.1 * random());
     }
 
-    integer i;
+    integer counter;
     loop {
         // Draw calls
         light:draw();
@@ -46,10 +46,10 @@ action onLoad() {
         //quad:draw();
         //tree:draw();
         //grass:draw();
-        ground:draw();
-        bunny:draw();
-        //statue:draw();
-        jupiter:draw();
+        //ground:draw();
+        //bunny:draw();
+        statue:draw();
+        //jupiter:draw();
         //asteroid:draw(positions[0], rotations[0], scales[0]);
 
         /*loop(i, nbAsteroids) {
@@ -57,7 +57,7 @@ action onLoad() {
         }*/
 
         // Next frame
-        i++;
+        counter++;
         suspends
     }
 }

@@ -14,7 +14,7 @@ import magia.render.shader;
 import magia.render.texture;
 import magia.render.vertex;
 import magia.render.window;
-import magia.render.light;
+import magia.shape.light;
 
 /// Renders a **Quad** with its own properties.
 final class Quad : Drawable3D {
@@ -25,8 +25,6 @@ final class Quad : Drawable3D {
         GLuint _scaleId;
 
         float _rotation;
-
-        mat4 _quadModel;
     }
 
     /// Constructor
@@ -57,8 +55,7 @@ final class Quad : Drawable3D {
         _shader = new Shader("default.vert", "default.frag");
 
         vec3 quadPos = vec3(0.0f, 0.0f, 0.0f);
-	    _quadModel = mat4.identity;
-	    _quadModel = _quadModel.translate(quadPos);
+	    _transform = Transform(quadPos);
 
         _shader.activate();
         glUniform4f(glGetUniformLocation(_shader.id, "lightColor"),
@@ -74,6 +71,6 @@ final class Quad : Drawable3D {
 
     /// Render the quad
     override void draw() {
-        _quadMesh.draw(_shader, _quadModel);
+        _quadMesh.draw(_shader, _transform);
     }
 }
