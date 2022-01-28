@@ -47,7 +47,7 @@ action onLoad() {
         //tree:draw();
         //grass:draw();
         //ground:draw();
-        //bunny:draw();
+        bunny:draw();
         //statue:draw();
         //jupiter:draw();
         //asteroid:draw(positions[0], rotations[0], scales[0]);
