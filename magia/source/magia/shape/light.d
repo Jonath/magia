@@ -20,8 +20,6 @@ final class Light : Drawable3D {
     private {
         Mesh _mesh;
         Shader _shader;
-
-        mat4 _model;
         vec4 _color;
     }
 
@@ -63,11 +61,10 @@ final class Light : Drawable3D {
             4, 6, 7
         ];
 
+        _transform = Transform.identity;
         _mesh = new Mesh(vertices, indices);
         _shader = new Shader("light.vert", "light.frag");
-
         _color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-        _transform = Transform(vec3(0f, 10f, 0f));
 
         _shader.activate();
         glUniform4f(glGetUniformLocation(_shader.id, "lightColor"),

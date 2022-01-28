@@ -328,17 +328,9 @@ final class Model {
             }
         }
 
-        mat4 localTranslation = mat4.identity;
-        mat4 localRotation = mat4.identity;
-        mat4 localScale = mat4.identity;
+        const mat4 combinedTransform = combineModel(translation, rotation, scale);
 
-        localTranslation = localTranslation.translate(translation);
-        localRotation = rotation.to_matrix!(4, 4);
-        localScale[0][0] = scale.x;
-        localScale[1][1] = scale.y;
-        localScale[2][2] = scale.z;
-
-        mat4 matNextNode = matrix * matNode * localTranslation * localRotation * localScale;
+        mat4 matNextNode = matrix * matNode * combinedTransform;
 
         // Load current node mesh
         if (hasJson(node, "mesh")) {
@@ -346,7 +338,7 @@ final class Model {
                 writeln("Load current mesh");
             }
 
-            _transforms ~= Transform(translation, rotation, scale, matNextNode);
+            _transforms ~= Transform(matNextNode, translation, rotation, scale);
             loadMesh(getJsonInt(node, "mesh"));
         }
 
@@ -366,9 +358,8 @@ final class Model {
     }
 
     /// Draw the model
-    void draw(Shader shader, Transform transform) {
+    void draw(Shader shader) {
         for (uint i = 0; i < _meshes.length; ++i) {
-            // @TODO combine transforms
             _meshes[i].draw(shader, _transforms[i]);
         }
     }

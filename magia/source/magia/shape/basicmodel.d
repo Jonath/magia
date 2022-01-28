@@ -13,14 +13,15 @@ import magia.shape.light;
 /// Renders a **Pyramid** with its own properties.
 final class BasicModel : Drawable3D {
     private {
-        Shader _shader;
         Model _model;
+        Shader _shader;
     }
 
     /// Constructor
     this(Light light, string fileName) {
-        _shader = new Shader("default.vert", "default.frag");
+        _transform = Transform.identity;
         _model = new Model(fileName);
+        _shader = new Shader("default.vert", "default.frag");
 
         _shader.activate();
         glUniform4f(glGetUniformLocation(_shader.id, "lightColor"),
@@ -36,6 +37,6 @@ final class BasicModel : Drawable3D {
 
     /// Render the model
     override void draw() {
-        _model.draw(_shader, _transform);
+        _model.draw(_shader);
     }
 }

@@ -19,9 +19,8 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
 
     library.addPrimitive(&_vec3, "vec3", [grReal, grReal, grReal], [vec3Type]);
     library.addPrimitive(&_quat, "quat", [grReal, grReal, grReal, grReal], [quatType]);
-
-    library.addPrimitive(&_draw1, "draw", [drawableType], []);
-    library.addPrimitive(&_draw2, "draw", [drawableType, vec3Type, quatType, vec3Type], []);
+    library.addPrimitive(&_position, "position", [drawableType, vec3Type], []);
+    library.addPrimitive(&_draw, "draw", [drawableType], []);
     library.addPrimitive(&_light1, "loadLight", [], [lightType]);
     library.addPrimitive(&_model1, "loadModel", [
             lightType, grString
@@ -48,25 +47,18 @@ private void _quat(GrCall call) {
     call.setObject(q);
 }
 
-private void _draw1(GrCall call) {
+private void _draw(GrCall call) {
     Drawable3D drawable = call.getForeign!Drawable3D(0);
     drawable.draw();
 }
 
-private void _draw2(GrCall call) {
+private void _position(GrCall call) {
     Drawable3D drawable = call.getForeign!Drawable3D(0);
-
     GrObject position = call.getObject(1);
-    GrObject rotation = call.getObject(2);
-    GrObject scale = call.getObject(3);
-
-    Transform transform =
-        Transform(vec3(position.getReal("x"), position.getReal("y"), position.getReal("z")),
-                  quat(rotation.getReal("w"), rotation.getReal("x"), rotation.getReal("y"), rotation.getReal("z")),
-                  vec3(scale.getReal("x"), scale.getReal("y"), scale.getReal("z")));
-
-    drawable.transform = transform;
-    drawable.draw();
+    writeln("Set light x: ", position.getReal("x"));
+    writeln("Set light y: ", position.getReal("y"));
+    writeln("Set light z: ", position.getReal("z"));
+    drawable.transform.position = vec3(position.getReal("x"), position.getReal("y"), position.getReal("z"));
 }
 
 private void _light1(GrCall call) {

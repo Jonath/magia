@@ -26,6 +26,8 @@ class Mesh {
         VAO _VAO;
         VBO _VBO;
         EBO _EBO;
+
+        bool _traceDeep = false;
     }
 
     /// Constructor
@@ -89,10 +91,12 @@ class Mesh {
         mat4 localRotation = mat4.identity;
         mat4 localScale = mat4.identity;
 
-        writeln("Position: ", transform.position);
-        writeln("Rotation: ", transform.rotation);
-        writeln("Scale: ", transform.scale);
-        writeln("Model: ", transform.model);
+        if (_traceDeep) {
+            writeln("Position: ", transform.position);
+            writeln("Rotation: ", transform.rotation);
+            writeln("Scale: ", transform.scale);
+            writeln("Model: ", transform.model);
+        }
 
         localTranslation = localTranslation.translate(transform.position);
         localRotation = transform.rotation.to_matrix!(4, 4);

@@ -19,12 +19,8 @@ import magia.shape.light;
 /// Renders a **Quad** with its own properties.
 final class Quad : Drawable3D {
     private {
-        Mesh _quadMesh;
-
+        Mesh _mesh;
         Shader _shader;
-        GLuint _scaleId;
-
-        float _rotation;
     }
 
     /// Constructor
@@ -51,11 +47,9 @@ final class Quad : Drawable3D {
             new Texture(pathPrefix ~ "planksSpec.png", "specular", 1)
         ];
 
-        _quadMesh = new Mesh(vertices, indices, textures);
+        _transform = Transform.identity;
+        _mesh = new Mesh(vertices, indices, textures);
         _shader = new Shader("default.vert", "default.frag");
-
-        vec3 quadPos = vec3(0.0f, 0.0f, 0.0f);
-	    _transform = Transform(quadPos);
 
         _shader.activate();
         glUniform4f(glGetUniformLocation(_shader.id, "lightColor"),
@@ -71,6 +65,6 @@ final class Quad : Drawable3D {
 
     /// Render the quad
     override void draw() {
-        _quadMesh.draw(_shader, _transform);
+        _mesh.draw(_shader, _transform);
     }
 }
