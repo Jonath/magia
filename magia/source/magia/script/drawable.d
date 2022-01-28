@@ -33,17 +33,17 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
 private void _vec3(GrCall call) {
     GrObject v = call.createObject("vec3");
     v.setReal("x", call.getReal(0));
-    v.setReal("y", call.getReal(0));
-    v.setReal("z", call.getReal(0));
+    v.setReal("y", call.getReal(1));
+    v.setReal("z", call.getReal(2));
     call.setObject(v);
 }
 
 private void _quat(GrCall call) {
     GrObject q = call.createObject("quat");
     q.setReal("w", call.getReal(0));
-    q.setReal("x", call.getReal(0));
-    q.setReal("y", call.getReal(0));
-    q.setReal("z", call.getReal(0));
+    q.setReal("x", call.getReal(1));
+    q.setReal("y", call.getReal(2));
+    q.setReal("z", call.getReal(3));
     call.setObject(q);
 }
 
@@ -55,9 +55,6 @@ private void _draw(GrCall call) {
 private void _position(GrCall call) {
     Drawable3D drawable = call.getForeign!Drawable3D(0);
     GrObject position = call.getObject(1);
-    writeln("Set light x: ", position.getReal("x"));
-    writeln("Set light y: ", position.getReal("y"));
-    writeln("Set light z: ", position.getReal("z"));
     drawable.transform.position = vec3(position.getReal("x"), position.getReal("y"), position.getReal("z"));
 }
 

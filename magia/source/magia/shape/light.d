@@ -61,7 +61,7 @@ final class Light : Drawable3D {
             4, 6, 7
         ];
 
-        _transform = Transform.identity;
+        transform = Transform.identity;
         _mesh = new Mesh(vertices, indices);
         _shader = new Shader("light.vert", "light.frag");
         _color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -78,6 +78,6 @@ final class Light : Drawable3D {
 
     /// Render the quad
     override void draw() {
-        _mesh.draw(_shader, _transform);
+        _mesh.draw(_shader, transform);
     }
 }

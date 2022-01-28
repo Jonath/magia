@@ -19,7 +19,7 @@ final class BasicModel : Drawable3D {
 
     /// Constructor
     this(Light light, string fileName) {
-        _transform = Transform.identity;
+        transform = Transform.identity;
         _model = new Model(fileName);
         _shader = new Shader("default.vert", "default.frag");
 

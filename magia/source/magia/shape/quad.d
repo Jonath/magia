@@ -47,7 +47,7 @@ final class Quad : Drawable3D {
             new Texture(pathPrefix ~ "planksSpec.png", "specular", 1)
         ];
 
-        _transform = Transform.identity;
+        transform = Transform.identity;
         _mesh = new Mesh(vertices, indices, textures);
         _shader = new Shader("default.vert", "default.frag");
 
@@ -65,6 +65,6 @@ final class Quad : Drawable3D {
 
     /// Render the quad
     override void draw() {
-        _mesh.draw(_shader, _transform);
+        _mesh.draw(_shader, transform);
     }
 }

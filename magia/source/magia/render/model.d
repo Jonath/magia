@@ -360,7 +360,8 @@ final class Model {
     /// Draw the model
     void draw(Shader shader) {
         for (uint i = 0; i < _meshes.length; ++i) {
-            _meshes[i].draw(shader, _transforms[i]);
+            Transform transform = Transform(_transforms[i].model);
+            _meshes[i].draw(shader, transform);
         }
     }
 }
