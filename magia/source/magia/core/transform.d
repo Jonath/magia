@@ -67,3 +67,8 @@ mat4 combineModel(vec3 position, quat rotation, vec3 scale) {
 
     return localTranslation * localRotation * localScale;
 }
+
+/// Combine model from transform position, rotation, scale
+mat4 combineModel(Transform transform) {
+    return combineModel(transform.position, transform.rotation, transform.scale);
+}

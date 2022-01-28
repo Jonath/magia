@@ -39,6 +39,7 @@ action onLoad() {
     }*/
 
     light:position(vec3(0f, 10f, 0f));
+    bunny:position(vec3(1f, 0f, 0f));
 
     integer counter;
     loop {

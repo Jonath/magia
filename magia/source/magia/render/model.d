@@ -358,10 +358,12 @@ final class Model {
     }
 
     /// Draw the model
-    void draw(Shader shader) {
+    void draw(Shader shader, Transform transform) {
+        mat4 transformModel = combineModel(transform);
+
         for (uint i = 0; i < _meshes.length; ++i) {
-            Transform transform = Transform(_transforms[i].model);
-            _meshes[i].draw(shader, transform);
+            Transform finalTransform = Transform(_transforms[i].model * transformModel);
+            _meshes[i].draw(shader, finalTransform);
         }
     }
 }

@@ -37,6 +37,6 @@ final class BasicModel : Drawable3D {
 
     /// Render the model
     override void draw() {
-        _model.draw(_shader);
+        _model.draw(_shader, transform);
     }
 }
