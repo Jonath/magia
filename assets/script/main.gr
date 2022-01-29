@@ -5,15 +5,16 @@ event onLoad() {
     camera:position(0., .5, 2.);
 
     Light light = loadLight();
+    light:position(vec3(0., 1., 0.));
 
-    //Quad quad = loadQuad(light);
+    Quad quad = loadQuad(light);
     //Model tree = loadModel(light, "tree/scene");
     //Model grass = loadModel(light, "grass/scene");
-    Model ground = loadModel(light, "ground/scene");
+    //Model ground = loadModel(light, "ground/scene");
     Model bunny = loadModel(light, "bunny/scene");
     //Model statue = loadModel(light, "statue/scene");
-    Model jupiter = loadModel(light, "jupiter/scene");
-    Model asteroid = loadModel(light, "asteroid/scene");
+    //Model jupiter = loadModel(light, "jupiter/scene");
+    //Model asteroid = loadModel(light, "asteroid/scene");
 
     int nbAsteroids = 100;
     array(vec3) positions;
@@ -27,29 +28,31 @@ event onLoad() {
     real radiusDeviation = 25.0f;
 
     // Gets stuck?
-    loop(i, nbAsteroids) {
-        real x = rand();
-        real y = ((rand() % 2) * 2 - 1) * sqrt(1.0f - x * x);
+    /*loop(i, nbAsteroids) {
+        real x = random();
+        real y = ((random() % 2) * 2 - 1) * root(1.0f - x * x);
 
         real finalRadius = radius + rand() * radiusDeviation;
 
-        positions ~ vec3(x * finalRadius, rand(), y * finalRadius);
-        rotations ~ quat(1.0f, rand(), rand(), rand());
-        scales ~ vec3(0.1 * rand(), 0.1 * rand(), 0.1 * rand());
-    }
+        positions ~ vec3(x * finalRadius, random(), y * finalRadius);
+        rotations ~ quat(1.0f, random(), random(), random());
+        scales ~ vec3(0.1 * random(), 0.1 * random(), 0.1 * random());
+    }*/
 
-    int i;
+    bunny:position(vec3(1f, 0f, 0f));
+
+    int counter;
     loop {
         // Draw calls
         light:draw();
 
-        //quad:draw();
+        quad:draw();
         //tree:draw();
         //grass:draw();
-        ground:draw();
+        //ground:draw();
         bunny:draw();
         //statue:draw();
-        jupiter:draw();
+        //jupiter:draw();
         //asteroid:draw(positions[0], rotations[0], scales[0]);
 
         /*loop(i, nbAsteroids) {
@@ -57,7 +60,7 @@ event onLoad() {
         }*/
 
         // Next frame
-        i++;
+        counter++;
         yield
     }
 }

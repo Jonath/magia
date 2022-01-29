@@ -4,6 +4,9 @@ import magia.core;
 
 /// Renderable class
 abstract class Drawable3D {
+    /// Transform
+    public Transform transform;
+
     /// Render on screen
     void draw();
 }
