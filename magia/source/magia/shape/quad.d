@@ -16,15 +16,15 @@ import magia.render.vertex;
 import magia.render.window;
 import magia.shape.light;
 
-/// Renders a **Quad** with its own properties.
-final class Quad : Drawable3D {
+/// Packs a 3D object model and shader
+final class QuadGroup {
     private {
         Mesh _mesh;
         Shader _shader;
     }
 
     /// Constructor
-    this(Light light) {
+    this() {
         // Quad vertices
         Vertex[] vertices = [
             //     COORDINATES                /     NORMALS         /    COLORS        /    TexCoord   //
@@ -47,15 +47,22 @@ final class Quad : Drawable3D {
             new Texture(pathPrefix ~ "planksSpec.png", "specular", 1)
         ];
 
-        transform = Transform.identity;
         _mesh = new Mesh(vertices, indices, textures);
         _shader = new Shader("default.vert", "default.frag");
+    }
 
+    /// Setup light before a draw call
+    void setupLight(LightInstance lightInstance) {
         _shader.activate();
         glUniform4f(glGetUniformLocation(_shader.id, "lightColor"),
-                                         light.color.x, light.color.y, light.color.z, light.color.w);
+                                         lightInstance.color.x,
+                                         lightInstance.color.y,
+                                         lightInstance.color.z,
+                                         lightInstance.color.w);
         glUniform3f(glGetUniformLocation(_shader.id, "lightPos"),
-                                         light.transform.position.x, light.transform.position.y, light.transform.position.z);
+                                         lightInstance.transform.position.x,
+                                         lightInstance.transform.position.y,
+                                         lightInstance.transform.position.z);
     }
 
     /// Unload
@@ -64,7 +71,28 @@ final class Quad : Drawable3D {
     }
 
     /// Render the quad
-    override void draw() {
+    void draw(const Transform transform) {
         _mesh.draw(_shader, transform);
+    }
+}
+
+/// Instance of quad
+final class QuadInstance : Instance3D, Drawable3D {
+    private {
+        QuadGroup _quadGroup;
+        LightInstance _lightInstance;
+    }
+
+    /// Constructor
+    this(QuadGroup quadGroup, LightInstance lightInstance) {
+        transform = Transform.identity;
+        _quadGroup = quadGroup;
+        _lightInstance = lightInstance;
+    }
+
+    /// Render the light
+    void draw() {
+        _quadGroup.setupLight(_lightInstance);
+        _quadGroup.draw(transform);
     }
 }

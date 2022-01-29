@@ -15,8 +15,8 @@ import magia.render.texture;
 import magia.render.vertex;
 import magia.render.window;
 
-/// Renders a **Light** with its own properties.
-final class Light : Drawable3D {
+/// Packs a light cube, its shader and its color
+final class LightGroup {
     private {
         Mesh _mesh;
         Shader _shader;
@@ -24,7 +24,7 @@ final class Light : Drawable3D {
     }
 
     @property {
-        /// Gets position
+        /// Gets color
         vec4 color() {
             return _color;
         }
@@ -61,7 +61,6 @@ final class Light : Drawable3D {
             4, 6, 7
         ];
 
-        transform = Transform.identity;
         _mesh = new Mesh(vertices, indices);
         _shader = new Shader("light.vert", "light.frag");
         _color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -77,7 +76,34 @@ final class Light : Drawable3D {
     }
 
     /// Render the quad
-    override void draw() {
+    void draw(const Transform transform) {
         _mesh.draw(_shader, transform);
     }
 }
+
+/// Instance of light
+final class LightInstance : Instance3D, Drawable3D {
+    private {
+        LightGroup _lightGroup;
+    }
+
+    @property {
+        /// Gets color
+        vec4 color() {
+            return _lightGroup.color;
+        }
+    }
+
+    /// Constructor
+    this(LightGroup lightGroup) {
+        transform = Transform.identity;
+        _lightGroup = lightGroup;
+    }
+
+    /// Render the light
+    void draw() {
+        _lightGroup.draw(transform);
+    }
+}
+
+/// @TODO decorate lightInstance with type (directional, cone, point)
