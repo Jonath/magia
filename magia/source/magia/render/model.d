@@ -34,6 +34,10 @@ final class Model {
         // Transformations
         Transform[] _transforms;
 
+        // Instancing
+        mat4[] _instanceMatrices;
+        uint _instances;
+
         // Trace
         bool _trace = true;
         bool _traceDeep = false;
@@ -47,7 +51,7 @@ final class Model {
     }
 
     /// Constructor
-    this(string fileName) {
+    this(string fileName, uint instances = 1, mat4[] instanceMatrices = []) {
         auto split = fileName.findSplitAfter("/");
         _fileDirectory = "assets/model/" ~ split[0];
         string filePath = _fileDirectory ~ split[1] ~ ".gltf";
@@ -58,6 +62,11 @@ final class Model {
 
         _json = parseJSON(readText(filePath));
         _data = getData();
+
+        _instances = instances;
+        _instanceMatrices = instanceMatrices;
+
+        // Traverse all nodes
         traverseNode(0);
     }
 
@@ -274,7 +283,7 @@ final class Model {
         GLuint[] indices = getIndices(_json["accessors"][indicesId]);
         Texture[] textures = getTextures();
 
-        _meshes ~= new Mesh(vertices, indices, textures);
+        _meshes ~= new Mesh(vertices, indices, textures, _instances, _instanceMatrices);
     }
 
     /// Traverse given node
