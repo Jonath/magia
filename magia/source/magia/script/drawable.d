@@ -16,19 +16,19 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     GrType pyramidType = library.addForeign("Pyramid", [], "Drawable3D");
     GrType quadType = library.addForeign("Quad", [], "Drawable3D");
 
-    library.addPrimitive(&_vec3, "vec3", [grReal, grReal, grReal], [vec3Type]);
-    library.addPrimitive(&_quat, "quat", [grReal, grReal, grReal, grReal], [quatType]);
+    library.addFunction(&_vec3, "vec3", [grReal, grReal, grReal], [vec3Type]);
+    library.addFunction(&_quat, "quat", [grReal, grReal, grReal, grReal], [quatType]);
 
-    library.addPrimitive(&_draw1, "draw", [drawableType], []);
-    library.addPrimitive(&_draw2, "draw", [drawableType, vec3Type, quatType, vec3Type], []);
-    library.addPrimitive(&_light1, "loadLight", [], [lightType]);
-    library.addPrimitive(&_model1, "loadModel", [
+    library.addFunction(&_draw1, "draw", [drawableType], []);
+    library.addFunction(&_draw2, "draw", [drawableType, vec3Type, quatType, vec3Type], []);
+    library.addFunction(&_light1, "loadLight", [], [lightType]);
+    library.addFunction(&_model1, "loadModel", [
             lightType, grString
         ], [modelType]);
-    library.addPrimitive(&_quad1, "loadQuad", [lightType], [
+    library.addFunction(&_quad1, "loadQuad", [lightType], [
             quadType
         ]);
-    library.addPrimitive(&_pyramid1, "loadPyramid", [], [pyramidType]);
+    library.addFunction(&_pyramid1, "loadPyramid", [], [pyramidType]);
 }
 
 private void _vec3(GrCall call) {

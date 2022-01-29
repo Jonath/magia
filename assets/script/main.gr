@@ -1,4 +1,4 @@
-action onLoad() {
+event onLoad() {
     /*Camera camera = Camera();
     setCamera(camera);*/
     let camera = getCamera();
@@ -15,10 +15,10 @@ action onLoad() {
     Model jupiter = loadModel(light, "jupiter/scene");
     Model asteroid = loadModel(light, "asteroid/scene");
 
-    integer nbAsteroids = 100;
-    list(vec3) positions;
-    list(quat) rotations;
-    list(vec3) scales;
+    int nbAsteroids = 100;
+    array(vec3) positions;
+    array(quat) rotations;
+    array(vec3) scales;
 
     // Radius for asteroid belt
     real radius = 100.0f;
@@ -28,17 +28,17 @@ action onLoad() {
 
     // Gets stuck?
     loop(i, nbAsteroids) {
-        real x = random();
-        real y = ((random() % 2) * 2 - 1) * root(1.0f - x * x);
+        real x = rand();
+        real y = ((rand() % 2) * 2 - 1) * sqrt(1.0f - x * x);
 
-        real finalRadius = radius + random() * radiusDeviation;
+        real finalRadius = radius + rand() * radiusDeviation;
 
-        positions ~ vec3(x * finalRadius, random(), y * finalRadius);
-        rotations ~ quat(1.0f, random(), random(), random());
-        scales ~ vec3(0.1 * random(), 0.1 * random(), 0.1 * random());
+        positions ~ vec3(x * finalRadius, rand(), y * finalRadius);
+        rotations ~ quat(1.0f, rand(), rand(), rand());
+        scales ~ vec3(0.1 * rand(), 0.1 * rand(), 0.1 * rand());
     }
 
-    integer i;
+    int i;
     loop {
         // Draw calls
         light:draw();
@@ -58,6 +58,6 @@ action onLoad() {
 
         // Next frame
         i++;
-        suspends
+        yield
     }
 }

@@ -81,13 +81,14 @@ void runApplication() {
     _engine.addLibrary(stdlib);
     _engine.addLibrary(magialib);
     _engine.load(bytecode);
-    if (_engine.hasAction("onLoad"))
-        _engine.callAction("onLoad");
+    import std.stdio;writeln(grDump(bytecode));
+    if (_engine.hasEvent("onLoad"))
+        _engine.callEvent("onLoad");
 
     while (processEvents()) {
         updateEvents(_deltatime);
 
-        if (_engine.hasCoroutines)
+        if (_engine.hasTasks)
             _engine.process();
 
         updateScene(_deltatime);

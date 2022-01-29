@@ -6,13 +6,13 @@ import magia.core, magia.render;
 
 package(magia.script) void loadMagiaLibPrimitive(GrLibrary library) {
     GrType colorType = grGetClassType("Color");
-    library.addPrimitive(&_rectangle1, "rectangle", [
+    library.addFunction(&_rectangle1, "rectangle", [
             grReal, grReal, grReal, grReal
         ]);
-    library.addPrimitive(&_rectangle2, "rectangle", [
+    library.addFunction(&_rectangle2, "rectangle", [
             grReal, grReal, grReal, grReal, colorType
         ]);
-    library.addPrimitive(&_rectangle3, "rectangle", [
+    library.addFunction(&_rectangle3, "rectangle", [
             grReal, grReal, grReal, grReal, colorType, grReal
         ]);
 }

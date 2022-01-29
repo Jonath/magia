@@ -8,21 +8,21 @@ package(magia.script) void loadMagiaLibSprite(GrLibrary library) {
     GrType spriteType = library.addForeign("Sprite", [], "Drawable");
     GrType textureType = grGetForeignType("Texture");
 
-    library.addPrimitive(&_sprite1, "Sprite", [textureType], [spriteType]);
-    library.addPrimitive(&_sprite2, "Sprite", [
+    library.addFunction(&_sprite1, "Sprite", [textureType], [spriteType]);
+    library.addFunction(&_sprite2, "Sprite", [
             textureType, grInt, grInt, grInt, grInt
         ], [spriteType]);
 
-    library.addPrimitive(&_setClip, "setClip", [
+    library.addFunction(&_setClip, "setClip", [
             spriteType, grInt, grInt, grInt, grInt
         ]);
-    library.addPrimitive(&_getClip, "getClip", [], [
+    library.addFunction(&_getClip, "getClip", [], [
             spriteType, grInt, grInt, grInt, grInt
         ]);
 
-    library.addPrimitive(&_getWidth, "getWidth", [spriteType], [grReal]);
-    library.addPrimitive(&_getHeight, "getHeight", [spriteType], [grReal]);
-    library.addPrimitive(&_getHeight, "getSize", [spriteType], [grReal, grReal]);
+    library.addFunction(&_getWidth, "getWidth", [spriteType], [grReal]);
+    library.addFunction(&_getHeight, "getHeight", [spriteType], [grReal]);
+    library.addFunction(&_getHeight, "getSize", [spriteType], [grReal, grReal]);
 }
 
 private void _sprite1(GrCall call) {

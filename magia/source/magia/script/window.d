@@ -6,12 +6,12 @@ import magia.core, magia.render;
 
 package(magia.script) void loadMagiaLibWindow(GrLibrary library) {
     GrType colorType = grGetClassType("Color");
-    library.addPrimitive(&_setColor1, "setColor", []);
-    library.addPrimitive(&_setColor2, "setColor", [colorType]);
-    library.addPrimitive(&_getColor, "getColor", [], [colorType]);
-    library.addPrimitive(&_setAlpha1, "setAlpha", []);
-    library.addPrimitive(&_setAlpha2, "setAlpha", [grReal]);
-    library.addPrimitive(&_getAlpha, "getAlpha", [], [grReal]);
+    library.addFunction(&_setColor1, "setColor", []);
+    library.addFunction(&_setColor2, "setColor", [colorType]);
+    library.addFunction(&_getColor, "getColor", [], [colorType]);
+    library.addFunction(&_setAlpha1, "setAlpha", []);
+    library.addFunction(&_setAlpha2, "setAlpha", [grReal]);
+    library.addFunction(&_getAlpha, "getAlpha", [], [grReal]);
 }
 
 private void _setColor1(GrCall) {

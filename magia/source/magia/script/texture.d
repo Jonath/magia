@@ -7,11 +7,11 @@ import magia.render;
 package(magia.script) void loadMagiaLibTexture(GrLibrary library) {
     GrType textureType = library.addForeign("Texture");
 
-    library.addPrimitive(&_texture, "Texture", [grString], [textureType]);
+    library.addFunction(&_texture, "Texture", [grString], [textureType]);
 
-    library.addPrimitive(&_getWidth, "getWidth", [textureType], [grInt]);
-    library.addPrimitive(&_getHeight, "getHeight", [textureType], [grInt]);
-    library.addPrimitive(&_getHeight, "getSize", [textureType], [grInt, grInt]);
+    library.addFunction(&_getWidth, "getWidth", [textureType], [grInt]);
+    library.addFunction(&_getHeight, "getHeight", [textureType], [grInt]);
+    library.addFunction(&_getHeight, "getSize", [textureType], [grInt, grInt]);
 }
 
 private void _texture(GrCall call) {

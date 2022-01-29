@@ -8,13 +8,13 @@ import magia.core, magia.render, magia.scene;
 package(magia.script) void loadMagiaLibCamera(GrLibrary library) {
     GrType cameraType = library.addForeign("Camera");
 
-    library.addPrimitive(&_camera, "Camera", [], [cameraType]);
-    library.addPrimitive(&_setCamera0, "setCamera");
-    library.addPrimitive(&_setCamera1, "setCamera", [cameraType]);
-    library.addPrimitive(&_getCamera, "getCamera", [], [cameraType]);
-    library.addPrimitive(&_setCameraPosition, "position", [cameraType, grReal, grReal, grReal]);
-    library.addPrimitive(&_getCameraPosition, "position", [cameraType], [grReal, grReal, grReal]);
-    library.addPrimitive(&_update, "update", [cameraType], []);
+    library.addFunction(&_camera, "Camera", [], [cameraType]);
+    library.addFunction(&_setCamera0, "setCamera");
+    library.addFunction(&_setCamera1, "setCamera", [cameraType]);
+    library.addFunction(&_getCamera, "getCamera", [], [cameraType]);
+    library.addFunction(&_setCameraPosition, "position", [cameraType, grReal, grReal, grReal]);
+    library.addFunction(&_getCameraPosition, "position", [cameraType], [grReal, grReal, grReal]);
+    library.addFunction(&_update, "update", [cameraType], []);
 }
 
 private void _camera(GrCall call) {

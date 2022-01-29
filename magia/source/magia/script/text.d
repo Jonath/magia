@@ -9,16 +9,16 @@ package(magia.script) void loadMagiaLibText(GrLibrary library) {
     GrType trueTypeFontType = library.addForeign("TrueTypeFont", [], "Font");
     GrType bitmapFontType = library.addForeign("BitmapFont", [], "Font");
 
-    library.addPrimitive(&_trueTypeFont, "TrueTypeFont", [
+    library.addFunction(&_trueTypeFont, "TrueTypeFont", [
             grString, grInt, grInt
         ], [trueTypeFontType]);
 
-    library.addPrimitive(&_setFont1, "setFont", []);
-    library.addPrimitive(&_setFont2, "setFont", [fontType]);
-    library.addPrimitive(&_getFont, "getFont", [], [fontType]);
+    library.addFunction(&_setFont1, "setFont", []);
+    library.addFunction(&_setFont2, "setFont", [fontType]);
+    library.addFunction(&_getFont, "getFont", [], [fontType]);
 
-    library.addPrimitive(&_print1, "print", [grString, grReal, grReal]);
-    library.addPrimitive(&_print2, "print", [
+    library.addFunction(&_print1, "print", [grString, grReal, grReal]);
+    library.addFunction(&_print2, "print", [
             grString, grReal, grReal, fontType
         ]);
 }
