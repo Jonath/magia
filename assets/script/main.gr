@@ -5,16 +5,16 @@ event onLoad() {
     camera:position(0., .5, 2.);
 
     Light light = loadLight();
-    light:position(vec3(0., 1., 0.));
+    light:position(0., 1., 0.);
 
     Quad quad = loadQuad(light);
-    //Model tree = loadModel(light, "tree/scene");
-    //Model grass = loadModel(light, "grass/scene");
-    //Model ground = loadModel(light, "ground/scene");
-    Model bunny = loadModel(light, "bunny/scene");
-    //Model statue = loadModel(light, "statue/scene");
-    //Model jupiter = loadModel(light, "jupiter/scene");
-    //Model asteroid = loadModel(light, "asteroid/scene");
+    //Model tree = loadModel("tree/scene", light);
+    //Model grass = loadModel("grass/scene", light);
+    //Model ground = loadModel("ground/scene", light);
+    Model bunny = loadModel("bunny/scene", light);
+    //Model statue = loadModel("statue/scene", light);
+    //Model jupiter = loadModel("jupiter/scene", light);
+    //Model asteroid = loadModel("asteroid/scene", light);
 
     int nbAsteroids = 100;
     array(vec3) positions;
@@ -53,7 +53,7 @@ event onLoad() {
         bunny:draw();
         //statue:draw();
         //jupiter:draw();
-        //asteroid:draw(positions[0], rotations[0], scales[0]);
+        //asteroid:draw(positions[0]);
 
         /*loop(i, nbAsteroids) {
             asteroid:draw(positions[i], rotations[i], scales[i]);
