@@ -1,6 +1,7 @@
 module magia.shape.model;
 
 import bindbc.opengl;
+import gl3n.linalg;
 
 import magia.core.instance;
 import magia.core.transform;
@@ -19,8 +20,8 @@ final class ModelGroup {
     }
 
     /// Constructor
-    this(string fileName) {
-        _model = new Model(fileName);
+    this(string fileName, uint instances = 1, mat4[] instanceMatrices = []) {
+        _model = new Model(fileName, instances, instanceMatrices);
         _shader = new Shader("default.vert", "default.frag");
     }
 
