@@ -48,6 +48,11 @@ class Mesh {
         _VAO = new VAO();
         _VAO.bind();
 
+        // Transpose all matrices to pass them onto the VAO properly
+        for (int i = 0; i < instanceMatrices.length; ++i) {
+            instanceMatrices[i].transpose();
+        }
+
         // Generate VBOs
         _instanceVBO = new VBO(instanceMatrices);
         _VBO = new VBO(_vertices);
@@ -61,9 +66,6 @@ class Mesh {
         _VAO.linkAttributes(_VBO, 3, 2, GL_FLOAT, Vertex.sizeof, cast(void*)(9 * float.sizeof));
 
         _instanceVBO.bind();
-        writeln("ma4.sizeof: ", mat4.sizeof);
-        writeln("vec4.sizeof: ", vec4.sizeof);
-        writeln("vec4.sizeof: ", instanceMatrices[0]);
         _VAO.linkAttributes(_instanceVBO, 4, 4, GL_FLOAT, mat4.sizeof, null);
         _VAO.linkAttributes(_instanceVBO, 5, 4, GL_FLOAT, mat4.sizeof, cast(void*)(1 * vec4.sizeof));
         _VAO.linkAttributes(_instanceVBO, 6, 4, GL_FLOAT, mat4.sizeof, cast(void*)(2 * vec4.sizeof));

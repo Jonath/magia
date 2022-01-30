@@ -19,15 +19,15 @@ event onLoad() {
     //Model statue = loadModel("statue/scene", light);
     Model jupiter = loadModel("jupiter/scene", light);
 
-    int nbAsteroids = 50;
+    int nbAsteroids = 500;
 
     array(mat4) instanceMatrices;
 
     // Radius for asteroid belt
-    real radius = 100.0f;
+    real radius = 50.0f;
 
     // Standard deviation from radius
-    real radiusDeviation = 25.0f;
+    real radiusDeviation = 5f;
 
     // Gets stuck?
     loop(nbAsteroids) {
@@ -36,23 +36,21 @@ event onLoad() {
 
         real finalRadius = radius + randf() * radiusDeviation;
         
-        vec3 position = vec3(randf() * 5., 0., 0.);
-        /*if (randf() > 0.5f) {
+        vec3 position;
+        if (randf() > 0.5f) {
             position = vec3(y * finalRadius, randf(), x * finalRadius);
         } else {
             position = vec3(x * finalRadius, randf(), y * finalRadius);
-        }*/
+        }
 
-        quat rotation = quat(1., 0., 0., 0.);
-        vec3 scale = vec3(1., 1., 1.);
+        quat rotation = quat(1., randf(), randf(), randf());
+        vec3 scale = vec3(0.1, 0.1, 0.1);
 
         mat4 instanceMatrix = packInstanceMatrix(position, rotation, scale);
         instanceMatrices ~= instanceMatrix;
     }
 
     Model asteroid = loadModel("asteroid/scene", light, nbAsteroids, instanceMatrices);
-    Model asteroid2 = loadModel("asteroid/scene", light);
-    asteroid2:position(vec3(50f, 0f, 0f));
 
     //bunny:position(vec3(1f, 0f, 0f));
 
@@ -69,7 +67,6 @@ event onLoad() {
         //statue:draw();
         jupiter:draw();
         asteroid:draw();
-        asteroid2:draw();
 
         // Next frame
         counter++;

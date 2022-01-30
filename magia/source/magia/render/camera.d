@@ -86,6 +86,6 @@ class Camera {
 
     /// Update the camera
     void update() {
-        updateMatrix(45f, 0.1f, 100f);
+        updateMatrix(45f, 0.1f, 250f);
     }
 }
