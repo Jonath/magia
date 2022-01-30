@@ -108,6 +108,9 @@ package void loadMagiaLibVec2(GrLibrary library) {
     library.addFunction(&_normalized, "normalized", [vec2Type], [
             vec2Type
         ]);
+
+    library.addCast(&_fromArray, grRealArray, vec2Type);
+    library.addCast(&_toString, vec2Type, grString);
 }
 
 // Ctors ------------------------------------------
@@ -689,4 +692,32 @@ private void _normalized(GrCall call) {
     v.setReal("x", x);
     v.setReal("y", y);
     call.setObject(v);
+}
+
+private void _fromArray(GrCall call) {
+    GrRealArray array = call.getRealArray(0);
+    if (array.data.length == 2) {
+        GrObject self = call.createObject("vec2");
+        if (!self) {
+            call.raise("UnknownClass");
+            return;
+        }
+        self.setReal("x", array.data[0]);
+        self.setReal("y", array.data[1]);
+        call.setObject(self);
+        return;
+    }
+    call.raise("ConvError");
+}
+
+private void _toString(GrCall call) {
+    GrObject self = call.getObject(0);
+    if (!self) {
+        call.raise("NullError");
+        return;
+    }
+    call.setString("vec2(" ~
+            to!GrString(self.getReal("x")) ~ ", " ~
+            to!GrString(
+                self.getReal("y")) ~ ")");
 }
