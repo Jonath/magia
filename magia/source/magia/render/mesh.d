@@ -38,19 +38,22 @@ class Mesh {
          uint instances = 1, mat4[] instanceMatrices = []) {
         _vertices = vertices;
         _indices = indices;
+        _instances = instances;
 
         if (textures) {
             _textures = textures;
         }
 
+        // Generate and bind VAO
         _VAO = new VAO();
         _VAO.bind();
 
-        _VBO = new VBO(_vertices);
-        _EBO = new EBO(_indices);
-
+        // Generate VBOs
         _instanceVBO = new VBO(instanceMatrices);
-        _instances = instances;
+        _VBO = new VBO(_vertices);
+
+        // Generate EBO
+        _EBO = new EBO(_indices);
 
         _VAO.linkAttributes(_VBO, 0, 3, GL_FLOAT, Vertex.sizeof, null);
         _VAO.linkAttributes(_VBO, 1, 3, GL_FLOAT, Vertex.sizeof, cast(void*)(3 * float.sizeof));
@@ -59,6 +62,9 @@ class Mesh {
 
         if (instances > 1) {
             _instanceVBO.bind();
+            writeln("ma4.sizeof: ", mat4.sizeof);
+            writeln("vec4.sizeof: ", vec4.sizeof);
+            writeln("vec4.sizeof: ", instanceMatrices[0]);
             _VAO.linkAttributes(_instanceVBO, 4, 4, GL_FLOAT, mat4.sizeof, null);
             _VAO.linkAttributes(_instanceVBO, 5, 4, GL_FLOAT, mat4.sizeof, cast(void*)(1 * vec4.sizeof));
             _VAO.linkAttributes(_instanceVBO, 6, 4, GL_FLOAT, mat4.sizeof, cast(void*)(2 * vec4.sizeof));
@@ -71,6 +77,7 @@ class Mesh {
 
         _VAO.unbind();
         _VBO.unbind();
+        _instanceVBO.unbind();
         _EBO.unbind();
     }
 

@@ -1,3 +1,7 @@
+function randf() (real) {
+    return rand(-1., 1.);
+}
+
 event onLoad() {
     /*Camera camera = Camera();
     setCamera(camera);*/
@@ -7,19 +11,17 @@ event onLoad() {
     Light light = loadLight();
     light:position(0., 1., 0.);
 
-    Quad quad = loadQuad(light);
+    //Quad quad = loadQuad(light);
     //Model tree = loadModel("tree/scene", light);
     //Model grass = loadModel("grass/scene", light);
     //Model ground = loadModel("ground/scene", light);
-    Model bunny = loadModel("bunny/scene", light);
+    //Model bunny = loadModel("bunny/scene", light);
     //Model statue = loadModel("statue/scene", light);
-    //Model jupiter = loadModel("jupiter/scene", light);
-    //Model asteroid = loadModel("asteroid/scene", light);
+    Model jupiter = loadModel("jupiter/scene", light);
 
-    int nbAsteroids = 100;
-    array(vec3) positions;
-    array(quat) rotations;
-    array(vec3) scales;
+    int nbAsteroids = 50;
+
+    array(mat4) instanceMatrices;
 
     // Radius for asteroid belt
     real radius = 100.0f;
@@ -28,36 +30,43 @@ event onLoad() {
     real radiusDeviation = 25.0f;
 
     // Gets stuck?
-    /*loop(i, nbAsteroids) {
-        real x = random();
-        real y = ((random() % 2) * 2 - 1) * root(1.0f - x * x);
+    loop(nbAsteroids) {
+        real x = randf();
+        real y = (rand(0, 1) * 2 - 1) * sqrt(1.0f - x * x);
 
-        real finalRadius = radius + rand() * radiusDeviation;
+        real finalRadius = radius + randf() * radiusDeviation;
+        
+        vec3 position = vec3(randf() * 5., 0., 0.);
+        /*if (randf() > 0.5f) {
+            position = vec3(y * finalRadius, randf(), x * finalRadius);
+        } else {
+            position = vec3(x * finalRadius, randf(), y * finalRadius);
+        }*/
 
-        positions ~ vec3(x * finalRadius, random(), y * finalRadius);
-        rotations ~ quat(1.0f, random(), random(), random());
-        scales ~ vec3(0.1 * random(), 0.1 * random(), 0.1 * random());
-    }*/
+        quat rotation = quat(1., 0., 0., 0.);
+        vec3 scale = vec3(1., 1., 1.);
 
-    bunny:position(vec3(1f, 0f, 0f));
+        mat4 instanceMatrix = packInstanceMatrix(position, rotation, scale);
+        instanceMatrices ~= instanceMatrix;
+    }
+
+    Model asteroid = loadModel("asteroid/scene", light, nbAsteroids, instanceMatrices);
+
+    //bunny:position(vec3(1f, 0f, 0f));
 
     int counter;
     loop {
         // Draw calls
         light:draw();
 
-        quad:draw();
+        //quad:draw();
         //tree:draw();
         //grass:draw();
         //ground:draw();
-        bunny:draw();
+        //bunny:draw();
         //statue:draw();
-        //jupiter:draw();
-        //asteroid:draw(positions[0]);
-
-        /*loop(i, nbAsteroids) {
-            asteroid:draw(positions[i], rotations[i], scales[i]);
-        }*/
+        jupiter:draw();
+        asteroid:draw();
 
         // Next frame
         counter++;
