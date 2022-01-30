@@ -56,6 +56,12 @@ uint setNominalFPS(uint fps) {
     return _nominalFPS = fps;
 }
 
+void print(GrString message) {
+    import std.stdio : writeln;
+
+    writeln(message);
+}
+
 /// Main application loop
 void runApplication() {
     createWindow(Vec2u(800, 600), "Magia");
@@ -69,6 +75,7 @@ void runApplication() {
     // Script
     GrLibrary stdlib = grLoadStdLibrary();
     GrLibrary magialib = loadMagiaLibrary();
+    grSetOutputFunction(&print);
 
     GrCompiler compiler = new GrCompiler;
     compiler.addLibrary(stdlib);
