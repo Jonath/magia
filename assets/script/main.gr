@@ -51,6 +51,8 @@ event onLoad() {
     }
 
     Model asteroid = loadModel("asteroid/scene", light, nbAsteroids, instanceMatrices);
+    Model asteroid2 = loadModel("asteroid/scene", light);
+    asteroid2:position(vec3(50f, 0f, 0f));
 
     //bunny:position(vec3(1f, 0f, 0f));
 
@@ -67,6 +69,7 @@ event onLoad() {
         //statue:draw();
         jupiter:draw();
         asteroid:draw();
+        asteroid2:draw();
 
         // Next frame
         counter++;

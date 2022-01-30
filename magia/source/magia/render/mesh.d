@@ -35,7 +35,7 @@ class Mesh {
 
     /// Constructor
     this(Vertex[] vertices, GLuint[] indices, Texture[] textures = null,
-         uint instances = 1, mat4[] instanceMatrices = []) {
+         uint instances = 1, mat4[] instanceMatrices = [mat4.identity]) {
         _vertices = vertices;
         _indices = indices;
         _instances = instances;
@@ -60,20 +60,18 @@ class Mesh {
         _VAO.linkAttributes(_VBO, 2, 3, GL_FLOAT, Vertex.sizeof, cast(void*)(6 * float.sizeof));
         _VAO.linkAttributes(_VBO, 3, 2, GL_FLOAT, Vertex.sizeof, cast(void*)(9 * float.sizeof));
 
-        if (instances > 1) {
-            _instanceVBO.bind();
-            writeln("ma4.sizeof: ", mat4.sizeof);
-            writeln("vec4.sizeof: ", vec4.sizeof);
-            writeln("vec4.sizeof: ", instanceMatrices[0]);
-            _VAO.linkAttributes(_instanceVBO, 4, 4, GL_FLOAT, mat4.sizeof, null);
-            _VAO.linkAttributes(_instanceVBO, 5, 4, GL_FLOAT, mat4.sizeof, cast(void*)(1 * vec4.sizeof));
-            _VAO.linkAttributes(_instanceVBO, 6, 4, GL_FLOAT, mat4.sizeof, cast(void*)(2 * vec4.sizeof));
-            _VAO.linkAttributes(_instanceVBO, 7, 4, GL_FLOAT, mat4.sizeof, cast(void*)(3 * vec4.sizeof));
-            glVertexAttribDivisor(4, 1);
-            glVertexAttribDivisor(5, 1);
-            glVertexAttribDivisor(6, 1);
-            glVertexAttribDivisor(7, 1);
-        }
+        _instanceVBO.bind();
+        writeln("ma4.sizeof: ", mat4.sizeof);
+        writeln("vec4.sizeof: ", vec4.sizeof);
+        writeln("vec4.sizeof: ", instanceMatrices[0]);
+        _VAO.linkAttributes(_instanceVBO, 4, 4, GL_FLOAT, mat4.sizeof, null);
+        _VAO.linkAttributes(_instanceVBO, 5, 4, GL_FLOAT, mat4.sizeof, cast(void*)(1 * vec4.sizeof));
+        _VAO.linkAttributes(_instanceVBO, 6, 4, GL_FLOAT, mat4.sizeof, cast(void*)(2 * vec4.sizeof));
+        _VAO.linkAttributes(_instanceVBO, 7, 4, GL_FLOAT, mat4.sizeof, cast(void*)(3 * vec4.sizeof));
+        glVertexAttribDivisor(4, 1);
+        glVertexAttribDivisor(5, 1);
+        glVertexAttribDivisor(6, 1);
+        glVertexAttribDivisor(7, 1);
 
         _VAO.unbind();
         _VBO.unbind();
@@ -138,6 +136,7 @@ class Mesh {
 
             glDrawElements(GL_TRIANGLES, cast(int) _indices.length, GL_UNSIGNED_INT, null);
         } else {
+            glUniformMatrix4fv(glGetUniformLocation(shader.id, "model"), 1, GL_TRUE, mat4.identity.value_ptr);
             glDrawElementsInstanced(GL_TRIANGLES, cast(int) _indices.length, GL_UNSIGNED_INT, null, _instances);
         }
     }

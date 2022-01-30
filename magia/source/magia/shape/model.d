@@ -20,7 +20,7 @@ final class ModelGroup {
     }
 
     /// Constructor
-    this(string fileName, uint instances = 1, mat4[] instanceMatrices = []) {
+    this(string fileName, uint instances = 1, mat4[] instanceMatrices = [mat4.identity]) {
         _model = new Model(fileName, instances, instanceMatrices);
         _shader = new Shader("default.vert", "default.frag");
     }

@@ -15,7 +15,7 @@ uniform mat4 camMatrix;
 uniform mat4 model;
 
 void main() {
-    currentPos = vec3(iInstanceMatrix * vec4(iPos, 1.0));
+    currentPos = vec3(iInstanceMatrix * model * vec4(iPos, 1.0));
     normal = iNormal;
     color = iColor;
     texCoord = iTexCoord;
