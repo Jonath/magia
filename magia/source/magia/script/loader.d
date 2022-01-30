@@ -3,7 +3,7 @@ module magia.script.loader;
 import grimoire;
 
 import magia.script.window, magia.script.camera, magia.script.drawable, magia.script.texture,
-magia.script.primitive, magia.script.sprite, magia.script.text;
+magia.script.primitive, magia.script.sprite, magia.script.text, magia.script.vec2, magia.script.vec3;
 
 /// Loads all sub libraries
 GrLibrary loadMagiaLibrary() {
@@ -15,5 +15,7 @@ GrLibrary loadMagiaLibrary() {
     loadMagiaLibPrimitive(library);
     loadMagiaLibSprite(library);
     loadMagiaLibText(library);
+    loadMagiaLibVec2(library);
+    loadMagiaLibVec3(library);
     return library;
 }

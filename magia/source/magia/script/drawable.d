@@ -20,7 +20,7 @@ class MatWrapper {
 }
 
 package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
-    GrType vec3Type = library.addClass("vec3", ["x", "y", "z"], [grReal, grReal, grReal]);
+    GrType vec3Type = grGetClassType("vec3");
     GrType quatType = library.addClass("quat", ["w", "x", "y", "z"], [grReal, grReal, grReal, grReal]);
     GrType mat4Type = library.addForeign("mat4");
 
@@ -29,7 +29,6 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     GrType modelType = library.addForeign("Model", [], "Entity");
     GrType quadType = library.addForeign("Quad", [], "Entity");
 
-    library.addFunction(&_vec3, "vec3", [grReal, grReal, grReal], [vec3Type]);
     library.addFunction(&_quat, "quat", [grReal, grReal, grReal, grReal], [quatType]);
     library.addFunction(&_position1, "position", [entityType, grReal, grReal, grReal], []);
     library.addFunction(&_position2, "position", [entityType, vec3Type], []);
@@ -39,14 +38,6 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     library.addFunction(&_model1, "loadModel", [grString, lightType], [modelType]);
     library.addFunction(&_model2, "loadModel", [grString, lightType, grInt, grArray(mat4Type)], [modelType]);
     library.addFunction(&_quad, "loadQuad", [lightType], [quadType]);
-}
-
-private void _vec3(GrCall call) {
-    GrObject v = call.createObject("vec3");
-    v.setReal("x", call.getReal(0));
-    v.setReal("y", call.getReal(1));
-    v.setReal("z", call.getReal(2));
-    call.setObject(v);
 }
 
 private void _quat(GrCall call) {
