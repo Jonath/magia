@@ -98,8 +98,8 @@ package void loadMagiaLibVec2(GrLibrary library) {
             vec2Type
         ]);
     library.addFunction(&_angled, "vec2_angled", [grReal], [vec2Type]);
-    library.addFunction(&_magnitude, "length", [vec2Type], [grReal]);
-    library.addFunction(&_magnitudeSquared, "length2", [vec2Type], [
+    library.addFunction(&_magnitude, "magnitude", [vec2Type], [grReal]);
+    library.addFunction(&_magnitudeSquared, "magnitude2", [vec2Type], [
             grReal
         ]);
     library.addFunction(&_normalize, "normalize", [vec2Type], [
