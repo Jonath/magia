@@ -5,7 +5,7 @@ import grimoire;
 import magia.core, magia.render;
 
 package(magia.script) void loadMagiaLibWindow(GrLibrary library) {
-    GrType colorType = grGetClassType("Color");
+    GrType colorType = grGetClassType("color");
     library.addFunction(&_setColor1, "setColor", []);
     library.addFunction(&_setColor2, "setColor", [colorType]);
     library.addFunction(&_getColor, "getColor", [], [colorType]);
@@ -23,7 +23,7 @@ private void _setColor2(GrCall call) {
 }
 
 private void _getColor(GrCall call) {
-    GrObject object = call.createObject("Color");
+    GrObject object = call.createObject("color");
     Color color = getBaseColor();
     object.setReal("r", color.r);
     object.setReal("g", color.g);
