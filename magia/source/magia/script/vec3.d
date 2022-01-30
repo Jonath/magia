@@ -55,7 +55,7 @@ package void loadMagiaLibVec3(GrLibrary library) {
     library.addFunction(&_round, "round", [vec3Type], [vec3Type]);
 
     library.addFunction(&_isZero, "zero?", [vec3Type], [grBool]);
-    
+
     // Operations
     library.addFunction(&_sum, "sum", [vec3Type], [grReal]);
     library.addFunction(&_sign, "sign", [vec3Type], [vec3Type]);
@@ -66,7 +66,7 @@ package void loadMagiaLibVec3(GrLibrary library) {
     library.addFunction(&_approach, "approach", [
             vec3Type, vec3Type, grReal
         ], [vec3Type]);
-        
+
     library.addFunction(&_distance, "distance", [vec3Type, vec3Type], [
             grReal
         ]);
@@ -85,6 +85,9 @@ package void loadMagiaLibVec3(GrLibrary library) {
     library.addFunction(&_normalized, "normalized", [vec3Type], [
             vec3Type
         ]);
+
+    library.addCast(&_fromArray, grRealArray, vec3Type);
+    library.addCast(&_toString, vec3Type, grString);
 }
 
 // Ctors ------------------------------------------
@@ -538,4 +541,33 @@ private void _normalized(GrCall call) {
     v.setReal("y", y);
     v.setReal("z", z);
     call.setObject(v);
+}
+
+private void _fromArray(GrCall call) {
+    GrRealArray array = call.getRealArray(0);
+    if (array.data.length == 3) {
+        GrObject self = call.createObject("vec3");
+        if (!self) {
+            call.raise("UnknownClass");
+            return;
+        }
+        self.setReal("x", array.data[0]);
+        self.setReal("y", array.data[1]);
+        self.setReal("z", array.data[2]);
+        call.setObject(self);
+        return;
+    }
+    call.raise("ConvError");
+}
+
+private void _toString(GrCall call) {
+    GrObject self = call.getObject(0);
+    if (!self) {
+        call.raise("NullError");
+        return;
+    }
+    call.setString("vec3(" ~ to!GrString(
+            self.getReal("x")) ~ ", " ~ to!GrString(
+            self.getReal(
+            "y")) ~ ", " ~ to!GrString(self.getReal("z")) ~ ")");
 }

@@ -80,7 +80,7 @@ void runApplication() {
     GrCompiler compiler = new GrCompiler;
     compiler.addLibrary(stdlib);
     compiler.addLibrary(magialib);
-    GrBytecode bytecode = compiler.compileFile("assets/script/main.gr", GrOption.none);
+    GrBytecode bytecode = compiler.compileFile("assets/script/main.gr", GrOption.none, GrLocale.fr_FR);
     if (!bytecode)
         throw new Exception(compiler.getError().prettify());
 
@@ -88,7 +88,7 @@ void runApplication() {
     _engine.addLibrary(stdlib);
     _engine.addLibrary(magialib);
     _engine.load(bytecode);
-    import std.stdio;writeln(grDump(bytecode));
+
     if (_engine.hasEvent("onLoad"))
         _engine.callEvent("onLoad");
 
