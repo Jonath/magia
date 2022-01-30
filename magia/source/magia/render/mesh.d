@@ -62,6 +62,9 @@ class Mesh {
 
         if (instances > 1) {
             _instanceVBO.bind();
+            writeln("ma4.sizeof: ", mat4.sizeof);
+            writeln("vec4.sizeof: ", vec4.sizeof);
+            writeln("vec4.sizeof: ", instanceMatrices[0]);
             _VAO.linkAttributes(_instanceVBO, 4, 4, GL_FLOAT, mat4.sizeof, null);
             _VAO.linkAttributes(_instanceVBO, 5, 4, GL_FLOAT, mat4.sizeof, cast(void*)(1 * vec4.sizeof));
             _VAO.linkAttributes(_instanceVBO, 6, 4, GL_FLOAT, mat4.sizeof, cast(void*)(2 * vec4.sizeof));

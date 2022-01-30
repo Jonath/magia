@@ -70,6 +70,8 @@ private void _packInstanceMatrix(GrCall call) {
     vec3 scale = vec3(scaleObj.getReal("x"), scaleObj.getReal("y"), scaleObj.getReal("z"));
 
     mat4 instanceMatrix = combineModel(position, rotation, scale);
+    writeln("instanceMatrix: ", instanceMatrix);
+
     MatWrapper wrapper = new MatWrapper(instanceMatrix);
     call.setForeign(wrapper);
 }
@@ -97,8 +99,11 @@ private void _model2(GrCall call) {
     MatWrapper[] mat4Array = grMat4Array.data;
     mat4[] matrices;
     foreach (MatWrapper matWrapper; mat4Array) {
+        writeln("got instanceMatrix: ", matWrapper.matrix);
         matrices ~= matWrapper.matrix;
     }
+
+    writeln("Nb instances: ", call.getInt32(2));
 
     ModelGroup modelGroup = new ModelGroup(call.getString(0), call.getInt32(2), matrices); // @TODO, check model group not already loaded (hashmap?)
     ModelInstance modelInstance = new ModelInstance(modelGroup, call.getForeign!LightInstance(1));
