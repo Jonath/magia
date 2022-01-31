@@ -16,7 +16,7 @@ import magia.render.vertex;
 import magia.render.window;
 import magia.shape.light;
 
-/// Packs a 3D object model and shader
+/// Packs a quad mesh and shader
 final class QuadGroup {
     private {
         Mesh _mesh;

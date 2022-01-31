@@ -22,15 +22,21 @@ class Texture {
 
         /// Slot
         GLuint _slot;
+
+        // Target
+        GLenum _target;
     }
 
-    /// Constructor
+    /// Constructor for usual 2D texture
     this(string path, string texType, GLuint slot) {
         // Setup type
         type = texType;
 
         // Setup slot
         _slot = slot;
+
+        // Setyp target
+        _target = GL_TEXTURE_2D;
 
         _surface = IMG_Load(toStringz(path));
         enforce(_surface, "can't load image `" ~ path ~ "`");
@@ -42,15 +48,15 @@ class Texture {
         // Generate texture and bind data
         glGenTextures(1, &id);
         glActiveTexture(GL_TEXTURE0 + _slot);
-        glBindTexture(GL_TEXTURE_2D, id);
+        glBindTexture(_target, id);
 
         // Setup filters
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(_target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(_target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
         // Setup wrap
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(_target, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(_target, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
         const uint nbChannels = _surface.format.BitsPerPixel / 8;
 
@@ -68,17 +74,49 @@ class Texture {
             new Exception("Unsupported texture format for " ~ texType ~ " texture type");
         }
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, format, GL_UNSIGNED_BYTE, _surface.pixels);
+        glTexImage2D(_target, 0, GL_RGBA, _width, _height, 0, format, GL_UNSIGNED_BYTE, _surface.pixels);
 
         // Generate mipmaps
-        glGenerateMipmap(GL_TEXTURE_2D);
+        glGenerateMipmap(_target);
 
         // Free texture handler
         SDL_FreeSurface(_surface);
         _surface = null;
 
         // Unbind data
-        glBindTexture(GL_TEXTURE_2D, 0);
+        glBindTexture(_target, 0);
+    }
+
+    /// Constructor for cubemap texture
+    this(string[6] paths) {
+        // Setyp target
+        _target = GL_TEXTURE_CUBE_MAP;
+
+        glGenTextures(1, &id);
+        glBindTexture(_target, id);
+        
+        // Setup filters
+        glTexParameteri(_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        // Setup wrap
+        glTexParameteri(_target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(_target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(_target, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+        for (int i = 0; i < paths.length; ++i) {
+            string path = paths[i];
+
+            SDL_Surface *surface = IMG_Load(toStringz(path));
+            enforce(surface, "can't load image `" ~ path ~ "`");
+
+            // Read data from handler
+            const int width = surface.w;
+            const int height = surface.h;
+
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0,
+                         GL_RGB, GL_UNSIGNED_BYTE, surface.pixels);
+        }
     }
 
     /// Pass texture onto shader
@@ -92,12 +130,12 @@ class Texture {
     /// Bind texture
     void bind() {
         glActiveTexture(GL_TEXTURE0 + _slot);
-        glBindTexture(GL_TEXTURE_2D, id);
+        glBindTexture(_target, id);
     }
 
     /// Unbind texture
     void unbind() {
-        glBindTexture(GL_TEXTURE_2D, 0);
+        glBindTexture(_target, 0);
     }
 
     /// Release texture
