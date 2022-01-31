@@ -66,12 +66,12 @@ final class Skybox {
         _shader = new Shader("skybox.vert", "skybox.frag");
 
         string[6] faceCubemaps = [
-            "right.png",
-            "left.png",
-            "top.png",
-            "bottom.png",
-            "back.png",
-            "front.png"
+            "night/right.png",
+            "night/left.png",
+            "night/top.png",
+            "night/bottom.png",
+            "night/front.png",
+            "night/back.png"
         ];
 
         _texture = new Texture(faceCubemaps);

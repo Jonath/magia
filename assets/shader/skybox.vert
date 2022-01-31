@@ -8,6 +8,7 @@ uniform mat4 projection;
 uniform mat4 view;
 
 void main() {
+    // Apply projection and view matrix
     vec4 currentPos = projection * view * vec4(iPos, 1.0f);
 
     // Having z equal to w will always result in a depth of 1

@@ -19,7 +19,7 @@ event onLoad() {
     //Model ground = loadModel("ground/scene", light);
     //Model bunny = loadModel("bunny/scene", light);
     //Model statue = loadModel("statue/scene", light);
-    //Model jupiter = loadModel("jupiter/scene", light);
+    Model jupiter = loadModel("jupiter/scene", light);
 
     int nbAsteroids = 500;
 
@@ -68,7 +68,7 @@ event onLoad() {
         //ground:draw();
         //bunny:draw();
         //statue:draw();
-        //jupiter:draw();
+        jupiter:draw();
         asteroid:draw();
 
         // Next frame
