@@ -11,6 +11,8 @@ event onLoad() {
     Light light = loadLight();
     light:position(0., 1., 0.);
 
+    Skybox skybox = loadSkybox();
+
     //Quad quad = loadQuad(light);
     //Model tree = loadModel("tree/scene", light);
     //Model grass = loadModel("grass/scene", light);
@@ -58,6 +60,7 @@ event onLoad() {
     loop {
         // Draw calls
         light:draw();
+        skybox:draw();
 
         //quad:draw();
         //tree:draw();

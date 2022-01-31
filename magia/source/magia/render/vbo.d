@@ -11,6 +11,13 @@ class VBO {
     GLuint id;
 
     /// Constructor given vertex buffer
+    this(float[] vertices) {
+        glGenBuffers(1, &id);
+        glBindBuffer(GL_ARRAY_BUFFER, id);
+        glBufferData(GL_ARRAY_BUFFER, vertices.length * float.sizeof, vertices.ptr, GL_STATIC_DRAW);
+    }
+
+    /// Constructor given vertex buffer
     this(Vertex[] vertices) {
         glGenBuffers(1, &id);
         glBindBuffer(GL_ARRAY_BUFFER, id);

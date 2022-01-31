@@ -28,6 +28,7 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     GrType lightType = library.addForeign("Light", [], "Entity");
     GrType modelType = library.addForeign("Model", [], "Entity");
     GrType quadType = library.addForeign("Quad", [], "Entity");
+    GrType skyboxType = library.addForeign("Skybox", [], "Entity");
 
     library.addFunction(&_quat, "quat", [grReal, grReal, grReal, grReal], [quatType]);
     library.addFunction(&_position1, "position", [entityType, grReal, grReal, grReal], []);
@@ -38,6 +39,7 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     library.addFunction(&_model1, "loadModel", [grString, lightType], [modelType]);
     library.addFunction(&_model2, "loadModel", [grString, lightType, grInt, grArray(mat4Type)], [modelType]);
     library.addFunction(&_quad, "loadQuad", [lightType], [quadType]);
+    library.addFunction(&_skybox, "loadSkybox", [], [skyboxType]);
 }
 
 private void _quat(GrCall call) {
@@ -68,9 +70,7 @@ private void _packInstanceMatrix(GrCall call) {
     vec3 position = vec3(positionObj.getReal("x"), positionObj.getReal("y"), positionObj.getReal("z"));
     quat rotation = quat(rotationObj.getReal("w"), rotationObj.getReal("x"), rotationObj.getReal("y"), rotationObj.getReal("z"));
     vec3 scale = vec3(scaleObj.getReal("x"), scaleObj.getReal("y"), scaleObj.getReal("z"));
-
     mat4 instanceMatrix = combineModel(position, rotation, scale);
-    writeln("instanceMatrix: ", instanceMatrix);
 
     MatWrapper wrapper = new MatWrapper(instanceMatrix);
     call.setForeign(wrapper);
@@ -94,16 +94,13 @@ private void _model1(GrCall call) {
 }
 
 private void _model2(GrCall call) { 
-    GrArray!MatWrapper grMat4Array = call.getArray!MatWrapper(3);
-    
-    MatWrapper[] mat4Array = grMat4Array.data;
+    const GrArray!MatWrapper grMat4Array = call.getArray!MatWrapper(3);
+    const MatWrapper[] mat4Array = grMat4Array.data;
+
     mat4[] matrices;
-    foreach (MatWrapper matWrapper; mat4Array) {
-        writeln("got instanceMatrix: ", matWrapper.matrix);
+    foreach (const MatWrapper matWrapper; mat4Array) {
         matrices ~= matWrapper.matrix;
     }
-
-    writeln("Nb instances: ", call.getInt32(2));
 
     ModelGroup modelGroup = new ModelGroup(call.getString(0), call.getInt32(2), matrices); // @TODO, check model group not already loaded (hashmap?)
     ModelInstance modelInstance = new ModelInstance(modelGroup, call.getForeign!LightInstance(1));
@@ -114,4 +111,10 @@ private void _quad(GrCall call) {
     QuadGroup quadGroup = new QuadGroup();
     QuadInstance quadInstance = new QuadInstance(quadGroup, call.getForeign!LightInstance(0));
     call.setForeign(quadInstance);
+}
+
+private void _skybox(GrCall call) {
+    SkyboxGroup skyboxGroup = new SkyboxGroup();
+    SkyboxInstance skyboxInstance = new SkyboxInstance(skyboxGroup);
+    call.setForeign(skyboxInstance);
 }

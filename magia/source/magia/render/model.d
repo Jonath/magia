@@ -17,7 +17,7 @@ import magia.render.shader;
 import magia.render.texture;
 import magia.render.vertex;
 
-/// Class handling model loading
+/// Class handling model data and draw call
 final class Model {
     private {
         // JSON data
@@ -39,7 +39,7 @@ final class Model {
         uint _instances;
 
         // Trace
-        bool _trace = true;
+        bool _trace = false;
         bool _traceDeep = false;
 
         // File directory
@@ -251,8 +251,8 @@ final class Model {
                     Texture specular = new Texture(path, "specular", textureId);
                     _loadedTextures ~= specular;
                     ++textureId;
-                } else {
-                    writeln("Warning: unknown texture type, not loaded");
+                } else if (_trace) {
+                    writeln("Warning: unknown texture type ", path ,", not loaded");
                 }
             }
         }
