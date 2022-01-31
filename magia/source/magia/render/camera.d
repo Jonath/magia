@@ -24,6 +24,8 @@ class Camera {
 
         /// Camera matrix
         mat4 _matrix = mat4.identity;
+        mat4 _projection = mat4.identity;
+        mat4 _view = mat4.identity;
 
         /// Width of the camera viewport
         int _width;
@@ -70,18 +72,21 @@ class Camera {
 
     /// Setting up camera matrices operations
     void updateMatrix(float FOVdeg, float nearPlane, float farPlane) {
-        mat4 view = mat4.identity;
-        mat4 proj = mat4.identity;
-
-        view = mat4.look_at(_position, _position + _orientation, _up);
-        proj = mat4.perspective(_width, _height, FOVdeg, nearPlane, farPlane);
-
-        _matrix = proj * view;
+        _view = mat4.look_at(_position, _position + _orientation, _up);
+        _projection = mat4.perspective(_width, _height, FOVdeg, nearPlane, farPlane);
+        _matrix = _projection * _view;
     }
 
     /// Sets camera matrix in shader
     void passToShader(Shader shader, const char* uniform) {
         glUniformMatrix4fv(glGetUniformLocation(shader.id, uniform), 1, GL_TRUE, _matrix.value_ptr);
+    }
+
+    /// Sets camera matrix in shader
+    void passToSkyboxShader(Shader shader) {
+        mat4 view = mat4(mat3(_view));
+        glUniformMatrix4fv(glGetUniformLocation(shader.id, "view"), 1, GL_TRUE, view.value_ptr);
+        glUniformMatrix4fv(glGetUniformLocation(shader.id, "projection"), 1, GL_TRUE, _projection.value_ptr);
     }
 
     /// Update the camera

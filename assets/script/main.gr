@@ -21,7 +21,7 @@ event onLoad() {
     //Model statue = loadModel("statue/scene", light);
     //Model jupiter = loadModel("jupiter/scene", light);
 
-    /*int nbAsteroids = 500;
+    int nbAsteroids = 500;
 
     array(mat4) instanceMatrices;
 
@@ -52,7 +52,7 @@ event onLoad() {
         instanceMatrices ~= instanceMatrix;
     }
 
-    Model asteroid = loadModel("asteroid/scene", light, nbAsteroids, instanceMatrices);*/
+    Model asteroid = loadModel("asteroid/scene", light, nbAsteroids, instanceMatrices);
 
     //bunny:position(vec3(1f, 0f, 0f));
 
@@ -69,7 +69,7 @@ event onLoad() {
         //bunny:draw();
         //statue:draw();
         //jupiter:draw();
-        //asteroid:draw();
+        asteroid:draw();
 
         // Next frame
         counter++;

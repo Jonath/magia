@@ -99,7 +99,7 @@ final class Skybox {
         glDepthFunc(GL_LEQUAL);
         
         _shader.activate();
-        _camera.passToShader(_shader, "camMatrix");
+        _camera.passToSkyboxShader(_shader);
 
         _VAO.bind();
         _texture.bind();
