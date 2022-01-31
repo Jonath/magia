@@ -64,17 +64,6 @@ final class Skybox {
     this(Camera camera) {
         _camera = camera;
         _shader = new Shader("skybox.vert", "skybox.frag");
-        _shader.activate();
-        glUniform1i(glGetUniformLocation(_shader.id, "skybox"), 0);
-
-        _VAO = new VAO();
-        _VBO = new VBO(_vertices);
-        _EBO = new EBO(_indices);
-        _VAO.linkAttributes(_VBO, 0, 3, GL_FLOAT, 3 * float.sizeof, null);
-
-        _VAO.unbind();
-        _VBO.unbind();
-        _EBO.unbind();
 
         string[6] faceCubemaps = [
             "right.png",
@@ -87,6 +76,22 @@ final class Skybox {
 
         _texture = new Texture(faceCubemaps);
         _texture.forwardToShader(_shader, _texture.type, 0);
+
+        // Generate and bind VAO
+        _VAO = new VAO();
+        _VAO.bind();
+
+        // Generate and bind VBO, EBO
+        _VBO = new VBO(_vertices);
+        _EBO = new EBO(_indices);
+
+        // Link VBO attributes
+        _VAO.linkAttributes(_VBO, 0, 3, GL_FLOAT, 3 * float.sizeof, null);
+
+        // Unbind all objects
+        _VAO.unbind();
+        _VBO.unbind();
+        _EBO.unbind();
     }
 
     /// Draw call
