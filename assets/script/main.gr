@@ -11,15 +11,17 @@ event onLoad() {
     Light light = loadLight();
     light:position(0., 1., 0.);
 
+    Skybox skybox = loadSkybox();
+
     //Quad quad = loadQuad(light);
     //Model tree = loadModel("tree/scene", light);
     //Model grass = loadModel("grass/scene", light);
     //Model ground = loadModel("ground/scene", light);
     //Model bunny = loadModel("bunny/scene", light);
     //Model statue = loadModel("statue/scene", light);
-    Model jupiter = loadModel("jupiter/scene", light);
+    //Model jupiter = loadModel("jupiter/scene", light);
 
-    int nbAsteroids = 500;
+    /*int nbAsteroids = 500;
 
     array(mat4) instanceMatrices;
 
@@ -50,7 +52,7 @@ event onLoad() {
         instanceMatrices ~= instanceMatrix;
     }
 
-    Model asteroid = loadModel("asteroid/scene", light, nbAsteroids, instanceMatrices);
+    Model asteroid = loadModel("asteroid/scene", light, nbAsteroids, instanceMatrices);*/
 
     //bunny:position(vec3(1f, 0f, 0f));
 
@@ -58,6 +60,7 @@ event onLoad() {
     loop {
         // Draw calls
         light:draw();
+        skybox:draw();
 
         //quad:draw();
         //tree:draw();
@@ -65,8 +68,8 @@ event onLoad() {
         //ground:draw();
         //bunny:draw();
         //statue:draw();
-        jupiter:draw();
-        asteroid:draw();
+        //jupiter:draw();
+        //asteroid:draw();
 
         // Next frame
         counter++;

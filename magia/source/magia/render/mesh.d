@@ -16,7 +16,7 @@ import magia.render.texture;
 import magia.render.shader;
 import magia.render.vertex;
 
-/// Class representing the mesh of a model
+/// Class handling mesh data and draw call
 class Mesh {
     private {
         Vertex[] _vertices;

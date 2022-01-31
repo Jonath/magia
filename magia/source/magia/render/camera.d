@@ -20,10 +20,10 @@ class Camera {
         vec3 _orientation = vec3(0.0f, 0.0f, -1.0f);
 
         /// Where is up? (by default the Y axis)
-        vec3 _cameraUp = vec3(0.0f, 1.0f, 0.0f);
+        vec3 _up = vec3(0.0f, 1.0f, 0.0f);
 
         /// Camera matrix
-        mat4 _cameraMatrix = mat4.identity;
+        mat4 _matrix = mat4.identity;
 
         /// Width of the camera viewport
         int _width;
@@ -42,15 +42,16 @@ class Camera {
             return _position = position_;
         }
 
+        /// Direction to the right of the camera
         vec3 right() const {
-            return cross(_orientation, _cameraUp).normalized;
+            return cross(_orientation, _up).normalized;
         }
-
+        /// Direction to the left of the camera
         vec3 up() const {
-            return _cameraUp;
+            return _up;
         }
 
-        /// The direction the camera is facing towards
+        /// Direction the camera is facing towards
         vec3 forward() const {
             return _orientation;
         }
@@ -72,16 +73,15 @@ class Camera {
         mat4 view = mat4.identity;
         mat4 proj = mat4.identity;
 
-        view = mat4.look_at(_position, _position + _orientation, _cameraUp);
+        view = mat4.look_at(_position, _position + _orientation, _up);
         proj = mat4.perspective(_width, _height, FOVdeg, nearPlane, farPlane);
 
-        _cameraMatrix = proj * view;
+        _matrix = proj * view;
     }
 
     /// Sets camera matrix in shader
     void passToShader(Shader shader, const char* uniform) {
-        glUniformMatrix4fv(glGetUniformLocation(shader.id, uniform), 1, GL_TRUE, _cameraMatrix
-                .value_ptr);
+        glUniformMatrix4fv(glGetUniformLocation(shader.id, uniform), 1, GL_TRUE, _matrix.value_ptr);
     }
 
     /// Update the camera

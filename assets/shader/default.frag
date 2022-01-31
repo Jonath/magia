@@ -1,6 +1,6 @@
 #version 400
 
-out vec4 FragColor;
+out vec4 fragColor;
 
 in vec3 currentPos;
 in vec3 normal;
@@ -112,5 +112,5 @@ float logisticDepth(float depth, float steepness = 0.5f, float offset = 5.0f) {
 void main() {
 	//float depth = logisticDepth(gl_FragCoord.z);
 	//FragColor = directionalLight() * (1.0f - depth) + vec4(depth * vec3(0.85f, 0.85f, 0.90f), 1.0f);
-    FragColor = directionalLight();
+    fragColor = directionalLight();
 }
