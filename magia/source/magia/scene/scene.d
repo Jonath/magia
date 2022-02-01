@@ -7,6 +7,7 @@ import magia.scene.entity;
 private {
     Camera _camera, _defaultCamera;
     Entity3D[] _entities;
+    ShadowMap _shadowMap;
 }
 
 void setCamera(Camera camera) {
@@ -17,6 +18,10 @@ Camera getCamera() {
     return _camera;
 }
 
+ShadowMap getShadowMap() {
+    return _shadowMap;
+}
+
 void addEntity(Entity3D entity) {
     _entities ~= entity;
 }
@@ -24,6 +29,7 @@ void addEntity(Entity3D entity) {
 void initializeScene() {
     _defaultCamera = new Camera(screenWidth, screenHeight, Vec3f.zero);
     _camera = _defaultCamera;
+    _shadowMap = new ShadowMap(vec3(0.0, 50.0, 0.0));
 }
 
 void updateScene(float deltaTime) {

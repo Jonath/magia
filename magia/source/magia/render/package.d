@@ -10,6 +10,7 @@ public {
     import magia.render.oldtexture;
     import magia.render.primitive;
     import magia.render.shader;
+    import magia.render.shadow;
     import magia.render.sprite;
     import magia.render.text;
     import magia.render.tileset;

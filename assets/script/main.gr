@@ -3,15 +3,13 @@ function randf() (real) {
 }
 
 event onLoad() {
-    /*Camera camera = Camera();
-    setCamera(camera);*/
     let camera = getCamera();
     camera:position(0., .5, 2.);
 
     Light light = loadLight();
-    light:position(0., 50., 0.);
+    light:position(0.5, 0.5, 0.5);
 
-    Skybox skybox = loadSkybox();
+    //Skybox skybox = loadSkybox();
 
     //Quad quad = loadQuad(light);
     //Model tree = loadModel("tree/scene", light);
@@ -19,7 +17,8 @@ event onLoad() {
     //Model ground = loadModel("ground/scene", light);
     //Model bunny = loadModel("bunny/scene", light);
     //Model statue = loadModel("statue/scene", light);
-    Model jupiter = loadModel("jupiter/scene", light);
+    //Model jupiter = loadModel("jupiter/scene", light);
+    Model crow = loadModel("crow/scene", light);
 
     int nbAsteroids = 500;
 
@@ -52,7 +51,7 @@ event onLoad() {
         instanceMatrices ~= instanceMatrix;
     }
 
-    Model asteroid = loadModel("asteroid/scene", light, nbAsteroids, instanceMatrices);
+    //Model asteroid = loadModel("asteroid/scene", light, nbAsteroids, instanceMatrices);
 
     //bunny:position(vec3(1f, 0f, 0f));
 }

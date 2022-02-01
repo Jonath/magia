@@ -8,6 +8,7 @@ import magia.render.fbo;
 import magia.render.mesh; // @TODO move renderable declaration
 import magia.render.shader;
 import magia.render.texture;
+import magia.render.window;
 
 /// Class holding shadow map data
 class ShadowMap {
@@ -28,6 +29,8 @@ class ShadowMap {
         float size = 35.0f;
         float near = 0.1f;
         float far = 75.0f;
+
+        _texture = new Texture(_width, _height);
 
         _FBO = new FBO();
         _FBO.attachTexture(_texture);
@@ -51,5 +54,7 @@ class ShadowMap {
         glClear(GL_DEPTH_BUFFER_BIT);
         renderable.draw(_shader, transform);
         _FBO.unbind();
+
+        //resetViewport();
     }
 }

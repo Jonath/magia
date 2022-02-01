@@ -195,6 +195,11 @@ void resizeWindow(const Vec2u windowSize) {
 	}
 }
 
+/// Reset viewport
+void resetViewport() {
+	glViewport(0, 0, _windowSize.x, _windowSize.y);
+}
+
 /// Current window size.
 Vec2i getWindowSize() {
 	Vec2i windowSize;

@@ -7,9 +7,10 @@ import magia.core.transform;
 import magia.core.vec3;
 import magia.render.model;
 import magia.render.shader;
+import magia.render.shadow;
 import magia.render.window;
 import magia.shape.light;
-import magia.scene.entity;
+import magia.scene;
 
 /// Packs a 3D object model and shader (@TODO defer load to another layer, so that we only load once even if several shaders are applied)
 final class ModelGroup {
@@ -44,8 +45,12 @@ final class ModelGroup {
     }
 
     /// Draw the model somewhere with its current shader parameters
-    void draw(const Transform transform) {
+    void draw(Transform transform) {
         _model.draw(_shader, transform);
+    }
+
+    void drawShadows(ShadowMap shadowMap, Transform transform) {
+        shadowMap.draw(_model, transform);
     }
 }
 
@@ -54,6 +59,7 @@ final class ModelInstance : Entity3D {
     private {
         ModelGroup _modelGroup;
         LightInstance _lightInstance;
+        ShadowMap _shadowMap;
     }
 
     /// Constructor
@@ -61,11 +67,13 @@ final class ModelInstance : Entity3D {
         transform = Transform.identity;
         _modelGroup = modelGroup;
         _lightInstance = lightInstance;
+        _shadowMap = getShadowMap();
     }
     
     /// Render the model
     void draw() {
         _modelGroup.setupLight(_lightInstance);
         _modelGroup.draw(transform);
+        //_modelGroup.drawShadows(_shadowMap, transform);
     }
 }

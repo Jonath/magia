@@ -10,6 +10,7 @@ class FBO {
 
     this() {
         glGenFramebuffers(1, &id);
+        glBindFramebuffer(GL_FRAMEBUFFER, id);
     }
 
     /// Bind VBO
