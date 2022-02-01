@@ -27,16 +27,17 @@ class PostProcess {
             -1.0f,  1.0f,    0.0f, 1.0f,
         ];
 
+        _VAO = new VAO();
+        _VAO.bind();
+
         VBO VBO_ = new VBO(rectangleVertices);
 
-        _VAO = new VAO();
         _VAO.linkAttributes(VBO_, 0, 2, GL_FLOAT, 4 * float.sizeof, null);
         _VAO.linkAttributes(VBO_, 1, 2, GL_FLOAT, 4 * float.sizeof, cast(void*)(2 * float.sizeof));
 
-        _FBO = new FBO(width, height);
+        _FBO = new FBO(FBOType.Postprocess, width, height);
         RBO RBO_ = new RBO(width, height);
         RBO_.attachFBO();
-        _FBO.unbind();
 
         _shader = new Shader("postprocess.vert", "postprocess.frag");
         _shader.activate();

@@ -13,7 +13,7 @@ class Texture {
     /// Texture type
     string type;
 
-    private {
+    protected {
         /// Teture image attributes
         int _width, _height;
 
@@ -32,6 +32,15 @@ class Texture {
         GLenum target() const {
             return _target;
         }
+    }
+
+    /// Default constructor
+    this(uint width, uint height, GLenum target, GLuint slot, string type_) {
+        _width = width;
+        _height = height;
+        _target = target;
+        _slot = slot;
+        type = type_;
     }
 
     /// Constructor for usual 2D texture
@@ -136,41 +145,6 @@ class Texture {
         }
     }
 
-    /// Constructor for FBO
-    this(uint width, uint height) {
-        // Setup type
-        type = "shadow";
-
-        // Setup target
-        _target = GL_TEXTURE_2D;
-
-        // Setup slot
-        _slot = 0;
-
-        // Setup resolution
-        _width = width;
-        _height = height;
-
-        // Generate and bind texture
-        glGenTextures(1, &id);
-        glBindTexture(_target, id);
-
-        // Create texture
-        glTexImage2D(_target, 0, GL_DEPTH_COMPONENT, _width, _height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, null);
-        
-        // Setup filters
-        glTexParameteri(_target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(_target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-        // Setup wrap
-        glTexParameteri(_target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-        glTexParameteri(_target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-
-        // Setup shadow color (black)
-        float[] clampColor = [1.0, 1.0, 1.0, 1.0];
-        glTexParameterfv(_target, GL_TEXTURE_BORDER_COLOR, clampColor.ptr);
-    }
-
     /// Pass texture onto shader
     void forwardToShader(Shader shader, string uniform, GLuint unit) {
         GLuint texUni = glGetUniformLocation(shader.id, toStringz(uniform));
@@ -193,5 +167,53 @@ class Texture {
     /// Release texture
     void remove() {
         glDeleteTextures(1, &id);
+    }
+}
+
+class ShadowmapTexture : Texture {
+    /// Constructor for FBO shadow
+    this(uint width, uint height) {
+        super(width, height, GL_TEXTURE_2D, 0, "shadow");
+
+        // Generate and bind texture
+        glGenTextures(1, &id);
+        glBindTexture(_target, id);
+
+        // Create texture
+        glTexImage2D(_target, 0, GL_DEPTH_COMPONENT, _width, _height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, null);
+        
+        // Setup filters
+        glTexParameteri(_target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(_target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        // Setup wrap
+        glTexParameteri(_target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+        glTexParameteri(_target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+        // Setup shadow color (black)
+        float[] clampColor = [1.0, 1.0, 1.0, 1.0];
+        glTexParameterfv(_target, GL_TEXTURE_BORDER_COLOR, clampColor.ptr);
+    }
+}
+
+class PostProcessTexture : Texture {
+    /// Constructor for FBO shadow
+    this(uint width, uint height) {
+        super(width, height, GL_TEXTURE_2D, 0, "postprocess");
+
+        // Generate and bind texture
+        glGenTextures(1, &id);
+        glBindTexture(_target, id);
+
+        // Create texture
+        glTexImage2D(_target, 0, GL_RGB, _width, _height, 0, GL_RGB, GL_UNSIGNED_BYTE, null);
+        
+        // Setup filters
+        glTexParameteri(_target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(_target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        // Setup wrap
+        glTexParameteri(_target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(_target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     }
 }

@@ -3,6 +3,11 @@ module magia.render.fbo;
 import bindbc.opengl;
 import magia.render.texture;
 
+enum FBOType {
+    Postprocess,
+    Shadowmap
+}
+
 /// Class holding a Frame Buffer Object
 class FBO {
     /// Index
@@ -13,14 +18,19 @@ class FBO {
     }
 
     /// Constructor
-    this(uint width, uint height) {
+    this(FBOType type, uint width, uint height) {
         assert(width == height, "FBO with different dimensions");
 
         glGenFramebuffers(1, &id);
         glBindFramebuffer(GL_FRAMEBUFFER, id);
 
-        _texture = new Texture(width, height);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, _texture.target, _texture.id, 0);
+        if (type == FBOType.Postprocess) {
+            _texture = new PostProcessTexture(width, height);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, _texture.target, _texture.id, 0);
+        } else {
+            _texture = new ShadowmapTexture(width, height);
+            // @TODO
+        }
     }
 
     /// Bind FBO

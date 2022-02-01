@@ -29,7 +29,7 @@ class ShadowMap {
         float near = 0.1f;
         float far = 75.0f;
 
-        _FBO = new FBO(_width, _height);
+        _FBO = new FBO(FBOType.Shadowmap, _width, _height);
         _FBO.unbind();
 
         mat4 orthographicProjection = mat4.orthographic(-size, size, -size, size, near, far);
