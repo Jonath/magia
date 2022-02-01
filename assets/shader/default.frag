@@ -27,14 +27,18 @@ vec4 pointLight() {
 
     // Diffuse lighting
     vec3 normal = normalize(normal);
-    vec3 lightDir = normalize(lightVector);
-    float diffuse = max(dot(normal, lightDir), 0.0f);
+    vec3 lightDirection = normalize(lightVector);
+    float diffuse = max(dot(normal, lightDirection), 0.0f);
 
     // Specular lighting
-    vec3 viewDir = normalize(camPos - currentPos);
-    vec3 reflectionDir = reflect(-lightDir, normal);
-    float specAmount = pow(max(dot(viewDir, reflectionDir), 0.0f), 16);
-    float specular = specAmount * 0.50f;
+    float specular = 0.0f;
+	if (diffuse != 0.0f) {
+        vec3 viewDirection = normalize(camPos - currentPos);
+        vec3 halfwayVector = normalize(viewDirection + lightDirection);
+
+        float specAmount = pow(max(dot(normal, halfwayVector), 0.0f), 16);
+        float specular = specAmount * 0.50f;
+    }
 
     // Combining lightings, keeping alpha
     vec4 lightColor = (texture(diffuse0, texCoord) * (diffuse * intensity + ambient) + texture(specular0, texCoord).r * specular * intensity) * lightColor;
@@ -49,14 +53,18 @@ vec4 directionalLight() {
 
     // Diffuse lighting
     vec3 normal = normalize(normal);
-    vec3 lightDir = normalize(vec3(1.0f, 1.0f, 0.0f)); // Direction of light (opposite)
-    float diffuse = max(dot(normal, lightDir), 0.0f);
+    vec3 lightDirection = normalize(lightPos);
+    float diffuse = max(dot(normal, lightDirection), 0.0f);
 
     // Specular lighting
-    vec3 viewDir = normalize(camPos - currentPos);
-    vec3 reflectionDir = reflect(-lightDir, normal);
-    float specAmount = pow(max(dot(viewDir, reflectionDir), 0.0f), 16);
-    float specular = specAmount * 0.50f;
+    float specular = 0.0f;
+    if (diffuse != 0.0f) {
+        vec3 viewDirection = normalize(camPos - currentPos);
+        vec3 halfwayVector = normalize(viewDirection + lightDirection);
+
+        float specAmount = pow(max(dot(normal, halfwayVector), 0.0f), 16);
+        specular = specAmount * 0.50f;
+    }
 
     // Discard alpha
     if (texture(diffuse0, texCoord).a < 0.1) {
@@ -76,19 +84,23 @@ vec4 spotLight() {
 
     // Diffuse lighting
     vec3 normal = normalize(normal);
-    vec3 lightDir = normalize(lightPos - currentPos);
-    float diffuse = max(dot(normal, lightDir), 0.0f);
+    vec3 lightDirection = normalize(lightPos - currentPos);
+    float diffuse = max(dot(normal, lightDirection), 0.0f);
 
     // Specular lighting
-    vec3 viewDir = normalize(camPos - currentPos);
-    vec3 reflectionDir = reflect(-lightDir, normal);
-    float specAmount = pow(max(dot(viewDir, reflectionDir), 0.0f), 16);
-    float specular = specAmount * 0.50f;
+    float specular = 0.0f;
+	if (diffuse != 0.0f) {
+        vec3 viewDirection = normalize(camPos - currentPos);
+        vec3 halfwayVector = normalize(viewDirection + lightDirection);
+
+        float specAmount = pow(max(dot(normal, halfwayVector), 0.0f), 16);
+        float specular = specAmount * 0.50f;
+    }
 
     // Cone angle
     float outerCone = 0.90f; // ~25 degrees
     float innerCone = 0.95f; // ~18 degrees
-    float angle = dot(vec3(0.0f, -1.0f, 0.0f), -lightDir);
+    float angle = dot(vec3(0.0f, -1.0f, 0.0f), -lightDirection);
     float intensity = clamp((angle - outerCone) / (innerCone - outerCone), 0.0f, 1.0f);
 
     // Combining lightings, keeping alpha
@@ -110,6 +122,7 @@ float logisticDepth(float depth, float steepness, float offset) {
 	return (1.0 / (1.0 + exp(-steepness * (zValue - offset))));
 }
 
+// Fog
 // float depth = logisticDepth(gl_FragCoord.z, 0.5, 5.0);
 // fragColor = directionalLight() * (1.0 - depth) + vec4(depth * vec3(0.85, 0.85, 0.90), 1.0);
 

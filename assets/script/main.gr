@@ -7,18 +7,18 @@ event onLoad() {
     camera:position(0., .5, 2.);
 
     Light light = loadLight();
-    light:position(0.5, 0.5, 0.5);
+    light:position(0.0, 0.5, 0.0);
 
     //Skybox skybox = loadSkybox();
 
-    //Quad quad = loadQuad(light);
+    Quad quad = loadQuad(light);
     //Model tree = loadModel("tree/scene", light);
     //Model grass = loadModel("grass/scene", light);
     //Model ground = loadModel("ground/scene", light);
     //Model bunny = loadModel("bunny/scene", light);
     //Model statue = loadModel("statue/scene", light);
     //Model jupiter = loadModel("jupiter/scene", light);
-    Model crow = loadModel("crow/scene", light);
+    //Model crow = loadModel("crow/scene", light);
 
     int nbAsteroids = 500;
 
