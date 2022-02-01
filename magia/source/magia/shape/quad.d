@@ -8,13 +8,13 @@ import gl3n.linalg;
 
 import magia.core;
 
-import magia.render.drawable;
 import magia.render.mesh;
 import magia.render.shader;
 import magia.render.texture;
 import magia.render.vertex;
 import magia.render.window;
 import magia.shape.light;
+import magia.scene.entity;
 
 /// Packs a quad mesh and shader
 final class QuadGroup {
@@ -77,7 +77,7 @@ final class QuadGroup {
 }
 
 /// Instance of quad
-final class QuadInstance : Instance3D, Drawable3D {
+final class QuadInstance : Entity3D {
     private {
         QuadGroup _quadGroup;
         LightInstance _lightInstance;

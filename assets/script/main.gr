@@ -55,24 +55,4 @@ event onLoad() {
     Model asteroid = loadModel("asteroid/scene", light, nbAsteroids, instanceMatrices);
 
     //bunny:position(vec3(1f, 0f, 0f));
-
-    int counter;
-    loop {
-        // Draw calls
-        light:draw();
-        skybox:draw();
-
-        //quad:draw();
-        //tree:draw();
-        //grass:draw();
-        //ground:draw();
-        //bunny:draw();
-        //statue:draw();
-        jupiter:draw();
-        asteroid:draw();
-
-        // Next frame
-        counter++;
-        yield
-    }
 }

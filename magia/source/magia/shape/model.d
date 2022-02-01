@@ -3,14 +3,13 @@ module magia.shape.model;
 import bindbc.opengl;
 import gl3n.linalg;
 
-import magia.core.instance;
 import magia.core.transform;
 import magia.core.vec3;
-import magia.render.drawable;
 import magia.render.model;
 import magia.render.shader;
 import magia.render.window;
 import magia.shape.light;
+import magia.scene.entity;
 
 /// Packs a 3D object model and shader (@TODO defer load to another layer, so that we only load once even if several shaders are applied)
 final class ModelGroup {
@@ -51,7 +50,7 @@ final class ModelGroup {
 }
 
 /// Instance of a **Model** to render
-final class ModelInstance : Instance3D, Drawable3D {
+final class ModelInstance : Entity3D {
     private {
         ModelGroup _modelGroup;
         LightInstance _lightInstance;

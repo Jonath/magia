@@ -1,6 +1,6 @@
 module magia.render.drawable;
 
-import magia.core;
+import magia.core.vec2;
 
 /// Interface for objects drawable in 3D
 interface Drawable3D {

@@ -1,9 +1,8 @@
 module magia.shape.skybox;
 
-import magia.core.instance;
-import magia.render.drawable;
 import magia.render.skybox;
 import magia.scene.scene;
+import magia.scene.entity;
 
 /// Packs a skybox
 final class SkyboxGroup {
@@ -23,7 +22,7 @@ final class SkyboxGroup {
 }
 
 /// Instance of a **Skybox** to render
-final class SkyboxInstance : Instance3D, Drawable3D {
+final class SkyboxInstance : Entity3D {
     private {
         SkyboxGroup _skyboxGroup;
     }

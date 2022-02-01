@@ -6,14 +6,13 @@ import std.stdio;
 import bindbc.opengl;
 import gl3n.linalg;
 
-import magia.core;
-
-import magia.render.drawable;
+import magia.core.transform;
 import magia.render.mesh;
 import magia.render.shader;
 import magia.render.texture;
 import magia.render.vertex;
 import magia.render.window;
+import magia.scene.entity;
 
 /// Packs a light cube, its shader and its color
 final class LightGroup {
@@ -82,7 +81,7 @@ final class LightGroup {
 }
 
 /// Instance of light
-final class LightInstance : Instance3D, Drawable3D {
+final class LightInstance : Entity3D {
     private {
         LightGroup _lightGroup;
     }

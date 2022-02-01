@@ -6,7 +6,7 @@ import magia.scene.entity;
 
 private {
     Camera _camera, _defaultCamera;
-    Entity[] _entities;
+    Entity3D[] _entities;
 }
 
 void setCamera(Camera camera) {
@@ -17,7 +17,7 @@ Camera getCamera() {
     return _camera;
 }
 
-void addEntity(Entity entity) {
+void addEntity(Entity3D entity) {
     _entities ~= entity;
 }
 

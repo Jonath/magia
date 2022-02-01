@@ -4,7 +4,7 @@ import grimoire;
 
 import gl3n.linalg;
 
-import magia.core, magia.render, magia.shape;
+import magia.core, magia.render, magia.shape, magia.scene;
 
 import std.stdio;
 
@@ -34,7 +34,6 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     library.addFunction(&_position1, "position", [entityType, grReal, grReal, grReal], []);
     library.addFunction(&_position2, "position", [entityType, vec3Type], []);
     library.addFunction(&_packInstanceMatrix, "packInstanceMatrix", [vec3Type, quatType, vec3Type], [mat4Type]);
-    library.addFunction(&_draw, "draw", [entityType], []);
     library.addFunction(&_light, "loadLight", [], [lightType]);
     library.addFunction(&_model1, "loadModel", [grString, lightType], [modelType]);
     library.addFunction(&_model2, "loadModel", [grString, lightType, grInt, grArray(mat4Type)], [modelType]);
@@ -76,21 +75,18 @@ private void _packInstanceMatrix(GrCall call) {
     call.setForeign(wrapper);
 }
 
-private void _draw(GrCall call) {
-    Drawable3D drawable = call.getForeign!Drawable3D(0);
-    drawable.draw();
-}
-
 private void _light(GrCall call) {
     LightGroup lightGroup = new LightGroup();
     LightInstance lightInstance = new LightInstance(lightGroup);
     call.setForeign(lightInstance);
+    addEntity(lightInstance);
 }
 
 private void _model1(GrCall call) {
     ModelGroup modelGroup = new ModelGroup(call.getString(0)); // @TODO, check model group not already loaded (hashmap?)
     ModelInstance modelInstance = new ModelInstance(modelGroup, call.getForeign!LightInstance(1));
     call.setForeign(modelInstance);
+    addEntity(modelInstance);
 }
 
 private void _model2(GrCall call) { 
@@ -105,16 +101,19 @@ private void _model2(GrCall call) {
     ModelGroup modelGroup = new ModelGroup(call.getString(0), call.getInt32(2), matrices); // @TODO, check model group not already loaded (hashmap?)
     ModelInstance modelInstance = new ModelInstance(modelGroup, call.getForeign!LightInstance(1));
     call.setForeign(modelInstance);
+    addEntity(modelInstance);
 }
 
 private void _quad(GrCall call) {
     QuadGroup quadGroup = new QuadGroup();
     QuadInstance quadInstance = new QuadInstance(quadGroup, call.getForeign!LightInstance(0));
     call.setForeign(quadInstance);
+    addEntity(quadInstance);
 }
 
 private void _skybox(GrCall call) {
     SkyboxGroup skyboxGroup = new SkyboxGroup();
     SkyboxInstance skyboxInstance = new SkyboxInstance(skyboxGroup);
     call.setForeign(skyboxInstance);
+    addEntity(skyboxInstance);
 }
