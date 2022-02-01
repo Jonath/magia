@@ -136,7 +136,7 @@ class Texture {
         }
     }
 
-    /// Default constructor for shadow texture
+    /// Constructor for FBO
     this(uint width, uint height) {
         // Setup type
         type = "shadow";

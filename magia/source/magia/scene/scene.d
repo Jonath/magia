@@ -8,6 +8,7 @@ private {
     Camera _camera, _defaultCamera;
     Entity3D[] _entities;
     ShadowMap _shadowMap;
+    PostProcess _postProcess;
 }
 
 void setCamera(Camera camera) {
@@ -30,6 +31,7 @@ void initializeScene() {
     _defaultCamera = new Camera(screenWidth, screenHeight, Vec3f.zero);
     _camera = _defaultCamera;
     _shadowMap = new ShadowMap(vec3(0.0, 50.0, 0.0));
+    _postProcess = new PostProcess(screenWidth, screenHeight);
 }
 
 void updateScene(float deltaTime) {
@@ -102,9 +104,13 @@ void updateScene(float deltaTime) {
 }
 
 void drawScene() {
+    _postProcess.prepare();
+
     foreach(entity; _entities) {
         entity.draw();
     }
+
+    _postProcess.draw();
 }
 
 /// @TODO: Bouger ça à un endroit plus approprié.

@@ -17,7 +17,6 @@ class ShadowMap {
         uint _height;
         
         FBO _FBO;
-        Texture _texture;
         Shader _shader;
     }
 
@@ -30,10 +29,7 @@ class ShadowMap {
         float near = 0.1f;
         float far = 75.0f;
 
-        _texture = new Texture(_width, _height);
-
-        _FBO = new FBO();
-        _FBO.attachTexture(_texture);
+        _FBO = new FBO(_width, _height);
         _FBO.unbind();
 
         mat4 orthographicProjection = mat4.orthographic(-size, size, -size, size, near, far);

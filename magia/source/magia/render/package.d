@@ -8,6 +8,7 @@ public {
     import magia.render.font;
     import magia.render.model;
     import magia.render.oldtexture;
+    import magia.render.postprocess;
     import magia.render.primitive;
     import magia.render.shader;
     import magia.render.shadow;

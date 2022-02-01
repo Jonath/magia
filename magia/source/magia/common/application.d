@@ -64,7 +64,7 @@ void print(GrString message) {
 
 /// Main application loop
 void runApplication() {
-    createWindow(Vec2u(800, 600), "Magia");
+    createWindow(Vec2u(800, 800), "Magia");
     initializeEvents();
     _tickStartFrame = Clock.currStdTime();
 

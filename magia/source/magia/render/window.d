@@ -120,12 +120,12 @@ void createWindow(const Vec2u windowSize, string title) {
 
 	glViewport(0, 0, windowSize.x, windowSize.y);
 
-	glCullFace(GL_FRONT);
-	glFrontFace(GL_CCW);
-
 	// Enable depth buffer
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
+
+	// Enables gamma correction
+	//glEnable(GL_FRAMEBUFFER_SRGB);
 	
 	// Enable culling
 	/*glEnable(GL_CULL_FACE);

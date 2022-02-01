@@ -8,30 +8,38 @@ class FBO {
     /// Index
     GLuint id;
 
-    this() {
-        glGenFramebuffers(1, &id);
-        glBindFramebuffer(GL_FRAMEBUFFER, id);
+    private {
+        Texture _texture;
     }
 
-    /// Bind VBO
+    /// Constructor
+    this(uint width, uint height) {
+        assert(width == height, "FBO with different dimensions");
+
+        glGenFramebuffers(1, &id);
+        glBindFramebuffer(GL_FRAMEBUFFER, id);
+
+        _texture = new Texture(width, height);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, _texture.target, _texture.id, 0);
+    }
+
+    /// Bind FBO
     void bind() {
         glBindFramebuffer(GL_FRAMEBUFFER, id);
     }
 
-    /// Unbind VBO
+    /// Unbind FBO
     void unbind() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    /// Delete VBO
+    /// Delete FBO
     void remove() {
         glDeleteFramebuffers(1, &id);
     }
 
-    /// Pass texture onto FBO (so far only 2D supported)
-    void attachTexture(Texture texture) {
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texture.target, texture.id, 0);
-        glDrawBuffer(GL_NONE);
-        glReadBuffer(GL_NONE);
+    /// Bind attached texture
+    void bindTexture() {
+        _texture.bind();
     }
 }
