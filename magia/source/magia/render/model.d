@@ -18,7 +18,7 @@ import magia.render.texture;
 import magia.render.vertex;
 
 /// Class handling model data and draw call
-final class Model {
+final class Model : Renderable {
     private {
         // JSON data
         ubyte[] _data;

@@ -27,6 +27,13 @@ class Texture {
         bool _trace = false;
     }
 
+    @property {
+        /// Get texture target
+        GLenum target() const {
+            return _target;
+        }
+    }
+
     /// Constructor for usual 2D texture
     this(string path, string texType, GLuint slot) {
         // Setup type
@@ -127,6 +134,41 @@ class Texture {
 
             SDL_FreeSurface(surface);
         }
+    }
+
+    /// Default constructor for shadow texture
+    this(uint width, uint height) {
+        // Setup type
+        type = "shadow";
+
+        // Setup target
+        _target = GL_TEXTURE_2D;
+
+        // Setup slot
+        _slot = 0;
+
+        // Setup resolution
+        _width = width;
+        _height = height;
+
+        // Generate and bind texture
+        glGenTextures(1, &id);
+        glBindTexture(_target, id);
+
+        // Create texture
+        glTexImage2D(_target, 0, GL_DEPTH_COMPONENT, _width, _height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, null);
+        
+        // Setup filters
+        glTexParameteri(_target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(_target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        // Setup wrap
+        glTexParameteri(_target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+        glTexParameteri(_target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+        // Setup shadow color (black)
+        float[] clampColor = [1.0, 1.0, 1.0, 1.0];
+        glTexParameterfv(_target, GL_TEXTURE_BORDER_COLOR, clampColor.ptr);
     }
 
     /// Pass texture onto shader

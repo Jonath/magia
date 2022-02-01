@@ -16,8 +16,14 @@ import magia.render.texture;
 import magia.render.shader;
 import magia.render.vertex;
 
+/// Interface for renderable objects
+interface Renderable {
+    /// Render on screen
+    void draw(Shader shader, Transform transform);
+}
+
 /// Class handling mesh data and draw call
-class Mesh {
+final class Mesh : Renderable {
     private {
         Vertex[] _vertices;
         GLuint[] _indices;
