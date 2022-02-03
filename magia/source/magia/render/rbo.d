@@ -31,7 +31,7 @@ class RBO {
     }
 
     /// Unbind RBO
-    void unbind() {
+    static void unbind() {
         glBindRenderbuffer(GL_RENDERBUFFER, 0);
     }
 

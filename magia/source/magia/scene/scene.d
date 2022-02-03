@@ -127,6 +127,7 @@ void drawScene() {
 
     _postProcess.prepare();
 
+    // @TODO: post-processing should not apply
     if (_skybox) {
         _skybox.draw();
     }
@@ -140,6 +141,7 @@ void drawScene() {
     }
 
     _postProcess.draw();
+
     renderWindow();
 }
 

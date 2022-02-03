@@ -163,8 +163,8 @@ class Texture {
     }
 
     /// Unbind texture
-    void unbind() {
-        glBindTexture(_target, 0);
+    static void unbind(GLenum target) {
+        glBindTexture(target, 0);
     }
 
     /// Release texture

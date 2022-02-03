@@ -83,10 +83,9 @@ final class Mesh : Renderable {
         glVertexAttribDivisor(7, 1);
 
         // Unbind all objects
-        _VAO.unbind();
-        _VBO.unbind();
-        _instanceVBO.unbind();
-        _EBO.unbind();
+        VAO.unbind();
+        VBO.unbind();
+        EBO.unbind();
     }
 
     /// Draw call

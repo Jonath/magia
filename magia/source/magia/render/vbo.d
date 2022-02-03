@@ -37,7 +37,7 @@ class VBO {
     }
 
     /// Unbind VBO
-    void unbind() {
+    static void unbind() {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 

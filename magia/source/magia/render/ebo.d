@@ -20,7 +20,7 @@ class EBO {
     }
 
     /// Unbind VBO
-    void unbind() {
+    static void unbind() {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 

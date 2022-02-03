@@ -29,7 +29,7 @@ class VAO {
     }
 
     /// Unbind VAO
-    void unbind() {
+    static void unbind() {
         glBindVertexArray(0);
     }
 

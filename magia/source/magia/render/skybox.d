@@ -89,9 +89,9 @@ final class Skybox {
         _VAO.linkAttributes(_VBO, 0, 3, GL_FLOAT, 3 * float.sizeof, null);
 
         // Unbind all objects
-        _VAO.unbind();
-        _VBO.unbind();
-        _EBO.unbind();
+        VAO.unbind();
+        VBO.unbind();
+        EBO.unbind();
     }
 
     /// Draw call
