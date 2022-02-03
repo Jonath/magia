@@ -162,6 +162,12 @@ class Texture {
         glBindTexture(_target, id);
     }
 
+    /// Bind texture
+    void bind(GLuint slot) {
+        glActiveTexture(GL_TEXTURE0 + slot);
+        glBindTexture(_target, id);
+    }
+
     /// Unbind texture
     static void unbind(GLenum target) {
         glBindTexture(target, 0);

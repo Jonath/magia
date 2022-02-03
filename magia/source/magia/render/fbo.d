@@ -77,8 +77,8 @@ class FBO {
     }
 
     /// Bind attached texture
-    void bindTexture() {
-        _texture.bind();
+    void bindTexture(GLuint slot = 0) {
+        _texture.bind(slot);
     }
 
     /// Check FBO status

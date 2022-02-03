@@ -65,6 +65,10 @@ class PostProcess {
 
         _postProcessFBO = new FBO(FBOType.Postprocess, _width, _height);
         FBO.check("postprocess");
+
+        FBO.unbind();
+        RBO.unbind();
+        VAO.unbind();
     }
 
     void prepare() {

@@ -1,6 +1,8 @@
 module magia.scene.scene;
 
+import bindbc.opengl;
 import gl3n.linalg;
+
 import magia.common, magia.core, magia.render;
 import magia.scene.entity;
 import magia.shape.light;
@@ -45,7 +47,7 @@ void addEntity(Entity3D entity) {
 void initializeScene() {
     _defaultCamera = new Camera(screenWidth, screenHeight, Vec3f.zero);
     _camera = _defaultCamera;
-    _shadowMap = new ShadowMap(vec3(0.0, 50.0, 0.0));
+    _shadowMap = new ShadowMap(vec3(20.0, 20.0, 20.0));
     _postProcess = new PostProcess(screenWidth, screenHeight);
     
     _defaultShader = new Shader("default.vert", "default.frag");
@@ -123,7 +125,7 @@ void updateScene(float deltaTime) {
 }
 
 void drawScene() {
-    //_shadowMap.draw(_entities);
+    _shadowMap.register(_entities);
 
     _postProcess.prepare();
 
@@ -136,6 +138,7 @@ void drawScene() {
         _globalLight.draw(_lightShader);
     }
 
+    _shadowMap.bind(_defaultShader);
     foreach(entity; _entities) {
         entity.draw(_defaultShader);
     }

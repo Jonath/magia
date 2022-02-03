@@ -16,9 +16,11 @@ class ShadowMap {
     private {
         uint _width;
         uint _height;
-        
+
         FBO _FBO;
         Shader _shader;
+
+        mat4 _lightProjection;
     }
 
     /// Initialize the shadow map
@@ -31,21 +33,22 @@ class ShadowMap {
         float far = 75.0f;
 
         _FBO = new FBO(FBOType.Shadowmap, _width, _height);
+        FBO.check("shadow");
         FBO.unbindRead();
         FBO.unbindDraw();
         FBO.unbind(); 
 
         mat4 orthographicProjection = mat4.orthographic(-size, size, -size, size, near, far);
         mat4 lightView = mat4.look_at(lightPosition, vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-        mat4 lightProjection = orthographicProjection * lightView;
+        _lightProjection = orthographicProjection * lightView;
 
         _shader = new Shader("shadow.vert", "shadow.frag");
         _shader.activate();
-        glUniformMatrix4fv(glGetUniformLocation(_shader.id, "lightProjection"), 1, GL_FALSE, lightProjection.value_ptr);
+        glUniformMatrix4fv(glGetUniformLocation(_shader.id, "lightProjection"), 1, GL_FALSE, _lightProjection.value_ptr);
     }
 
-    /// Draw the shadows onto a given model/mesh
-    void draw(Entity3D[] _entities) {
+    /// Save the shadows of each entity into an FBO
+    void register(Entity3D[] _entities) {
         glEnable(GL_DEPTH_TEST);
         glViewport(0, 0, _width, _height);
 
@@ -58,5 +61,14 @@ class ShadowMap {
 
         FBO.unbind();
         resetViewport();
+    }
+
+    void bind(Shader shader) {
+        shader.activate();
+        glUniformMatrix4fv(glGetUniformLocation(shader.id, "lightProjection"), 1, GL_FALSE, _lightProjection.value_ptr);
+
+        GLuint slot = 2;
+        _FBO.bindTexture(slot);
+        glUniform1i(glGetUniformLocation(shader.id, "shadowMap"), slot);
     }
 }

@@ -6,9 +6,11 @@ in vec3 currentPos;
 in vec3 normal;
 in vec3 color;
 in vec2 texCoords;
+in vec4 fragLightPosition;
 
 uniform sampler2D diffuse0;
 uniform sampler2D specular0;
+uniform sampler2D shadowMap;
 
 uniform vec4 lightColor;
 uniform vec3 lightPos;
@@ -67,12 +69,27 @@ vec4 directionalLight() {
     }
 
     // Discard alpha
-    if (texture(diffuse0, texCoords).a < 0.1) {
+    if (texture(diffuse0, texCoords).a < 0.1f) {
         discard;
     }
 
+    float noShadow = 1.0f;
+    vec3 lightCoords = fragLightPosition.xyz / fragLightPosition.w;
+
+    if (lightCoords.z <= 1.0f) {
+        lightCoords = (lightCoords + 1.0f) / 2.0f;
+
+        float closestDepth = texture(shadowMap, lightCoords.xy).r;
+        float currentDepth = lightCoords.z;
+
+        float bias = 0.005f;
+        if (currentDepth > closestDepth + bias) {
+            noShadow = 0.0f;
+        }
+    }
+
     // Combining lightings, keeping alpha
-    vec4 lightColor = (texture(diffuse0, texCoords) * (diffuse + ambient) + texture(specular0, texCoords).r * specular) * lightColor;
+    vec4 lightColor = (texture(diffuse0, texCoords) * (diffuse * noShadow + ambient) + texture(specular0, texCoords).r * specular * noShadow) * lightColor;
     lightColor.a = 1.0f;
 
     return lightColor;
