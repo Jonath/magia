@@ -35,11 +35,10 @@ class Texture {
     }
 
     /// Default constructor
-    this(uint width, uint height, GLenum target, GLuint slot, string type_) {
+    this(uint width, uint height, GLenum target, string type_) {
         _width = width;
         _height = height;
         _target = target;
-        _slot = slot;
         type = type_;
     }
 
@@ -82,12 +81,16 @@ class Texture {
 
         // For now, consider diffuses as RGBA, speculars as R
         GLenum format;
+        GLenum internalFormat;
         if (nbChannels == 4) {
             format = GL_RGBA;
+            internalFormat = GL_SRGB_ALPHA;
         } else if (nbChannels == 3) {
             format = GL_RGB;
+            internalFormat = GL_SRGB;
         } else if (nbChannels == 1) {
             format = GL_RED;
+            internalFormat = GL_SRGB;
         } else {
             new Exception("Unsupported texture format for " ~ texType ~ " texture type");
         }
@@ -170,10 +173,60 @@ class Texture {
     }
 }
 
+class MultiSampleTexture : Texture {
+    /// Constructor for FBO shadow
+    this(uint width, uint height, uint nbSamples) {
+        super(width, height, GL_TEXTURE_2D_MULTISAMPLE, "multisample");
+
+        // Generate and bind texture
+        glGenTextures(1, &id);
+        glBindTexture(_target, id);
+
+        // Create texture
+        glTexImage2DMultisample(_target, nbSamples, GL_RGB16F, _width, _height, GL_TRUE);
+        
+        // Setup filters
+        glTexParameteri(_target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(_target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        // Setup wrap
+        glTexParameteri(_target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(_target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+        // Bind to FBO
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, _target, id, 0);
+    }
+}
+
+class PostProcessTexture : Texture {
+    /// Constructor for FBO shadow
+    this(uint width, uint height) {
+        super(width, height, GL_TEXTURE_2D, "postprocess");
+
+        // Generate and bind texture
+        glGenTextures(1, &id);
+        glBindTexture(_target, id);
+
+        // Create texture
+        glTexImage2D(_target, 0, GL_RGB16F, _width, _height, 0, GL_RGB, GL_UNSIGNED_BYTE, null);
+        
+        // Setup filters
+        glTexParameteri(_target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(_target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        // Setup wrap
+        glTexParameteri(_target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(_target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+        // Bind to FBO
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, _target, id, 0);
+    }
+}
+
 class ShadowmapTexture : Texture {
     /// Constructor for FBO shadow
     this(uint width, uint height) {
-        super(width, height, GL_TEXTURE_2D, 0, "shadow");
+        super(width, height, GL_TEXTURE_2D, "shadow");
 
         // Generate and bind texture
         glGenTextures(1, &id);
@@ -193,30 +246,5 @@ class ShadowmapTexture : Texture {
         // Setup shadow color (black)
         float[] clampColor = [1.0, 1.0, 1.0, 1.0];
         glTexParameterfv(_target, GL_TEXTURE_BORDER_COLOR, clampColor.ptr);
-    }
-}
-
-class PostProcessTexture : Texture {
-    /// Constructor for FBO shadow
-    this(uint width, uint height) {
-        super(width, height, GL_TEXTURE_2D, 0, "postprocess");
-
-        // Generate and bind texture
-        glGenTextures(1, &id);
-        glBindTexture(_target, id);
-
-        // Create texture
-        glTexImage2D(_target, 0, GL_RGB, _width, _height, 0, GL_RGB, GL_UNSIGNED_BYTE, null);
-        
-        // Setup filters
-        glTexParameteri(_target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(_target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-        // Setup wrap
-        glTexParameteri(_target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(_target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-        // Bind to FBO
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, _target, id, 0);
     }
 }

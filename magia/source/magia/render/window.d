@@ -124,6 +124,9 @@ void createWindow(const Vec2u windowSize, string title) {
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
+	// Enables multi-samples
+	glEnable(GL_MULTISAMPLE);
+
 	// Enables gamma correction
 	//glEnable(GL_FRAMEBUFFER_SRGB);
 	
@@ -138,9 +141,6 @@ void createWindow(const Vec2u windowSize, string title) {
 
 	// Deactivate vsync
 	// SDL_GL_SetSwapInterval(0);
-
-	// Clear color
-	glClearColor(.08f, .10f, .13f, 1.0f);
 
 	CanvasReference canvasRef;
 	canvasRef.position = cast(Vec2f)(windowSize) / 2;

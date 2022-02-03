@@ -4,7 +4,9 @@ out vec4 fragColor;
 in vec2 texCoords;
 
 uniform sampler2D screenTexture;
+uniform float gamma;
 
 void main() {
-    fragColor = vec4(1.0) - texture(screenTexture, texCoords);
+    vec4 fragment = texture(screenTexture, texCoords);
+    fragColor.rgb = pow(fragment.rgb, vec3(1.0 / gamma));
 }
