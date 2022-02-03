@@ -20,8 +20,8 @@ final class ModelInstance : Entity3D {
 
     /// Constructor
     this(string fileName, uint instances = 1, mat4[] instanceMatrices = [mat4.identity]) {
-        _model = new Model(fileName, instances, instanceMatrices);
         transform = Transform.identity;
+        _model = new Model(fileName, instances, instanceMatrices);
     }
     
     /// Render the model

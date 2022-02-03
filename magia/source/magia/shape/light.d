@@ -84,4 +84,4 @@ final class LightInstance : Entity3D {
     }
 }
 
-/// @TODO decorate lightInstance with type (directional, cone, point)
+/// @TODO decorate LightInstance with type (directional, cone, point)

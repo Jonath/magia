@@ -24,6 +24,8 @@ final class QuadInstance : Entity3D {
 
     /// Constructor
     this() {
+        transform = Transform.identity;
+
         // Quad vertices
         Vertex[] vertices = [
             //     COORDINATES                /     NORMALS         /    COLORS        /    TexCoord   //
