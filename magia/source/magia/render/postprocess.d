@@ -18,14 +18,18 @@ class PostProcess {
     this(uint width, uint height) {
         float[] rectangleVertices = [
             // Coords     // Texture coords
-            1.0f, -1.0f,    1.0f, 0.0f,
+             1.0f, -1.0f,    1.0f, 0.0f,
             -1.0f, -1.0f,    0.0f, 0.0f,
             -1.0f,  1.0f,    0.0f, 1.0f,
 
-            1.0f,  1.0f,    1.0f, 1.0f,
-            1.0f, -1.0f,    1.0f, 0.0f,
+             1.0f,  1.0f,    1.0f, 1.0f,
+             1.0f, -1.0f,    1.0f, 0.0f,
             -1.0f,  1.0f,    0.0f, 1.0f,
         ];
+
+        _shader = new Shader("postprocess.vert", "postprocess.frag");
+        _shader.activate();
+        glUniform1i(glGetUniformLocation(_shader.id, "screenTexture"), 0);
 
         _VAO = new VAO();
         _VAO.bind();
@@ -38,22 +42,28 @@ class PostProcess {
         _FBO = new FBO(FBOType.Postprocess, width, height);
         RBO RBO_ = new RBO(width, height);
         RBO_.attachFBO();
-
-        _shader = new Shader("postprocess.vert", "postprocess.frag");
-        _shader.activate();
-        glUniform1i(glGetUniformLocation(_FBO.id, "screenTexture"), 0);
-    }
-
-    void prepare() {
-        _FBO.bind();
-        glEnable(GL_DEPTH_TEST);
         _FBO.unbind();
     }
 
+    void prepare() {
+        // Bind frame buffer
+        _FBO.bind();
+
+        // Clear back buffer and depth buffer
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Enable depth testing
+        glEnable(GL_DEPTH_TEST);
+    }
+
     void draw() {
+        // Unbind frame buffer
+        _FBO.unbind();
+
+        // Draw the frame buffer rectangle
         _shader.activate();
         _VAO.bind();
-        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_DEPTH_TEST); // Prevents the frame buffer from being discarded
         _FBO.bindTexture();
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }

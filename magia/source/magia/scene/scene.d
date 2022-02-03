@@ -111,6 +111,7 @@ void drawScene() {
     }
 
     _postProcess.draw();
+    renderWindow();
 }
 
 /// @TODO: Bouger ça à un endroit plus approprié.

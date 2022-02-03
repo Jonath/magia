@@ -26,10 +26,8 @@ class FBO {
 
         if (type == FBOType.Postprocess) {
             _texture = new PostProcessTexture(width, height);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, _texture.target, _texture.id, 0);
         } else {
             _texture = new ShadowmapTexture(width, height);
-            // @TODO
         }
     }
 

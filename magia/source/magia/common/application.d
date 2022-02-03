@@ -101,8 +101,6 @@ void runApplication() {
         updateScene(_deltatime);
         drawScene();
 
-        renderWindow();
-
         long deltaTicks = Clock.currStdTime() - _tickStartFrame;
         if (deltaTicks < (10_000_000 / _nominalFPS))
             Thread.sleep(dur!("hnsecs")((10_000_000 / _nominalFPS) - deltaTicks));

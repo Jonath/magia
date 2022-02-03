@@ -133,8 +133,8 @@ void createWindow(const Vec2u windowSize, string title) {
 	glFrontFace(GL_CCW);*/
 
 	// Enable blending
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	/*glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);*/
 
 	// Deactivate vsync
 	// SDL_GL_SetSwapInterval(0);
@@ -288,9 +288,6 @@ void renderWindow() {
 	}
 
 	SDL_GL_SwapWindow(_sdlWindow);
-
-	// Clear back buffer and depth buffer
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 /// Push a render canvas on the stack.
