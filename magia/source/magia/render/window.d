@@ -126,9 +126,6 @@ void createWindow(const Vec2u windowSize, string title) {
 
 	// Enables multi-samples
 	glEnable(GL_MULTISAMPLE);
-
-	// Enables gamma correction
-	//glEnable(GL_FRAMEBUFFER_SRGB);
 	
 	// Enable culling
 	/*glEnable(GL_CULL_FACE);

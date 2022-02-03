@@ -95,7 +95,7 @@ class Texture {
             new Exception("Unsupported texture format for " ~ texType ~ " texture type");
         }
 
-        glTexImage2D(_target, 0, GL_RGBA, _width, _height, 0, format, GL_UNSIGNED_BYTE, surface.pixels);
+        glTexImage2D(_target, 0, internalFormat, _width, _height, 0, format, GL_UNSIGNED_BYTE, surface.pixels);
 
         // Generate mipmaps
         glGenerateMipmap(_target);

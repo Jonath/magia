@@ -7,7 +7,7 @@ event onLoad() {
     camera:position(0., .5, 2.);
 
     Light light = loadLight();
-    light:position(0.0, 0.5, 0.0);
+    light:position(0.5, 0.5, 0.5);
 
     //Skybox skybox = loadSkybox();
 

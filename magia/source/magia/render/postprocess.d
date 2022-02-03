@@ -11,7 +11,7 @@ import magia.render.fbo;
 import magia.render.rbo;
 
 // Controls the gamma function
-static float gamma = 1.0f;
+static float gamma = 2.2f;
 
 // Background color
 static Color bgColor = Color(.08f, .10f, .13f);
