@@ -12,6 +12,7 @@ public {
     import magia.render.primitive;
     import magia.render.shader;
     import magia.render.shadow;
+    import magia.render.skybox;
     import magia.render.sprite;
     import magia.render.text;
     import magia.render.tileset;

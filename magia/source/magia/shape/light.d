@@ -14,11 +14,10 @@ import magia.render.vertex;
 import magia.render.window;
 import magia.scene.entity;
 
-/// Packs a light cube, its shader and its color
-final class LightGroup {
+/// Instance of light
+final class LightInstance : Entity3D {
     private {
         Mesh _mesh;
-        Shader _shader;
         vec4 _color;
     }
 
@@ -31,6 +30,8 @@ final class LightGroup {
 
     /// Constructor
     this() {
+        transform = Transform.identity;
+
         // Quad light vertices
         Vertex[] vertices = [
             //  COORDINATES
@@ -61,47 +62,25 @@ final class LightGroup {
         ];
 
         _mesh = new Mesh(vertices, indices);
-        _shader = new Shader("light.vert", "light.frag");
         _color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    }
 
-        _shader.activate();
-        glUniform4f(glGetUniformLocation(_shader.id, "lightColor"),
+    /// Setup light casting and receiving shaders
+    void setupShaders(Shader lightShader, Shader materialShader) {
+        lightShader.activate();
+        glUniform4f(glGetUniformLocation(lightShader.id, "lightColor"),
                                          _color.x, _color.y, _color.z, _color.w);
+
+        materialShader.activate();
+        glUniform4f(glGetUniformLocation(materialShader.id, "lightColor"),
+                                         _color.x, _color.y, _color.z, _color.w);
+        glUniform3f(glGetUniformLocation(materialShader.id, "lightPos"),
+                                         transform.position.x, transform.position.y, transform.position.z);
     }
 
-    /// Unload
-    void unload() {
-        _shader.remove();
-    }
-
-    /// Render the quad
-    void draw(const Transform transform) {
-        _mesh.draw(_shader, transform);
-    }
-}
-
-/// Instance of light
-final class LightInstance : Entity3D {
-    private {
-        LightGroup _lightGroup;
-    }
-
-    @property {
-        /// Gets color
-        vec4 color() {
-            return _lightGroup.color;
-        }
-    }
-
-    /// Constructor
-    this(LightGroup lightGroup) {
-        transform = Transform.identity;
-        _lightGroup = lightGroup;
-    }
-
-    /// Render the light
-    void draw() {
-        _lightGroup.draw(transform);
+    /// Render the light object (for debug)
+    void draw(Shader shader) {
+        _mesh.draw(shader, transform);
     }
 }
 

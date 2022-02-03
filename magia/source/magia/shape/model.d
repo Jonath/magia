@@ -12,68 +12,20 @@ import magia.render.window;
 import magia.shape.light;
 import magia.scene;
 
-/// Packs a 3D object model and shader (@TODO defer load to another layer, so that we only load once even if several shaders are applied)
-final class ModelGroup {
+/// Instance of a **Model** to render
+final class ModelInstance : Entity3D {
     private {
         Model _model;
-        Shader _shader;
     }
 
     /// Constructor
     this(string fileName, uint instances = 1, mat4[] instanceMatrices = [mat4.identity]) {
         _model = new Model(fileName, instances, instanceMatrices);
-        _shader = new Shader("default.vert", "default.frag");
-    }
-
-    /// Unload
-    void unload() {
-        _shader.remove();
-    }
-
-    /// Setup light before a draw call
-    void setupLight(LightInstance lightInstance) {
-        _shader.activate();
-        glUniform4f(glGetUniformLocation(_shader.id, "lightColor"),
-                                         lightInstance.color.x,
-                                         lightInstance.color.y,
-                                         lightInstance.color.z,
-                                         lightInstance.color.w);
-        glUniform3f(glGetUniformLocation(_shader.id, "lightPos"),
-                                         lightInstance.transform.position.x,
-                                         lightInstance.transform.position.y,
-                                         lightInstance.transform.position.z);
-    }
-
-    /// Draw the model somewhere with its current shader parameters
-    void draw(Transform transform) {
-        _model.draw(_shader, transform);
-    }
-
-    void drawShadows(ShadowMap shadowMap, Transform transform) {
-        shadowMap.draw(_model, transform);
-    }
-}
-
-/// Instance of a **Model** to render
-final class ModelInstance : Entity3D {
-    private {
-        ModelGroup _modelGroup;
-        LightInstance _lightInstance;
-        ShadowMap _shadowMap;
-    }
-
-    /// Constructor
-    this(ModelGroup modelGroup, LightInstance lightInstance) {
         transform = Transform.identity;
-        _modelGroup = modelGroup;
-        _lightInstance = lightInstance;
-        _shadowMap = getShadowMap();
     }
     
     /// Render the model
-    void draw() {
-        _modelGroup.setupLight(_lightInstance);
-        _modelGroup.draw(transform);
-        //_modelGroup.drawShadows(_shadowMap, transform);
+    void draw(Shader shader) {
+        _model.draw(shader, transform);
     }
 }

@@ -246,5 +246,8 @@ class ShadowmapTexture : Texture {
         // Setup shadow color (black)
         float[] clampColor = [1.0, 1.0, 1.0, 1.0];
         glTexParameterfv(_target, GL_TEXTURE_BORDER_COLOR, clampColor.ptr);
+
+        // Bind to FBO
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, _target, id, 0);
     }
 }

@@ -56,6 +56,16 @@ class FBO {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
+    /// Unbind FBO (bind to default FBO)
+    static void unbindRead() {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    /// Unbind FBO (bind to default FBO)
+    static void unbindDraw() {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
     /// Blit frame buffer
     static void blit(uint width, uint height) {
         glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);

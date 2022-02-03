@@ -3,16 +3,31 @@ module magia.scene.scene;
 import gl3n.linalg;
 import magia.common, magia.core, magia.render;
 import magia.scene.entity;
+import magia.shape.light;
 
 private {
     Camera _camera, _defaultCamera;
     Entity3D[] _entities;
+    LightInstance _globalLight;
     ShadowMap _shadowMap;
+    Skybox _skybox;
     PostProcess _postProcess;
+    Shader _defaultShader;
+    Shader _lightShader;
+    Shader _shadowShader;
 }
 
 void setCamera(Camera camera) {
     _camera = camera ? camera : _defaultCamera;
+}
+
+void setSkybox(Skybox skybox) {
+    _skybox = skybox;
+}
+
+void setGlobalLight(LightInstance globalLight) {
+    _globalLight = globalLight;
+    _globalLight.setupShaders(_lightShader, _defaultShader);
 }
 
 Camera getCamera() {
@@ -32,6 +47,10 @@ void initializeScene() {
     _camera = _defaultCamera;
     _shadowMap = new ShadowMap(vec3(0.0, 50.0, 0.0));
     _postProcess = new PostProcess(screenWidth, screenHeight);
+    
+    _defaultShader = new Shader("default.vert", "default.frag");
+    _lightShader = new Shader("light.vert", "light.frag");
+    _shadowShader = new Shader("shadow.vert", "shadow.frag");
 }
 
 void updateScene(float deltaTime) {
@@ -104,10 +123,20 @@ void updateScene(float deltaTime) {
 }
 
 void drawScene() {
+    //_shadowMap.draw(_entities);
+
     _postProcess.prepare();
 
+    if (_skybox) {
+        _skybox.draw();
+    }
+
+    if (_globalLight) {
+        _globalLight.draw(_lightShader);
+    }
+
     foreach(entity; _entities) {
-        entity.draw();
+        entity.draw(_defaultShader);
     }
 
     _postProcess.draw();

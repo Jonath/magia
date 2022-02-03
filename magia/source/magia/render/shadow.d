@@ -9,6 +9,7 @@ import magia.render.mesh; // @TODO move renderable declaration
 import magia.render.shader;
 import magia.render.texture;
 import magia.render.window;
+import magia.scene.entity;
 
 /// Class holding shadow map data
 class ShadowMap {
@@ -30,7 +31,9 @@ class ShadowMap {
         float far = 75.0f;
 
         _FBO = new FBO(FBOType.Shadowmap, _width, _height);
-        _FBO.unbind();
+        FBO.unbindRead();
+        FBO.unbindDraw();
+        FBO.unbind(); 
 
         mat4 orthographicProjection = mat4.orthographic(-size, size, -size, size, near, far);
         mat4 lightView = mat4.look_at(lightPosition, vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
@@ -42,15 +45,18 @@ class ShadowMap {
     }
 
     /// Draw the shadows onto a given model/mesh
-    void draw(Renderable renderable, Transform transform) {
+    void draw(Entity3D[] _entities) {
         glEnable(GL_DEPTH_TEST);
         glViewport(0, 0, _width, _height);
 
         _FBO.bind();
         glClear(GL_DEPTH_BUFFER_BIT);
-        renderable.draw(_shader, transform);
-        _FBO.unbind();
 
-        //resetViewport();
+        foreach(entity; _entities) {
+            entity.draw(_shader);
+        }
+
+        FBO.unbind();
+        resetViewport();
     }
 }

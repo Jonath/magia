@@ -35,9 +35,9 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     library.addFunction(&_position2, "position", [entityType, vec3Type], []);
     library.addFunction(&_packInstanceMatrix, "packInstanceMatrix", [vec3Type, quatType, vec3Type], [mat4Type]);
     library.addFunction(&_light, "loadLight", [], [lightType]);
-    library.addFunction(&_model1, "loadModel", [grString, lightType], [modelType]);
-    library.addFunction(&_model2, "loadModel", [grString, lightType, grInt, grArray(mat4Type)], [modelType]);
-    library.addFunction(&_quad, "loadQuad", [lightType], [quadType]);
+    library.addFunction(&_model1, "loadModel", [grString], [modelType]);
+    library.addFunction(&_model2, "loadModel", [grString, grInt, grArray(mat4Type)], [modelType]);
+    library.addFunction(&_quad, "loadQuad", [], [quadType]);
     library.addFunction(&_skybox, "loadSkybox", [], [skyboxType]);
 }
 
@@ -76,21 +76,19 @@ private void _packInstanceMatrix(GrCall call) {
 }
 
 private void _light(GrCall call) {
-    LightGroup lightGroup = new LightGroup();
-    LightInstance lightInstance = new LightInstance(lightGroup);
+    LightInstance lightInstance = new LightInstance();
     call.setForeign(lightInstance);
-    addEntity(lightInstance);
+    setGlobalLight(lightInstance);
 }
 
 private void _model1(GrCall call) {
-    ModelGroup modelGroup = new ModelGroup(call.getString(0)); // @TODO, check model group not already loaded (hashmap?)
-    ModelInstance modelInstance = new ModelInstance(modelGroup, call.getForeign!LightInstance(1));
+    ModelInstance modelInstance = new ModelInstance(call.getString(0));
     call.setForeign(modelInstance);
     addEntity(modelInstance);
 }
 
 private void _model2(GrCall call) { 
-    const GrArray!MatWrapper grMat4Array = call.getArray!MatWrapper(3);
+    const GrArray!MatWrapper grMat4Array = call.getArray!MatWrapper(2);
     const MatWrapper[] mat4Array = grMat4Array.data;
 
     mat4[] matrices;
@@ -98,22 +96,19 @@ private void _model2(GrCall call) {
         matrices ~= matWrapper.matrix;
     }
 
-    ModelGroup modelGroup = new ModelGroup(call.getString(0), call.getInt32(2), matrices); // @TODO, check model group not already loaded (hashmap?)
-    ModelInstance modelInstance = new ModelInstance(modelGroup, call.getForeign!LightInstance(1));
+    ModelInstance modelInstance = new ModelInstance(call.getString(0), call.getInt32(1), matrices);
     call.setForeign(modelInstance);
     addEntity(modelInstance);
 }
 
 private void _quad(GrCall call) {
-    QuadGroup quadGroup = new QuadGroup();
-    QuadInstance quadInstance = new QuadInstance(quadGroup, call.getForeign!LightInstance(0));
+    QuadInstance quadInstance = new QuadInstance();
     call.setForeign(quadInstance);
     addEntity(quadInstance);
 }
 
 private void _skybox(GrCall call) {
-    SkyboxGroup skyboxGroup = new SkyboxGroup();
-    SkyboxInstance skyboxInstance = new SkyboxInstance(skyboxGroup);
-    call.setForeign(skyboxInstance);
-    addEntity(skyboxInstance);
+    Skybox skybox = new Skybox(getCamera());
+    call.setForeign(skybox);
+    setSkybox(skybox);
 }

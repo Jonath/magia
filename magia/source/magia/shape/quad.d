@@ -16,11 +16,10 @@ import magia.render.window;
 import magia.shape.light;
 import magia.scene.entity;
 
-/// Packs a quad mesh and shader
-final class QuadGroup {
+/// Instance of quad
+final class QuadInstance : Entity3D {
     private {
         Mesh _mesh;
-        Shader _shader;
     }
 
     /// Constructor
@@ -48,51 +47,10 @@ final class QuadGroup {
         ];
 
         _mesh = new Mesh(vertices, indices, textures);
-        _shader = new Shader("default.vert", "default.frag");
-    }
-
-    /// Setup light before a draw call
-    void setupLight(LightInstance lightInstance) {
-        _shader.activate();
-        glUniform4f(glGetUniformLocation(_shader.id, "lightColor"),
-                                         lightInstance.color.x,
-                                         lightInstance.color.y,
-                                         lightInstance.color.z,
-                                         lightInstance.color.w);
-        glUniform3f(glGetUniformLocation(_shader.id, "lightPos"),
-                                         lightInstance.transform.position.x,
-                                         lightInstance.transform.position.y,
-                                         lightInstance.transform.position.z);
-    }
-
-    /// Unload
-    void unload() {
-        _shader.remove();
     }
 
     /// Render the quad
-    void draw(const Transform transform) {
-        _mesh.draw(_shader, transform);
-    }
-}
-
-/// Instance of quad
-final class QuadInstance : Entity3D {
-    private {
-        QuadGroup _quadGroup;
-        LightInstance _lightInstance;
-    }
-
-    /// Constructor
-    this(QuadGroup quadGroup, LightInstance lightInstance) {
-        transform = Transform.identity;
-        _quadGroup = quadGroup;
-        _lightInstance = lightInstance;
-    }
-
-    /// Render the light
-    void draw() {
-        _quadGroup.setupLight(_lightInstance);
-        _quadGroup.draw(transform);
+    void draw(Shader shader) {
+        _mesh.draw(shader, transform);
     }
 }
