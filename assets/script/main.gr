@@ -7,7 +7,7 @@ event onLoad() {
     camera:position(0., .5, 2.);
 
     Light light = loadLight();
-    light:position(.5, .5, .5);
+    light:position(0., 20., 0.);
 
     //Skybox skybox = loadSkybox();
 
@@ -16,6 +16,7 @@ event onLoad() {
     //Model grass = loadModel("grass/scene");
     //Model ground = loadModel("ground/scene");
     //Model bunny = loadModel("bunny/scene");
+    //bunny:position(vec3(0., 0., -.5));
     //Model statue = loadModel("statue/scene");
     //Model jupiter = loadModel("jupiter/scene");
     Model crow = loadModel("crow/scene");
@@ -52,6 +53,4 @@ event onLoad() {
     }
 
     //Model asteroid = loadModel("asteroid/scene", nbAsteroids, instanceMatrices);
-
-    //bunny:position(vec3(1f, 0f, 0f));
 }

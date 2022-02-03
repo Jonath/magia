@@ -59,6 +59,7 @@ class ShadowMap {
             entity.draw(_shader);
         }
 
+        glDrawArrays(GL_TRIANGLES, 0, 6);
         FBO.unbind();
         resetViewport();
     }
