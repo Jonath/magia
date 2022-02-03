@@ -73,7 +73,7 @@ vec4 directionalLight() {
         discard;
     }
 
-    float noShadow = 1.0f;
+    float shadow = 0.0f;
     vec3 lightCoords = fragLightPosition.xyz / fragLightPosition.w;
 
     if (lightCoords.z <= 1.0f) {
@@ -82,11 +82,23 @@ vec4 directionalLight() {
         float closestDepth = texture(shadowMap, lightCoords.xy).r;
         float currentDepth = lightCoords.z;
 
-        float bias = 0.005f;
-        if (currentDepth > closestDepth + bias) {
-            noShadow = 0.0f;
+        float bias = max(0.025f * (1.0f - dot(normal, lightDirection)), 0.0005f);
+
+        int sampleRadius = 2;
+        vec2 pixelSize = 1.0 / textureSize(shadowMap, 0);
+        for(int y = -sampleRadius; y <= sampleRadius; y++) {
+            for(int x = -sampleRadius; x <= sampleRadius; x++) {
+                float closestDepth = texture(shadowMap, lightCoords.xy + vec2(x, y) * pixelSize).r;
+                if (currentDepth > closestDepth + bias) {
+                    shadow += 1.0f;
+                }
+            }
         }
+
+        shadow /= pow((sampleRadius * 2 + 1), 2);
     }
+
+    float noShadow = 1.0f - shadow;
 
     // Combining lightings, keeping alpha
     vec4 lightColor = (texture(diffuse0, texCoords) * (diffuse * noShadow + ambient) + texture(specular0, texCoords).r * specular * noShadow) * lightColor;
