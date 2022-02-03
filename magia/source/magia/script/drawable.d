@@ -33,6 +33,8 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     library.addFunction(&_quat, "quat", [grReal, grReal, grReal, grReal], [quatType]);
     library.addFunction(&_position1, "position", [entityType, grReal, grReal, grReal], []);
     library.addFunction(&_position2, "position", [entityType, vec3Type], []);
+    library.addFunction(&_scale1, "scale", [entityType, grReal, grReal, grReal], []);
+    library.addFunction(&_scale2, "scale", [entityType, vec3Type], []);
     library.addFunction(&_packInstanceMatrix, "packInstanceMatrix", [vec3Type, quatType, vec3Type], [mat4Type]);
     library.addFunction(&_light, "loadLight", [], [lightType]);
     library.addFunction(&_model1, "loadModel", [grString], [modelType]);
@@ -59,6 +61,17 @@ private void _position2(GrCall call) {
     Instance3D instance = call.getForeign!Instance3D(0);
     GrObject position = call.getObject(1);
     instance.transform.position = vec3(position.getReal("x"), position.getReal("y"), position.getReal("z"));
+}
+
+private void _scale1(GrCall call) {
+    Instance3D instance = call.getForeign!Instance3D(0);
+    instance.transform.position = vec3(call.getReal(1), call.getReal(2), call.getReal(3));
+}
+
+private void _scale2(GrCall call) {
+    Instance3D instance = call.getForeign!Instance3D(0);
+    GrObject scale = call.getObject(1);
+    instance.transform.scale = vec3(scale.getReal("x"), scale.getReal("y"), scale.getReal("z"));
 }
 
 private void _packInstanceMatrix(GrCall call) {

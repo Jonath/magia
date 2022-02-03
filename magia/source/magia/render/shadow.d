@@ -24,31 +24,32 @@ class ShadowMap {
     }
 
     /// Initialize the shadow map
-    this(vec3 lightPosition) {
+    this() {
         _width = 2048;
         _height = 2048;
-
-        float size = 35.0f;
-        float near = 0.1f;
-        float far = 75.0f;
 
         _FBO = new FBO(FBOType.Shadowmap, _width, _height);
         FBO.check("shadow");
         FBO.unbindRead();
         FBO.unbindDraw();
-        FBO.unbind(); 
+        FBO.unbind();
+
+        _shader = new Shader("shadow.vert", "shadow.frag");
+    }
+
+    /// Save the shadows of each entity into an FBO
+    void register(Entity3D[] _entities, vec3 lightPosition) {
+        float size = 35.0f;
+        float near = 0.1f;
+        float far = 75.0f;
 
         mat4 orthographicProjection = mat4.orthographic(-size, size, -size, size, near, far);
         mat4 lightView = mat4.look_at(lightPosition, vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
         _lightProjection = orthographicProjection * lightView;
 
-        _shader = new Shader("shadow.vert", "shadow.frag");
         _shader.activate();
         glUniformMatrix4fv(glGetUniformLocation(_shader.id, "lightProjection"), 1, GL_FALSE, _lightProjection.value_ptr);
-    }
 
-    /// Save the shadows of each entity into an FBO
-    void register(Entity3D[] _entities) {
         glEnable(GL_DEPTH_TEST);
         glViewport(0, 0, _width, _height);
 

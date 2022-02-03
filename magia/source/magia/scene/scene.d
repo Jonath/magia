@@ -46,7 +46,7 @@ void addEntity(Entity3D entity) {
 void initializeScene() {
     _defaultCamera = new Camera(screenWidth, screenHeight, Vec3f.zero);
     _camera = _defaultCamera;
-    _shadowMap = new ShadowMap(vec3(-20.0, -20.0, -20.0));
+    _shadowMap = new ShadowMap();
     _postProcess = new PostProcess(screenWidth, screenHeight);
     
     _defaultShader = new Shader("default.vert", "default.frag");
@@ -125,7 +125,7 @@ void updateScene(float deltaTime) {
 
 void drawScene() {
     _globalLight.setupShaders(_lightShader, _defaultShader);
-    _shadowMap.register(_entities);
+    _shadowMap.register(_entities, _globalLight.transform.position); // vec3(-20.0, -20.0, -20.0)
     _postProcess.prepare();
 
     // @TODO: post-processing should not apply
