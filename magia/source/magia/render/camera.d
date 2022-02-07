@@ -78,8 +78,10 @@ class Camera {
     }
 
     /// Sets camera matrix in shader
-    void passToShader(Shader shader, const char* uniform) {
-        glUniformMatrix4fv(glGetUniformLocation(shader.id, uniform), 1, GL_TRUE, _matrix.value_ptr);
+    void passToShader(Shader shader) {
+        shader.activate();
+        glUniform3f(glGetUniformLocation(shader.id, "camPos"), _position.x, _position.x, _position.z);
+        glUniformMatrix4fv(glGetUniformLocation(shader.id, "camMatrix"), 1, GL_TRUE, _matrix.value_ptr);
     }
 
     /// Sets camera matrix in shader

@@ -6,6 +6,7 @@ import bindbc.opengl;
 import gl3n.linalg;
 
 import magia.render.camera;
+import magia.render.postprocess;
 import magia.render.shader;
 import magia.render.texture;
 import magia.render.ebo;
@@ -31,8 +32,7 @@ final class Skybox {
 
         /// Indices
         GLuint[] _indices = [
-            // Right
-            1, 2, 6,
+            // RightglUniform1f(glGetUniformLocation(_shader.id, "gamma"), gamma);
             6, 5, 1,
             // Left
             0, 4, 7,
@@ -100,6 +100,7 @@ final class Skybox {
         
         _shader.activate();
         _camera.passToSkyboxShader(_shader);
+        glUniform1f(glGetUniformLocation(_shader.id, "gamma"), gamma);
 
         _VAO.bind();
         _texture.bind();

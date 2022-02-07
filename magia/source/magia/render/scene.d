@@ -146,6 +146,7 @@ void updateScene(float deltaTime) {
 }
 
 void drawScene() {
+    _camera.passToShader(_defaultShader);
     _globalLight.setupShaders(_lightShader, _defaultShader);
 
     if (_showShadows) {

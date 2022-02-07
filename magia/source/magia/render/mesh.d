@@ -88,8 +88,8 @@ final class Mesh : Renderable {
         EBO.unbind();
     }
 
-    /// Draw call
-    void draw(Shader shader, Transform transform = Transform.identity) {
+    /// Bind shader, VAO
+    void bindData(Shader shader) {
         shader.activate();
         _VAO.bind();
 
@@ -114,35 +114,14 @@ final class Mesh : Renderable {
             texture.bind();
             ++textureId;
         }
+    }
 
-        Camera camera = getCamera();
-        glUniform3f(glGetUniformLocation(shader.id, "camPos"),
-            camera.position.x, camera.position.x, camera.position.z);
-        camera.passToShader(shader, "camMatrix");
+    /// Draw call
+    void draw(Shader shader, Transform transform = Transform.identity) {
+        bindData(shader);
 
         if (_instances == 1) {
-            mat4 localTranslation = mat4.identity;
-            mat4 localRotation = mat4.identity;
-            mat4 localScale = mat4.identity;
-
-            if (_traceDeep) {
-                writeln("Position: ", transform.position);
-                writeln("Rotation: ", transform.rotation);
-                writeln("Scale: ", transform.scale);
-                writeln("Model: ", transform.model);
-            }
-
-            localTranslation = localTranslation.translate(transform.position);
-            localRotation = transform.rotation.to_matrix!(4, 4);
-            localScale[0][0] = transform.scale.x;
-            localScale[1][1] = transform.scale.y;
-            localScale[2][2] = transform.scale.z;
-
-            glUniformMatrix4fv(glGetUniformLocation(shader.id, "translation"), 1, GL_TRUE, localTranslation.value_ptr);
-            glUniformMatrix4fv(glGetUniformLocation(shader.id, "rotation"), 1, GL_TRUE, localRotation.value_ptr);
-            glUniformMatrix4fv(glGetUniformLocation(shader.id, "scale"), 1, GL_TRUE, localScale.value_ptr);
             glUniformMatrix4fv(glGetUniformLocation(shader.id, "model"), 1, GL_TRUE, transform.model.value_ptr);
-
             glDrawElements(GL_TRIANGLES, cast(int) _indices.length, GL_UNSIGNED_INT, null);
         } else {
             glUniformMatrix4fv(glGetUniformLocation(shader.id, "model"), 1, GL_TRUE, mat4.identity.value_ptr);

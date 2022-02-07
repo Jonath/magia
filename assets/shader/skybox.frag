@@ -4,7 +4,9 @@ out vec4 fragColor;
 in vec3 texCoord;
 
 uniform samplerCube skybox;
+uniform float gamma;
 
 void main() {  
-    fragColor = texture(skybox, texCoord);
+    vec4 fragment = texture(skybox, texCoord);
+    fragColor.rgb = pow(fragment.rgb, vec3(gamma));
 }
