@@ -21,7 +21,7 @@ void main() {
     normal = iNormal;
     color = iColor;
     texCoords = iTexCoords;
-    fragLightPosition = lightProjection * vec4(iPos, 1.0);
+    fragLightPosition = lightProjection * vec4(currentPos, 1.0);
 
     gl_Position = camMatrix * vec4(currentPos, 1.0);
 }
