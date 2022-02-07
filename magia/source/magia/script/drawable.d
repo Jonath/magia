@@ -29,6 +29,7 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     GrType modelType = library.addForeign("Model", [], "Entity");
     GrType quadType = library.addForeign("Quad", [], "Entity");
     GrType skyboxType = library.addForeign("Skybox", [], "Entity");
+    GrType lightEnumType = library.addEnum("LightKind", ["DIRECTIONAL", "POINT", "SPOT"]);
 
     library.addFunction(&_quat, "quat", [grReal, grReal, grReal, grReal], [quatType]);
     library.addFunction(&_position1, "position", [entityType, grReal, grReal, grReal], []);
@@ -36,7 +37,7 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     library.addFunction(&_scale1, "scale", [entityType, grReal, grReal, grReal], []);
     library.addFunction(&_scale2, "scale", [entityType, vec3Type], []);
     library.addFunction(&_packInstanceMatrix, "packInstanceMatrix", [vec3Type, quatType, vec3Type], [mat4Type]);
-    library.addFunction(&_light, "loadLight", [], [lightType]);
+    library.addFunction(&_light, "loadLight", [lightEnumType], [lightType]);
     library.addFunction(&_model1, "loadModel", [grString], [modelType]);
     library.addFunction(&_model2, "loadModel", [grString, grInt, grArray(mat4Type)], [modelType]);
     library.addFunction(&_quad, "loadQuad", [], [quadType]);
@@ -89,7 +90,7 @@ private void _packInstanceMatrix(GrCall call) {
 }
 
 private void _light(GrCall call) {
-    LightInstance lightInstance = new LightInstance();
+    LightInstance lightInstance = new LightInstance(call.getEnum!LightType(0));
     call.setForeign(lightInstance);
     setGlobalLight(lightInstance);
 }

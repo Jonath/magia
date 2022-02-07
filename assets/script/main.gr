@@ -6,7 +6,7 @@ event onLoad() {
     let camera = getCamera();
     camera:position(0., .5, 2.);
 
-    Light light = loadLight();
+    Light light = loadLight(LightKind.DIRECTIONAL);
     light:position(0., 1., 0.);
 
     //Skybox skybox = loadSkybox();

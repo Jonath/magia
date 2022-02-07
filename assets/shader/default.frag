@@ -12,6 +12,7 @@ uniform sampler2D diffuse0;
 uniform sampler2D specular0;
 uniform sampler2D shadowMap;
 
+uniform int lightType;
 uniform vec4 lightColor;
 uniform vec3 lightPos;
 uniform vec3 camPos;
@@ -156,5 +157,11 @@ float logisticDepth(float depth, float steepness, float offset) {
 // fragColor = directionalLight() * (1.0 - depth) + vec4(depth * vec3(0.85, 0.85, 0.90), 1.0);
 
 void main() {
-    fragColor = directionalLight();
+    if (lightType == 0) {
+        fragColor = directionalLight();
+    } else if (lightType == 1) {
+        fragColor = pointLight();
+    } else if (lightType == 2) {
+        fragColor = spotLight();
+    }
 }

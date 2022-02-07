@@ -14,11 +14,18 @@ import magia.render.vertex;
 import magia.render.window;
 import magia.scene.entity;
 
+enum LightType {
+    DIRECTIONAL,
+    POINT,
+    SPOT
+}
+
 /// Instance of light
 final class LightInstance : Entity3D {
     private {
         Mesh _mesh;
         vec4 _color;
+        LightType _lightType;
     }
 
     @property {
@@ -29,7 +36,8 @@ final class LightInstance : Entity3D {
     }
 
     /// Constructor
-    this() {
+    this(LightType lightType) {
+        _lightType = lightType;
         transform = Transform.identity;
 
         // Quad light vertices
@@ -72,6 +80,7 @@ final class LightInstance : Entity3D {
                                          _color.x, _color.y, _color.z, _color.w);
 
         materialShader.activate();
+        glUniform1i(glGetUniformLocation(materialShader.id, "lightType"), cast(int)_lightType);
         glUniform4f(glGetUniformLocation(materialShader.id, "lightColor"),
                                          _color.x, _color.y, _color.z, _color.w);
         glUniform3f(glGetUniformLocation(materialShader.id, "lightPos"),

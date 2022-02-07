@@ -125,7 +125,7 @@ void updateScene(float deltaTime) {
 
 void drawScene() {
     _globalLight.setupShaders(_lightShader, _defaultShader);
-    _shadowMap.register(_entities, _globalLight.transform.position); // vec3(-20.0, -20.0, -20.0)
+    _shadowMap.register(_entities, vec3(-20.0, -20.0, -20.0)); // _globalLight.transform.position
     _postProcess.prepare();
 
     // @TODO: post-processing should not apply
