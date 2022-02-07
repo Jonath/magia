@@ -1,4 +1,4 @@
-module magia.scene.entity;
+module magia.render.entity;
 
 import magia.core.instance;
 import magia.render.drawable;

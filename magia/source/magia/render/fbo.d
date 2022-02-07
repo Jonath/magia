@@ -51,6 +51,11 @@ class FBO {
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, id);
     }
 
+    /// Clear FBO binding
+    void clear() {
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, _texture.target, 0, 0);
+    }
+
     /// Unbind FBO (bind to default FBO)
     static void unbind() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);

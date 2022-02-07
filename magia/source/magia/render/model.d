@@ -368,11 +368,17 @@ final class Model : Renderable {
 
     /// Draw the model
     void draw(Shader shader, Transform transform) {
+        // Model culling is the opposite of usual objects
+        glCullFace(GL_BACK);
+
         mat4 transformModel = combineModel(transform);
 
         for (uint i = 0; i < _meshes.length; ++i) {
             Transform finalTransform = Transform(_transforms[i].model * transformModel);
             _meshes[i].draw(shader, finalTransform);
         }
+
+        // Revert to usual culling
+        glCullFace(GL_FRONT);
     }
 }

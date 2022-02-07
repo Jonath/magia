@@ -7,12 +7,12 @@ import bindbc.opengl;
 import gl3n.linalg;
 
 import magia.core.transform;
+import magia.render.entity;
 import magia.render.mesh;
 import magia.render.shader;
 import magia.render.texture;
 import magia.render.vertex;
 import magia.render.window;
-import magia.scene.entity;
 
 enum LightType {
     DIRECTIONAL,

@@ -5,12 +5,12 @@ import gl3n.linalg;
 
 import magia.core.transform;
 import magia.core.vec3;
+import magia.render.entity;
 import magia.render.model;
 import magia.render.shader;
 import magia.render.shadow;
 import magia.render.window;
 import magia.shape.light;
-import magia.scene;
 
 /// Instance of a **Model** to render
 final class ModelInstance : Entity3D {

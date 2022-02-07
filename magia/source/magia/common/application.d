@@ -15,7 +15,7 @@ import std.datetime;
 
 import grimoire;
 
-import magia.core, magia.render, magia.script, magia.scene;
+import magia.core, magia.render, magia.script;
 
 import magia.common.event;
 import magia.common.settings;

@@ -4,7 +4,7 @@ import grimoire;
 
 import gl3n.linalg;
 
-import magia.core, magia.render, magia.shape, magia.scene;
+import magia.core, magia.render, magia.shape;
 
 import std.stdio;
 

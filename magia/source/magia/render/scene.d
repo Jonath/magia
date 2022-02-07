@@ -1,22 +1,39 @@
-module magia.scene.scene;
+module magia.render.scene;
+
+import std.stdio;
 
 import bindbc.opengl;
 import gl3n.linalg;
 
-import magia.common, magia.core, magia.render;
-import magia.scene.entity;
+import magia.core, magia.render;
+import magia.common.event;
 import magia.shape.light;
 
+alias Entities = Entity3D[];
+
 private {
+    // Camera, light
     Camera _camera, _defaultCamera;
-    Entity3D[] _entities;
     LightInstance _globalLight;
-    ShadowMap _shadowMap;
+
+    // 3D entity containers
+    Entities _entities;
+    Entities[Model] _modelEntityMap;
+
+    // Skybox
     Skybox _skybox;
+
+    // Processing
+    ShadowMap _shadowMap;
     PostProcess _postProcess;
+
+    // Shaders
     Shader _defaultShader;
     Shader _lightShader;
     Shader _shadowShader;
+
+    // Flags
+    bool _showShadows = false;
 }
 
 void setCamera(Camera camera) {
@@ -99,6 +116,11 @@ void updateScene(float deltaTime) {
         _camera.position = _camera.position + (speed * -_camera.forward);
     }
 
+    /// Show/hide shadows
+    if (getButtonDown(KeyButton.r)) {
+        _showShadows = !_showShadows;
+    }
+
     /// Look
     const Vec2f deltaPos = getRelativeMousePos();
 
@@ -125,7 +147,13 @@ void updateScene(float deltaTime) {
 
 void drawScene() {
     _globalLight.setupShaders(_lightShader, _defaultShader);
-    _shadowMap.register(_entities, vec3(-20.0, -20.0, -20.0)); // _globalLight.transform.position
+
+    if (_showShadows) {
+        _shadowMap.register(_entities, vec3(-20.0, -20.0, -20.0)); // _globalLight.transform.position
+    } else {
+        _shadowMap.clear();
+    }
+
     _postProcess.prepare();
 
     // @TODO: post-processing should not apply
@@ -138,6 +166,7 @@ void drawScene() {
     }
 
     _shadowMap.bind(_defaultShader);
+
     foreach(entity; _entities) {
         entity.draw(_defaultShader);
     }
@@ -146,6 +175,20 @@ void drawScene() {
 
     renderWindow();
 }
+
+/// Draw call
+/*void drawScene() {
+    foreach (Model model; modelEntityMap.keys) {
+        Entity3DArray entityBatch = modelEntityMap[model];
+        // Bind entity data
+
+        foreach (Entity3D entity; entityBatch) {
+            // Draw
+        }
+
+        // Unbind entity data
+    }
+}*/
 
 /// @TODO: Bouger ça à un endroit plus approprié.
 alias Quaternionf = Quaternion!(float);

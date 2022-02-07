@@ -4,12 +4,12 @@ import bindbc.opengl;
 import gl3n.linalg;
 
 import magia.core.transform;
+import magia.render.entity;
 import magia.render.fbo;
-import magia.render.mesh; // @TODO move renderable declaration
+import magia.render.mesh;
 import magia.render.shader;
 import magia.render.texture;
 import magia.render.window;
-import magia.scene.entity;
 
 /// Class holding shadow map data
 class ShadowMap {
@@ -72,5 +72,15 @@ class ShadowMap {
         GLuint slot = 2;
         _FBO.bindTexture(slot);
         glUniform1i(glGetUniformLocation(shader.id, "shadowMap"), slot);
+    }
+
+    void clear() {
+        glEnable(GL_DEPTH_TEST);
+        glViewport(0, 0, _width, _height);
+
+        _FBO.bind();
+        glClear(GL_DEPTH_BUFFER_BIT);
+        FBO.unbind();
+        resetViewport();
     }
 }

@@ -6,13 +6,13 @@ import std.stdio;
 import bindbc.opengl;
 import gl3n.linalg;
 
-import magia.scene;
 import magia.core.transform;
 import magia.render.vao;
 import magia.render.vbo;
 import magia.render.ebo;
 import magia.render.camera;
 import magia.render.texture;
+import magia.render.scene;
 import magia.render.shader;
 import magia.render.vertex;
 

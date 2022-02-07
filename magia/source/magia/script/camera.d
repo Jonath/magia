@@ -3,7 +3,7 @@ module magia.script.camera;
 import gl3n.linalg;
 import grimoire;
 
-import magia.core, magia.render, magia.scene;
+import magia.core, magia.render;
 
 package(magia.script) void loadMagiaLibCamera(GrLibrary library) {
     GrType cameraType = library.addForeign("Camera");

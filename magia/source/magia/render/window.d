@@ -127,9 +127,8 @@ void createWindow(const Vec2u windowSize, string title) {
 	glEnable(GL_MULTISAMPLE);
 	
 	// Enable culling
-	/*glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
-	glFrontFace(GL_CCW);*/
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
 
 	// Enable blending
 	/*glEnable(GL_BLEND);
