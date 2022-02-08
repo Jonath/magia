@@ -179,8 +179,9 @@ class Texture {
     }
 }
 
+/// Texture for multi sample FBOs
 class MultiSampleTexture : Texture {
-    /// Constructor for FBO shadow
+    /// Constructor for FBO multisample texture
     this(uint width, uint height, uint nbSamples) {
         super(width, height, GL_TEXTURE_2D_MULTISAMPLE, "multisample");
 
@@ -204,8 +205,9 @@ class MultiSampleTexture : Texture {
     }
 }
 
+/// Texture for post process FBOs
 class PostProcessTexture : Texture {
-    /// Constructor for FBO shadow
+    /// Constructor for FBO postprocess texture
     this(uint width, uint height) {
         super(width, height, GL_TEXTURE_2D, "postprocess");
 
@@ -229,6 +231,7 @@ class PostProcessTexture : Texture {
     }
 }
 
+/// Texture for shadow FBOs
 class ShadowmapTexture : Texture {
     /// Constructor for FBO shadow
     this(uint width, uint height) {

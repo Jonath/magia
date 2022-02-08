@@ -11,17 +11,17 @@ event onLoad() {
 
     Skybox skybox = loadSkybox();
 
-    Quad quad = loadQuad();
+    //Quad quad = loadQuad();
     //Model tree = loadModel("tree/scene");
     //Model grass = loadModel("grass/scene");
     //Model ground = loadModel("ground/scene");
     //Model bunny = loadModel("bunny/scene");
     //bunny:position(vec3(1., 1., 1.));
     //Model statue = loadModel("statue/scene");
-    //Model jupiter = loadModel("jupiter/scene");
+    Model jupiter = loadModel("jupiter/scene");
     //jupiter:position(vec3(1., 0., 1.));
     //jupiter:scale(vec3(0.05, 0.05, 0.05));
-    Model crow = loadModel("crow/scene");
+    //Model crow = loadModel("crow/scene");
 
     int nbAsteroids = 500;
 
@@ -54,5 +54,5 @@ event onLoad() {
         instanceMatrices ~= instanceMatrix;
     }
 
-    //Model asteroid = loadModel("asteroid/scene", nbAsteroids, instanceMatrices);
+    Model asteroid = loadModel("asteroid/scene", nbAsteroids, instanceMatrices);
 }

@@ -10,15 +10,16 @@ import magia.render.vbo;
 import magia.render.fbo;
 import magia.render.rbo;
 
-// Controls the gamma function
+/// Controls the gamma function
 static float gamma = 2.2f;
 
-// Background color
+/// Background color
 static Color bgColor = Color(.08f, .10f, .13f);
 
-// Number of samples
+/// Number of samples
 static uint nbSamples = 8;
 
+/// Post-processing handler
 class PostProcess {
     private {
         uint _width;
@@ -30,6 +31,7 @@ class PostProcess {
         Shader _shader;
     }
 
+    /// Constructor
     this(uint width, uint height) {
         _width = width;
         _height = height;
