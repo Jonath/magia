@@ -14,7 +14,7 @@ import magia.core;
 
 import magia.render.window, magia.render.oldtexture;
 import magia.render.tileset, magia.render.sprite;
-
+/+
 /// Series of animation frames played successively.
 final class Animation {
     /// Change the way the animation is playing.
@@ -347,3 +347,4 @@ final class Animation {
                 angle, currentFlip, anchor, blend, color, alpha);
     }
 }
++/

@@ -15,7 +15,7 @@ import std.datetime;
 
 import grimoire;
 
-import magia.core, magia.render, magia.script;
+import magia.core, magia.render, magia.ui, magia.script;
 
 import magia.common.event;
 import magia.common.settings;
@@ -72,6 +72,8 @@ void runApplication() {
 
     initializeScene();
 
+    initUI();
+
     // Script
     GrLibrary stdlib = grLoadStdLibrary();
     GrLibrary magialib = loadMagiaLibrary();
@@ -93,14 +95,26 @@ void runApplication() {
         _engine.callEvent("onLoad");
 
     while (processEvents()) {
+        // Màj
         updateEvents(_deltatime);
 
         if (_engine.hasTasks)
             _engine.process();
 
         updateScene(_deltatime);
+
+        // Rendu
+        // 3D
+        setup3DRender();
         drawScene();
 
+        // 2D
+        setup2DRender();
+        drawUI();
+
+        renderWindow();
+
+        // IPS
         long deltaTicks = Clock.currStdTime() - _tickStartFrame;
         if (deltaTicks < (10_000_000 / _nominalFPS))
             Thread.sleep(dur!("hnsecs")((10_000_000 / _nominalFPS) - deltaTicks));

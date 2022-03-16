@@ -173,8 +173,6 @@ void drawScene() {
     }
 
     _postProcess.draw();
-
-    renderWindow();
 }
 
 /// Draw call

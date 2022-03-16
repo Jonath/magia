@@ -8,7 +8,7 @@ import magia.core;
 import magia.render.window, magia.render.drawable, magia.render.oldtexture;
 
 /// Renders a **Texture** with its own properties.
-final class Sprite : Drawable2D {
+/+final class Sprite : Drawable2D {
     @property {
         /// Is the texture loaded ?
         bool isValid() const {
@@ -153,3 +153,4 @@ final class Sprite : Drawable2D {
         return position.isBetween(-halfSize, halfSize);
     }
 }
++/

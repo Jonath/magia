@@ -5,7 +5,7 @@ import grimoire;
 import magia.core, magia.render;
 
 package(magia.script) void loadMagiaLibSprite(GrLibrary library) {
-    GrType spriteType = library.addForeign("Sprite", [], "Drawable");
+    /+GrType spriteType = library.addForeign("Sprite", [], "Drawable");
     GrType textureType = grGetForeignType("Texture");
 
     library.addFunction(&_sprite1, "Sprite", [textureType], [spriteType]);
@@ -22,9 +22,9 @@ package(magia.script) void loadMagiaLibSprite(GrLibrary library) {
 
     library.addFunction(&_getWidth, "getWidth", [spriteType], [grReal]);
     library.addFunction(&_getHeight, "getHeight", [spriteType], [grReal]);
-    library.addFunction(&_getHeight, "getSize", [spriteType], [grReal, grReal]);
+    library.addFunction(&_getHeight, "getSize", [spriteType], [grReal, grReal]);+/
 }
-
+/+
 private void _sprite1(GrCall call) {
     Sprite sprite = new Sprite(call.getForeign!Texture(0));
     call.setForeign(sprite);
@@ -85,3 +85,4 @@ private void _getSize(GrCall call) {
     call.setReal(sprite.size.x);
     call.setReal(sprite.size.y);
 }
++/

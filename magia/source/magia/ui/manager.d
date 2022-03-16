@@ -1,19 +1,26 @@
-module magia.render.primitive;
+module magia.ui.manager;
 
 import std.string;
 import bindbc.opengl, bindbc.sdl;
-import magia.core, magia.render.window;
+import gl3n.linalg;
+import magia.core, magia.render;
 
 private {
-    GLuint _shaderProgram, _vertShader, _fragShader;
-    GLuint _vao;
-    GLint _sizeUniform, _positionUniform, _colorUniform;
+    UIElement[] _roots;
 }
 
-void initPrimitive() {
+private {
+    
+    GLuint _shaderProgram, _vertShader, _fragShader;
+    GLuint _vao;
+    GLint _sizeUniform, _positionUniform, _colorUniform, _modelUniform;
+}
+
+void initUI() {
     // Vertices
     immutable float[] points = [
         1f, 1f, -1f, 1f, 1f, -1f, -1f, -1f
+        //1f, 1f, 0f, 1f, 1f, 0f, 0f, 0f
     ];
 
     GLuint vbo = 0;
@@ -32,9 +39,12 @@ void initPrimitive() {
         out vec2 st;
         uniform vec2 size;
         uniform vec2 position;
+
+        uniform mat4 model;
         void main() {
-            st = (vp + 1.0) * 0.5;
-            gl_Position = vec4((position + (st * size)) * 2.0 - 1.0, 0.0, 1.0);
+            st = vp;//(vp + 1.0) * 0.5;
+            gl_Position = model * vec4(vp, 0.0, 1.0);
+            //gl_Position = vec4((position + (st * size)) * 2.0 - 1.0, 0.0, 1.0);
         }
         ");
 
@@ -64,22 +74,65 @@ void initPrimitive() {
     _sizeUniform = glGetUniformLocation(_shaderProgram, "size");
     _positionUniform = glGetUniformLocation(_shaderProgram, "position");
     _colorUniform = glGetUniformLocation(_shaderProgram, "color");
+    _modelUniform = glGetUniformLocation(_shaderProgram, "model");
 }
 
-/// Draw a fully filled rectangle.
-void drawFilledRect(Vec2f origin, Vec2f size, const Color color, float alpha) {
+void drawUI() {
+    mat4 model = mat4.identity;
+    mat4 a = mat4.identity;
+    mat4 b = mat4.identity;
+    a.translate(-1f, -1f, 0.0f);
+    b.scale(1f / screenSize().x, 1f / screenSize().y, 1.0f);
+    model = a * b;
+
+    drawFilledRect(Vec2f(10f, 200f), Vec2f(100f, 150f), Color.blue, 1f);
+    //drawFilledRect(Vec2f(401f - 50f, 600f - 75f), Vec2f(100f, 150f), Color.blue, 1f);
+    drawTest(model, 10f, 200f, 100f, 150f);
+
+    //import magia.render.text;
+    //drawText("HEllo World", 0f, 0f);
+}
+
+abstract class UIElement {
+    private {
+        UIElement[] _children;
+    }
+
+    void draw();
+}
+/*
+final class TestUI : UIElement {
+    override void draw() {
+        drawTest();
+    }
+}*/
+
+
+void drawTest(mat4 model, float x, float y, float w, float h) {
 
     import std.stdio;
 
-    //writeln(origin, " -> ", transformRenderSpace(origin) / screenSize());
-    origin = transformRenderSpace(origin) / screenSize();
-    size = (size * transformScale()) / screenSize();
-
     setShaderProgram(_shaderProgram);
+
+    Vec2f origin = Vec2f(x, y);
+    Vec2f size = Vec2f(w, h);
+
+    //writeln(size, " -> ", size / screenSize());
+    origin = origin / screenSize();
+    size = size / screenSize();
 
     glUniform2f(_sizeUniform, size.x, size.y);
     glUniform2f(_positionUniform, origin.x, origin.y);
-    glUniform4f(_colorUniform, color.r, color.g, color.b, alpha);
+    mat4 a = mat4.identity;
+    mat4 b = mat4.identity;
+    a.translate(x + w / 2f, y + h / 2f, 0f);
+    b.scale(w, h, 1f);
+    //b.translate(- screenWidth() / 2f, - screenHeight() / 2f, 0f);
+    //a = a * b;
+    a = model * a * b;
+
+    glUniform4f(_colorUniform, 1f, 0f, 0f, 1f);
+    glUniformMatrix4fv(_modelUniform, 1, GL_TRUE, a.value_ptr);
 
     glBindVertexArray(_vao);
 
@@ -87,14 +140,4 @@ void drawFilledRect(Vec2f origin, Vec2f size, const Color color, float alpha) {
     glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
     glBlendEquation(GL_FUNC_ADD);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-}
-
-/// Ditto
-void drawFilledRect(Vec2f origin, Vec2f size, const Color color) {
-    drawFilledRect(origin, size, color, getBaseAlpha());
-}
-
-/// Ditto
-void drawFilledRect(Vec2f origin, Vec2f size) {
-    drawFilledRect(origin, size, getBaseColor(), getBaseAlpha());
 }

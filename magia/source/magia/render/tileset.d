@@ -13,7 +13,7 @@ import magia.core;
 import magia.render.window, magia.render.drawable, magia.render.oldtexture, magia.render.sprite;
 
 /// Series of aligned tiles.
-final class Tileset {
+/+final class Tileset {
     @property {
         /// loaded ?
         bool isLoaded() const {
@@ -170,3 +170,4 @@ final class Tileset {
                 angle, flip, anchor, blend, color, alpha);
     }
 }
++/

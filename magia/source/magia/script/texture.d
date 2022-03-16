@@ -5,15 +5,15 @@ import grimoire;
 import magia.render;
 
 package(magia.script) void loadMagiaLibTexture(GrLibrary library) {
-    GrType textureType = library.addForeign("Texture");
+    /+GrType textureType = library.addForeign("Texture");
 
     library.addFunction(&_texture, "Texture", [grString], [textureType]);
 
     library.addFunction(&_getWidth, "getWidth", [textureType], [grInt]);
     library.addFunction(&_getHeight, "getHeight", [textureType], [grInt]);
-    library.addFunction(&_getHeight, "getSize", [textureType], [grInt, grInt]);
+    library.addFunction(&_getHeight, "getSize", [textureType], [grInt, grInt]);+/
 }
-
+/+
 private void _texture(GrCall call) {
     Texture texture = new Texture(call.getString(0));
     call.setForeign(texture);
@@ -46,3 +46,4 @@ private void _getSize(GrCall call) {
     call.getInt(texture.width);
     call.getInt(texture.height);
 }
++/

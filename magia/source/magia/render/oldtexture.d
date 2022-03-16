@@ -145,7 +145,7 @@ final class Texture {
 
         // Vertices
         immutable float[] points = [
-            -1, 1f, 1f, -1f, -1f, -1f, -1f, 1f, 1, 1f, 1f, -1f,
+            1f, 1f, -1f, 1f, 1f, -1f, -1f, -1f
         ];
 
         GLuint vbo = 0;
@@ -281,6 +281,6 @@ final class Texture {
             glBlendEquation(GL_FUNC_ADD);
             break;
         }
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 6);
     }
 }
