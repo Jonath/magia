@@ -29,6 +29,8 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     GrType modelType = library.addForeign("Model", [], "Entity");
     GrType quadType = library.addForeign("Quad", [], "Entity");
     GrType skyboxType = library.addForeign("Skybox", [], "Entity");
+    GrType terrainType = library.addForeign("Terrain", [], "Entity");
+
     GrType lightEnumType = library.addEnum("LightKind", ["DIRECTIONAL", "POINT", "SPOT"]);
 
     library.addFunction(&_quat, "quat", [grReal, grReal, grReal, grReal], [quatType]);
@@ -42,6 +44,7 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     library.addFunction(&_model2, "loadModel", [grString, grInt, grArray(mat4Type)], [modelType]);
     library.addFunction(&_quad, "loadQuad", [], [quadType]);
     library.addFunction(&_skybox, "loadSkybox", [], [skyboxType]);
+    library.addFunction(&_terrain, "loadTerrain", [grReal, grInt, grInt, grInt, grString], [terrainType]);
 }
 
 private void _quat(GrCall call) {
@@ -125,4 +128,18 @@ private void _skybox(GrCall call) {
     Skybox skybox = new Skybox(getCamera());
     call.setForeign(skybox);
     setSkybox(skybox);
+}
+
+private void _terrain(GrCall call) {
+    const float size = call.getReal(0);;
+    const int nbVertices = call.getInt32(1);
+    const int gridX = call.getInt32(2);
+    const int gridZ = call.getInt32(3);
+
+    string[] textureFiless;
+    textureFiless ~= call.getString(4);
+
+    Terrain terrain = new Terrain(size, nbVertices, gridX, gridZ, textureFiless);
+    call.setForeign(terrain);
+    addEntity(terrain);
 }
