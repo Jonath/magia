@@ -86,7 +86,6 @@ void drawUI() {
     model = a * b;
 
     drawFilledRect(Vec2f(10f, 200f), Vec2f(100f, 150f), Color.blue, 1f);
-    //drawFilledRect(Vec2f(401f - 50f, 600f - 75f), Vec2f(100f, 150f), Color.blue, 1f);
     drawTest(model, 10f, 200f, 100f, 150f);
 
     //import magia.render.text;
@@ -125,14 +124,12 @@ void drawTest(mat4 model, float x, float y, float w, float h) {
     glUniform2f(_positionUniform, origin.x, origin.y);
     mat4 a = mat4.identity;
     mat4 b = mat4.identity;
-    a.translate(x + w / 2f, y + h / 2f, 0f);
+    a.translate(x * 2 + w, y * 2 + h, 0f);
     b.scale(w, h, 1f);
-    //b.translate(- screenWidth() / 2f, - screenHeight() / 2f, 0f);
-    //a = a * b;
-    a = model * a * b;
+    model = model * a * b;
 
     glUniform4f(_colorUniform, 1f, 0f, 0f, 1f);
-    glUniformMatrix4fv(_modelUniform, 1, GL_TRUE, a.value_ptr);
+    glUniformMatrix4fv(_modelUniform, 1, GL_TRUE, model.value_ptr);
 
     glBindVertexArray(_vao);
 
