@@ -13,7 +13,7 @@ private {
     
     GLuint _shaderProgram, _vertShader, _fragShader;
     GLuint _vao;
-    GLint _sizeUniform, _positionUniform, _colorUniform, _modelUniform;
+    GLint _colorUniform, _modelUniform;
 }
 
 void initUI() {
@@ -71,65 +71,105 @@ void initUI() {
     glAttachShader(_shaderProgram, _fragShader);
     glAttachShader(_shaderProgram, _vertShader);
     glLinkProgram(_shaderProgram);
-    _sizeUniform = glGetUniformLocation(_shaderProgram, "size");
-    _positionUniform = glGetUniformLocation(_shaderProgram, "position");
     _colorUniform = glGetUniformLocation(_shaderProgram, "color");
     _modelUniform = glGetUniformLocation(_shaderProgram, "model");
+
+    auto t = new TestUI();
+    t._children ~= new Test2UI();
+    appendRoot(t);
 }
 
 void drawUI() {
-    mat4 model = mat4.identity;
+    mat4 transform = mat4.identity;
     mat4 a = mat4.identity;
     mat4 b = mat4.identity;
     a.translate(-1f, -1f, 0.0f);
     b.scale(1f / screenSize().x, 1f / screenSize().y, 1.0f);
-    model = a * b;
+    transform = a * b;
 
-    drawFilledRect(Vec2f(10f, 200f), Vec2f(100f, 150f), Color.blue, 1f);
-    drawTest(model, 10f, 200f, 100f, 150f);
+    /*drawFilledRect(Vec2f(10f, 200f), Vec2f(100f, 150f), Color.blue, 1f);*/
+    //drawTest(transform, 10f, 200f, 400f, 400f);
 
     //import magia.render.text;
     //drawText("HEllo World", 0f, 0f);
+
+    foreach (UIElement element; _roots) {
+        drawUI(transform, element);
+    }
+}
+
+void appendRoot(UIElement element) {
+    _roots ~= element;
+}
+
+private void drawUI(mat4 transform, UIElement element, UIElement parent = null) {
+    mat4 local = mat4.identity;
+
+    local.scale(element.scaleX, element.scaleY, 1f);
+    local.translate(-element.w * element.scaleX, -element.h, 0f);
+    if(element.angle)
+        local.rotatez(element.angle);
+    local.translate(element.w * element.scaleX, element.h, 0f);
+    local.translate(element.x * 2f, element.y * 2f, 0f);
+    transform = transform * local;
+    
+    element.draw(transform);
+    foreach (UIElement child; element._children) {
+        drawUI(transform, child, element);
+    }
 }
 
 abstract class UIElement {
     private {
         UIElement[] _children;
+        float x = 0f, y = 0f, w = 0f, h = 0f, scaleX = 1f, scaleY = 1f;
+        float angle = 0f;
     }
 
-    void draw();
+    void draw(mat4);
 }
-/*
+
 final class TestUI : UIElement {
-    override void draw() {
-        drawTest();
+    private {
     }
-}*/
+    this() {
+        x = 400f;
+        w = 400f;
+        h = 400f;
+        scaleX = .5f;
+        angle = 90f * (PI / 180.0);
+    }
+    override void draw(mat4 transform) {
+        //angle += .05f;
+        drawTest(transform, 0f, 0f, w, h, Color.red);
+        //drawTest(transform, 10f, 200f, 400f, 400f);
+    }
+}
+
+final class Test2UI : UIElement {
+    this() {
+        x = 20f;
+        y = 20f;
+        w = 50f;
+        h = 10f;
+    }
+    override void draw(mat4 transform) {
+        drawTest(transform, 10f, 10f, w, h, Color.green);
+        //drawTest(transform, 10f, 200f, 400f, 400f);
+    }
+}
 
 
-void drawTest(mat4 model, float x, float y, float w, float h) {
-
-    import std.stdio;
-
+void drawTest(mat4 transform, float x, float y, float w, float h, Color color = Color.white) {
     setShaderProgram(_shaderProgram);
 
-    Vec2f origin = Vec2f(x, y);
-    Vec2f size = Vec2f(w, h);
+    mat4 local = mat4.identity;
+    local.scale(w, h, 1f);
+    local.translate(x * 2 + w, y * 2 + h, 0f);
+    transform = transform * local;
 
-    //writeln(size, " -> ", size / screenSize());
-    origin = origin / screenSize();
-    size = size / screenSize();
-
-    glUniform2f(_sizeUniform, size.x, size.y);
-    glUniform2f(_positionUniform, origin.x, origin.y);
-    mat4 a = mat4.identity;
-    mat4 b = mat4.identity;
-    a.translate(x * 2 + w, y * 2 + h, 0f);
-    b.scale(w, h, 1f);
-    model = model * a * b;
-
-    glUniform4f(_colorUniform, 1f, 0f, 0f, 1f);
-    glUniformMatrix4fv(_modelUniform, 1, GL_TRUE, model.value_ptr);
+    glUniform4f(_colorUniform, color.r, color.g, color.b, 1f);
+    glUniformMatrix4fv(_modelUniform, 1, GL_TRUE, transform.value_ptr);
 
     glBindVertexArray(_vao);
 
