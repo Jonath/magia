@@ -63,3 +63,15 @@ event onLoad() {
         yield
     }*/
 }
+
+/*
+scale: scale/screen
+rota: angle
+trans: identité
+
+
+
+
+Local = Trans * Rota * Scale
+M = World * Local
+*/

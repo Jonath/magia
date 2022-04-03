@@ -106,10 +106,10 @@ private void drawUI(mat4 transform, UIElement element, UIElement parent = null) 
     mat4 local = mat4.identity;
 
     local.scale(element.scaleX, element.scaleY, 1f);
-    local.translate(-element.w * element.scaleX, -element.h, 0f);
+    local.translate(-element.w * element.scaleX, -element.h * element.scaleY, 0f);
     if(element.angle)
         local.rotatez(element.angle);
-    local.translate(element.w * element.scaleX, element.h, 0f);
+    local.translate(element.w * element.scaleX, element.h * element.scaleY, 0f);
     local.translate(element.x * 2f, element.y * 2f, 0f);
     transform = transform * local;
     
@@ -151,9 +151,13 @@ final class Test2UI : UIElement {
         x = 20f;
         y = 20f;
         w = 50f;
-        h = 10f;
+        h = 50f;
+        //scaleX = 2f;
+        //scaleY = 2f;
+        angle = 90f;
     }
     override void draw(mat4 transform) {
+        //angle += .05f;
         drawTest(transform, 10f, 10f, w, h, Color.green);
         //drawTest(transform, 10f, 200f, 400f, 400f);
     }
