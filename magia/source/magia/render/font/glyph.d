@@ -52,6 +52,6 @@ struct Glyph {
     void draw(mat4 transform, float posX, float posY, float scale, Color color, float alpha) {
         _texture.draw(transform, posX, posY, _width * scale, _height * scale,
             Vec4i(_packX, _packY, _packWidth, _packHeight),
-            0f, Flip.none, Vec2f.zero, Blend.alpha, color, alpha);
+            Flip.none, Blend.alpha, color, alpha);
     }
 }

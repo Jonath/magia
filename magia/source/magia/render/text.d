@@ -25,9 +25,9 @@ void drawText(mat4 transform, string text, float x, float y, Font font = null) {
         else {
             Glyph metrics = font.getMetrics(ch);
             pos.x += font.getKerning(prevChar, ch) * _charScale;
-            Vec2f drawPos = Vec2f(pos.x + metrics.offsetX * _charScale,
-                    pos.y - metrics.offsetY * _charScale);
-            metrics.draw(transform, drawPos, _charScale, color, alpha);
+            float drawPosX = pos.x + metrics.offsetX * _charScale;
+            float drawPosY = pos.y - metrics.offsetY * _charScale;
+            metrics.draw(transform, drawPosX, drawPosY, _charScale, color, alpha);
             pos.x += (metrics.advance + _charSpacing) * _charScale;
             prevChar = ch;
         }

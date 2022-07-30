@@ -67,7 +67,7 @@ final class Label : UIElement {
                 pos.x += _font.getKerning(prevChar, ch) * _charScale;
                 Vec2f drawPos = Vec2f(pos.x + metrics.offsetX * _charScale,
                     pos.y - metrics.offsetY * _charScale);
-                metrics.draw(transform, drawPos, _charScale, color, alpha);
+                metrics.draw(transform, drawPos.x, drawPos.y, _charScale, color, alpha);
                 pos.x += (metrics.advance + _charSpacing) * _charScale;
                 prevChar = ch;
             }

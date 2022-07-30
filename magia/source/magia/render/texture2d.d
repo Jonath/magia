@@ -235,7 +235,7 @@ final class Texture2D {
 
         mat4 local = mat4.identity;
         local.scale(sizeX, sizeY, 1f);
-        local.translate(positionX * 2f + sizeX, positionY * 2f + sizeY, 0f);
+        local.translate(posX * 2f + sizeX, posY * 2f + sizeY, 0f);
         transform = transform * local;
 
         glUniform4f(_colorUniform, color.r, color.g, color.b, 1f);
