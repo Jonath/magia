@@ -7,14 +7,14 @@ module magia.render.font.bitmap;
 
 import bindbc.sdl, bindbc.sdl.ttf;
 import magia.core;
-import magia.render.oldtexture;
+import magia.render.texture2d;
 import magia.render.font.font, magia.render.font.glyph;
 
 /// Font from a texture atlas.
 final class BitmapFont : Font {
     private {
         string _name;
-        Texture _texture;
+        Texture2D _texture;
         Metrics _metrics;
     }
 
@@ -67,14 +67,14 @@ final class BitmapFont : Font {
     this(string name_, string texturePath, Metrics metrics) {
         _name = name_;
         _metrics = metrics;
-        _texture = new Texture(texturePath, true);
+        _texture = new Texture2D(texturePath, true);
     }
 
     /// Copy ctor
     this(BitmapFont font) {
         _name = font._name;
         _metrics = font._metrics;
-        _texture = new Texture(font._texture);
+        _texture = new Texture2D(font._texture);
     }
 
     /// Call only after Renderer is created in main thread.

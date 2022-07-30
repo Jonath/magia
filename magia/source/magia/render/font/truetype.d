@@ -9,7 +9,7 @@ import std.conv : to;
 import std.string : toStringz, fromStringz;
 import bindbc.sdl, bindbc.sdl.ttf;
 import magia.core;
-import magia.render.oldtexture;
+import magia.render.texture2d;
 import magia.render.font.font, magia.render.font.glyph;
 
 /// Font that load a TTF file.
@@ -105,7 +105,7 @@ final class TrueTypeFont : Font {
             SDL_Surface* surface = TTF_RenderGlyph_Blended(_trueTypeFont,
                     cast(wchar) ch, Color.white.toSDL());
             assert(surface);
-            Texture texture = new Texture(surface);
+            Texture2D texture = new Texture2D(surface);
             assert(texture);
             SDL_FreeSurface(surface);
             Glyph metrics = Glyph(true, advance, 0, 0, texture.width,
@@ -134,7 +134,7 @@ final class TrueTypeFont : Font {
 
             SDL_BlitSurface(surface, &srcRect, surfaceOutline, &dstRect);
 
-            Texture texture = new Texture(surfaceOutline);
+            Texture2D texture = new Texture2D(surfaceOutline);
             assert(texture);
             SDL_FreeSurface(surface);
             SDL_FreeSurface(surfaceOutline);

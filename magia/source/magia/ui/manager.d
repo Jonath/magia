@@ -2,15 +2,14 @@ module magia.ui.manager;
 
 import std.string;
 import bindbc.opengl, bindbc.sdl;
-import gl3n.linalg;
 import magia.core, magia.render;
+import magia.ui.element;
 
 private {
     UIElement[] _roots;
 }
 
 private {
-    
     GLuint _shaderProgram, _vertShader, _fragShader;
     GLuint _vao;
     GLint _colorUniform, _modelUniform;
@@ -20,7 +19,6 @@ void initUI() {
     // Vertices
     immutable float[] points = [
         1f, 1f, -1f, 1f, 1f, -1f, -1f, -1f
-        //1f, 1f, 0f, 1f, 1f, 0f, 0f, 0f
     ];
 
     GLuint vbo = 0;
@@ -42,11 +40,9 @@ void initUI() {
 
         uniform mat4 model;
         void main() {
-            st = vp;//(vp + 1.0) * 0.5;
+            st = vp;
             gl_Position = model * vec4(vp, 0.0, 1.0);
-            //gl_Position = vec4((position + (st * size)) * 2.0 - 1.0, 0.0, 1.0);
-        }
-        ");
+        }");
 
     immutable char* fshader = toStringz("
         #version 400
@@ -57,8 +53,7 @@ void initUI() {
             frag_color = color;
             if(frag_color.a == 0.0)
                 discard;
-        }
-        ");
+        }");
 
     _vertShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(_vertShader, 1, &vshader, null);
@@ -91,7 +86,6 @@ void drawUI() {
     //drawTest(transform, 10f, 200f, 400f, 400f);
 
     //import magia.render.text;
-    //drawText("HEllo World", 0f, 0f);
 
     foreach (UIElement element; _roots) {
         drawUI(transform, element);
@@ -106,63 +100,103 @@ private void drawUI(mat4 transform, UIElement element, UIElement parent = null) 
     mat4 local = mat4.identity;
 
     local.scale(element.scaleX, element.scaleY, 1f);
-    local.translate(-element.w * element.scaleX, -element.h * element.scaleY, 0f);
-    if(element.angle)
+    local.translate(
+        -element.sizeX * element.scaleX * element.pivotX * 2f,
+        -element.sizeY * element.scaleY * element.pivotY * 2f,
+        0f);
+
+    if (element.angle)
         local.rotatez(element.angle);
-    local.translate(element.w * element.scaleX, element.h * element.scaleY, 0f);
-    local.translate(element.x * 2f, element.y * 2f, 0f);
+
+    local.translate(
+        element.sizeX * element.scaleX * element.pivotX * 2f,
+        element.sizeY * element.scaleY * element.pivotY * 2f,
+        0f);
+
+    float x, y;
+    float parentW = parent ? parent.sizeX : screenWidth();
+    float parentH = parent ? parent.sizeY : screenHeight();
+
+    final switch (element.alignX) with (UIElement.AlignX) {
+    case left:
+        x = element.posX;
+        break;
+    case right:
+        x = parentW - (element.posX + (element.sizeX * element.scaleX));
+        break;
+    case center:
+        x = parentW / 2f + element.posX;
+        break;
+    }
+    final switch (element.alignY) with (UIElement.AlignY) {
+    case bottom:
+        y = element.posY;
+        break;
+    case top:
+        y = parentH - (element.posY + (element.sizeY * element.scaleY));
+        break;
+    case center:
+        y = parentH / 2f + element.posY;
+        break;
+    }
+    local.translate(x * 2f, y * 2f, 0f);
     transform = transform * local;
-    
+
     element.draw(transform);
     foreach (UIElement child; element._children) {
         drawUI(transform, child, element);
     }
 }
 
-abstract class UIElement {
-    private {
-        UIElement[] _children;
-        float x = 0f, y = 0f, w = 0f, h = 0f, scaleX = 1f, scaleY = 1f;
-        float angle = 0f;
-    }
-
-    void draw(mat4);
-}
-
 final class TestUI : UIElement {
     private {
     }
     this() {
-        x = 400f;
-        w = 400f;
-        h = 400f;
-        scaleX = .5f;
-        angle = 90f * (PI / 180.0);
+        posX = 50f;
+        posY = 50f;
+        sizeX = 400f;
+        sizeY = 400f;
+        //scaleX = .5f;
+        //angle = 90f * (PI / 180.0);
+        //alignX = AlignX.right;
+        //alignY = AlignY.top;
+
+        import magia.ui.label;
+
+        auto a = new Label;
+        a.sizeX = 50f;
+        a.sizeX = 50f;
+        a.text = "Test de label !";
+        _children ~= a;
     }
+
     override void draw(mat4 transform) {
         //angle += .05f;
-        drawTest(transform, 0f, 0f, w, h, Color.red);
+        drawTest(transform, 0f, 0f, sizeX, sizeY, Color.red);
         //drawTest(transform, 10f, 200f, 400f, 400f);
+        //drawText(transform, "HEllo World", 10f, 10f);
     }
 }
 
 final class Test2UI : UIElement {
     this() {
-        x = 20f;
-        y = 20f;
-        w = 50f;
-        h = 50f;
-        //scaleX = 2f;
-        //scaleY = 2f;
-        angle = 90f;
+        posX = 20f;
+        posY = 20f;
+        sizeX = 50f;
+        sizeY = 50f;
+        scaleX = 2f;
+        scaleY = 2f;
+        //angle = 45f * (PI / 180.0);
+        //alignX = AlignX.right;
+        //alignY = AlignY.top;
     }
+
     override void draw(mat4 transform) {
-        //angle += .05f;
-        drawTest(transform, 10f, 10f, w, h, Color.green);
+        angle += .05f;
+        drawTest(transform, 0f, 0f, sizeX, sizeY, Color.green);
         //drawTest(transform, 10f, 200f, 400f, 400f);
     }
 }
-
 
 void drawTest(mat4 transform, float x, float y, float w, float h, Color color = Color.white) {
     setShaderProgram(_shaderProgram);

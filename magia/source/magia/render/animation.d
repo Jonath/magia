@@ -12,7 +12,7 @@ import bindbc.sdl, bindbc.sdl.image;
 import magia.common;
 import magia.core;
 
-import magia.render.window, magia.render.oldtexture;
+import magia.render.window, magia.render.texture2d;
 import magia.render.tileset, magia.render.sprite;
 /+
 /// Series of animation frames played successively.

@@ -9,6 +9,8 @@
 module magia.core;
 
 public {
+    import gl3n.linalg;
+
     import magia.core.util;
     import magia.core.vec2;
     import magia.core.vec3;

@@ -1,12 +1,13 @@
 module magia.render.text;
 
 import std.conv : to;
+import gl3n.linalg;
 
 import magia.core;
 import magia.render.font, magia.render.window;
 
 /// Render text on screen
-void drawText(string text, float x, float y, Font font = null) {
+void drawText(mat4 transform, string text, float x, float y, Font font = null) {
     if (!font)
         font = getDefaultFont();
     const _charScale = 1;
@@ -26,7 +27,7 @@ void drawText(string text, float x, float y, Font font = null) {
             pos.x += font.getKerning(prevChar, ch) * _charScale;
             Vec2f drawPos = Vec2f(pos.x + metrics.offsetX * _charScale,
                     pos.y - metrics.offsetY * _charScale);
-            metrics.draw(drawPos, _charScale, color, alpha);
+            metrics.draw(transform, drawPos, _charScale, color, alpha);
             pos.x += (metrics.advance + _charSpacing) * _charScale;
             prevChar = ch;
         }

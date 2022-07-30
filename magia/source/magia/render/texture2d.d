@@ -1,7 +1,8 @@
-module magia.render.oldtexture;
+module magia.render.texture2d;
 
 import std.string, std.exception;
 import bindbc.opengl, bindbc.sdl;
+import gl3n.linalg;
 import magia.core, magia.render.window;
 
 /// Indicate if something is mirrored.
@@ -10,19 +11,6 @@ enum Flip {
     horizontal,
     vertical,
     both
-}
-
-package SDL_RendererFlip getSDLFlip(Flip flip) {
-    final switch (flip) with (Flip) {
-    case both:
-        return cast(SDL_RendererFlip)(SDL_FLIP_HORIZONTAL | SDL_FLIP_VERTICAL);
-    case horizontal:
-        return SDL_FLIP_HORIZONTAL;
-    case vertical:
-        return SDL_FLIP_VERTICAL;
-    case none:
-        return SDL_FLIP_NONE;
-    }
 }
 
 /// Blending algorithm \
@@ -38,13 +26,12 @@ enum Blend {
 }
 
 /// Base rendering class.
-final class Texture {
+final class Texture2D {
     private {
         GLuint _texId;
         GLuint _shaderProgram, _vertShader, _fragShader;
         GLuint _vao;
-        GLint _sizeUniform, _positionUniform, _clipUniform, _rotUniform,
-            _flipUniform, _colorUniform;
+        GLint _clipUniform, _flipUniform, _colorUniform, _modelUniform;
         SDL_Surface* _surface = null;
         uint _width, _height;
         bool _isLoaded, _ownData;
@@ -67,7 +54,7 @@ final class Texture {
     }
 
     /// Ctor
-    this(const Texture texture) {
+    this(const Texture2D texture) {
         _isLoaded = texture._isLoaded;
         _width = texture._width;
         _height = texture._height;
@@ -76,12 +63,10 @@ final class Texture {
         _vertShader = texture._vertShader;
         _fragShader = texture._fragShader;
         _vao = texture._vao;
-        _sizeUniform = texture._sizeUniform;
-        _positionUniform = texture._positionUniform;
         _clipUniform = texture._clipUniform;
-        _rotUniform = texture._rotUniform;
         _flipUniform = texture._flipUniform;
         _colorUniform = texture._colorUniform;
+        _modelUniform = texture._modelUniform;
         _ownData = false;
     }
 
@@ -93,7 +78,7 @@ final class Texture {
 
         _width = _surface.w;
         _height = _surface.h;
-        if(!preload_)
+        if (!preload_)
             postload();
     }
 
@@ -106,8 +91,8 @@ final class Texture {
         _width = _surface.w;
         _height = _surface.h;
         _ownData = true;
-        
-        if(!preload_)
+
+        if (!preload_)
             postload();
     }
 
@@ -125,20 +110,20 @@ final class Texture {
 
     /// Call it if you set the preload flag on ctor.
     void postload() {
-        if(_isLoaded)
+        if (_isLoaded)
             return;
         glGenTextures(1, &_texId);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, _texId);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_RGBA,
-                GL_UNSIGNED_BYTE, _surface.pixels);
+            GL_UNSIGNED_BYTE, _surface.pixels);
         glGenerateMipmap(GL_TEXTURE_2D);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        if(_ownData) {
+        if (_ownData) {
             SDL_FreeSurface(_surface);
             _surface = null;
         }
@@ -159,38 +144,34 @@ final class Texture {
         glEnableVertexAttribArray(0);
 
         immutable char* vshader = toStringz("
-        #version 400
-        in vec2 vp;
-        out vec2 st;
-        uniform vec2 size;
-        uniform vec2 position;
-        uniform vec4 clip;
-        uniform vec2 rot;
-        uniform vec2 flip;
-        void main() {
-            vec2 rotated = vec2(vp.x * rot.x - vp.y * rot.y, vp.x * rot.y + vp.y * rot.x);
-            rotated = (rotated + 1.0) * 0.5;
-            gl_Position = vec4((position + (rotated * size)) * 2.0 - 1.0, 0.0, 1.0);
-            st = ((vp + 1.0) * 0.5);
-            st.x = (1.0 - flip.x) * st.x + (1.0 - st.x) * flip.x;
-            st.y = (1.0 - flip.y) * st.y + (1.0 - st.y) * flip.y;
-            st.x = st.x * clip.z + (1.0 - st.x) * clip.x;
-            st.y = (1.0 - st.y) * clip.w + st.y * clip.y;
-        }
-        ");
+            #version 400
+            in vec2 vp;
+            out vec2 st;
+            uniform vec4 clip;
+            uniform vec2 flip;
+            uniform mat4 model;
+
+            void main() {
+                st = ((vp + 1.0) * 0.5);
+                st.x = (1.0 - flip.x) * st.x + (1.0 - st.x) * flip.x;
+                st.y = (1.0 - flip.y) * st.y + (1.0 - st.y) * flip.y;
+                st.x = st.x * clip.z + (1.0 - st.x) * clip.x;
+                st.y = (1.0 - st.y) * clip.w + st.y * clip.y;
+                gl_Position = model * vec4(vp, 0.0, 1.0);
+            }");
 
         immutable char* fshader = toStringz("
-        #version 400
-        in vec2 st;
-        out vec4 frag_color;
-        uniform sampler2D tex;
-        uniform vec4 color;
-        void main() {
-            frag_color = texture(tex, st) * color;
-            if(frag_color.a == 0.0)
-                discard;
-        }
-        ");
+            #version 400
+            in vec2 st;
+            out vec4 frag_color;
+            uniform sampler2D tex;
+            uniform vec4 color;
+
+            void main() {
+                frag_color = texture(tex, st) * color;
+                if(frag_color.a == 0.0)
+                    discard;
+            }");
 
         _vertShader = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(_vertShader, 1, &vshader, null);
@@ -203,12 +184,10 @@ final class Texture {
         glAttachShader(_shaderProgram, _fragShader);
         glAttachShader(_shaderProgram, _vertShader);
         glLinkProgram(_shaderProgram);
-        _sizeUniform = glGetUniformLocation(_shaderProgram, "size");
-        _positionUniform = glGetUniformLocation(_shaderProgram, "position");
         _clipUniform = glGetUniformLocation(_shaderProgram, "clip");
-        _rotUniform = glGetUniformLocation(_shaderProgram, "rot");
         _flipUniform = glGetUniformLocation(_shaderProgram, "flip");
         _colorUniform = glGetUniformLocation(_shaderProgram, "color");
+        _modelUniform = glGetUniformLocation(_shaderProgram, "model");
     }
 
     /// Free image data
@@ -222,9 +201,9 @@ final class Texture {
         _isLoaded = false;
     }
 
-    void draw(Vec2f position, Vec2f renderSize, Vec4i clip, float angle,
-            Flip flip = Flip.none, Vec2f anchor = Vec2f.half,
-            Blend blend = Blend.alpha, Color color = Color.white, float alpha = 1f) const {
+    void draw(mat4 transform, float posX, float posY, float sizeX, float sizeY,
+        Vec4i clip, Flip flip = Flip.none,
+        Blend blend = Blend.alpha, Color color = Color.white, float alpha = 1f) const {
 
         //@TODO: glUniform2f(_flipUniform, cast(float) (flip & 0x1), cast(float) (flip & 0x2));
         final switch (flip) with (Flip) {
@@ -246,12 +225,6 @@ final class Texture {
         glBindTexture(GL_TEXTURE_2D, _texId);
         setShaderProgram(_shaderProgram);
 
-        renderSize = (transformScale() * renderSize) / screenSize();
-        position = transformRenderSpace(position) / screenSize();
-        position -= anchor * renderSize;
-        glUniform2f(_sizeUniform, renderSize.x, renderSize.y);
-        glUniform2f(_positionUniform, position.x, position.y);
-
         const float clipX = cast(float) clip.x / cast(float) _width;
         const float clipY = cast(float) clip.y / cast(float) _height;
         const float clipW = clipX + (cast(float) clip.z / cast(float) _width);
@@ -260,10 +233,14 @@ final class Texture {
         glUniform4f(_clipUniform, clipX, clipY, clipW, clipH);
         glUniform4f(_colorUniform, color.r, color.g, color.b, alpha);
 
-        const float radians = -angle * degToRad;
-        const float c = std.math.cos(radians);
-        const float s = std.math.sin(radians);
-        glUniform2f(_rotUniform, c, s);
+        mat4 local = mat4.identity;
+        local.scale(sizeX, sizeY, 1f);
+        local.translate(positionX * 2f + sizeX, positionY * 2f + sizeY, 0f);
+        transform = transform * local;
+
+        glUniform4f(_colorUniform, color.r, color.g, color.b, 1f);
+        glUniformMatrix4fv(_modelUniform, 1, GL_TRUE, transform.value_ptr);
+
         glBindVertexArray(_vao);
 
         glEnable(GL_BLEND);

@@ -1,7 +1,9 @@
 module magia.render.font.glyph;
 
+import gl3n.linalg;
+
 import magia.core;
-import magia.render.oldtexture, magia.render.window;
+import magia.render.texture2d, magia.render.window;
 
 /// Information about a single character
 struct Glyph {
@@ -43,14 +45,13 @@ struct Glyph {
         /// Coordinates in texture
         int _packX, _packY, _packWidth, _packHeight;
         /// Texture
-        Texture _texture;
+        Texture2D _texture;
     }
 
     /// Render glyph
-    void draw(Vec2f position, int scale, Color color, float alpha) {
-        const Vec2f finalSize = Vec2f(_width, _height) * scale * transformScale();
-        _texture.draw(transformRenderSpace(position), finalSize, Vec4i(_packX,
-                _packY, _packWidth, _packHeight), 0f, Flip.none, Vec2f.zero,
-                Blend.alpha, color, alpha);
+    void draw(mat4 transform, float posX, float posY, float scale, Color color, float alpha) {
+        _texture.draw(transform, posX, posY, _width * scale, _height * scale,
+            Vec4i(_packX, _packY, _packWidth, _packHeight),
+            0f, Flip.none, Vec2f.zero, Blend.alpha, color, alpha);
     }
 }

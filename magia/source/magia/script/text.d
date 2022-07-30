@@ -1,6 +1,7 @@
 module magia.script.text;
 
 import grimoire;
+import gl3n.linalg;
 
 import magia.render;
 
@@ -41,9 +42,9 @@ private void _getFont(GrCall call) {
 }
 
 private void _print1(GrCall call) {
-    drawText(call.getString(0), call.getReal(1), call.getReal(2));
+    drawText(mat4.identity, call.getString(0), call.getReal(1), call.getReal(2));
 }
 
 private void _print2(GrCall call) {
-    drawText(call.getString(0), call.getReal(1), call.getReal(2), call.getForeign!Font(3));
+    drawText(mat4.identity, call.getString(0), call.getReal(1), call.getReal(2), call.getForeign!Font(3));
 }
