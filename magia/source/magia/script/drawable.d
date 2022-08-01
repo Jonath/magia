@@ -44,7 +44,7 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     library.addFunction(&_model2, "loadModel", [grString, grInt, grArray(mat4Type)], [modelType]);
     library.addFunction(&_quad, "loadQuad", [], [quadType]);
     library.addFunction(&_skybox, "loadSkybox", [], [skyboxType]);
-    library.addFunction(&_terrain, "loadTerrain", [grReal, grInt, grInt, grInt, grString], [terrainType]);
+    library.addFunction(&_terrain, "loadTerrain", [grInt, grInt, grInt, grInt, grInt, grString], [terrainType]);
 }
 
 private void _quat(GrCall call) {
@@ -131,15 +131,16 @@ private void _skybox(GrCall call) {
 }
 
 private void _terrain(GrCall call) {
-    const float size = call.getReal(0);;
-    const int nbVertices = call.getInt32(1);
-    const int gridX = call.getInt32(2);
-    const int gridZ = call.getInt32(3);
+    const int gridX = call.getInt32(0);
+    const int gridZ = call.getInt32(1);
+    const int sizeX = call.getInt32(2);
+    const int sizeZ = call.getInt32(3);
+    const int nbVertices = call.getInt32(4);
 
     string[] textureFiless;
-    textureFiless ~= call.getString(4);
+    textureFiless ~= call.getString(5);
 
-    Terrain terrain = new Terrain(size, nbVertices, gridX, gridZ, textureFiless);
-    call.setForeign(terrain);
-    addEntity(terrain);
+    TerrainInstance terrainInstance = new TerrainInstance(vec2(gridX, gridZ), vec2(sizeX, sizeZ), nbVertices, textureFiless);
+    call.setForeign(terrainInstance);
+    addEntity(terrainInstance);
 }

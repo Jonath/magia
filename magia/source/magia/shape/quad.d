@@ -8,8 +8,8 @@ import gl3n.linalg;
 
 import magia.core;
 
-import magia.render.mesh;
 import magia.render.entity;
+import magia.render.mesh;
 import magia.render.shader;
 import magia.render.texture;
 import magia.render.vertex;
