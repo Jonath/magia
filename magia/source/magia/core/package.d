@@ -17,7 +17,7 @@ public {
     import magia.core.vec4;
     import magia.core.color;
     import magia.core.timer;
-    import magia.core.tween;
+    import magia.core.spline;
     import magia.core.simplex;
     import magia.core.stream;
     import magia.core.indexedarray;

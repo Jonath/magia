@@ -56,7 +56,7 @@ event onLoad() {
 
     Model asteroid = loadModel("asteroid/scene", nbAsteroids, instanceMatrices);
 
-    //appendUI(Label("Hello World !"));
+    testUI();
 
     /*loop {
         print("HAAAAAAAA", 0., 50.);
@@ -75,3 +75,21 @@ trans: identité
 Local = Trans * Rota * Scale
 M = World * Local
 */
+
+function testUI() {
+    let label = Label("Hello World !");
+    label:position(200., 200.);
+    label:align(AlignX.right, AlignY.top);
+    appendUI(label);
+
+    let state = UIState("hidden");
+    state:time(.25);
+    state:spline(Spline.sineInOut);
+    state:alpha(.0);
+    state:offset(-100., .0);
+    state:angle(rad(45.0));
+    label:addState(state);
+
+    sleep(2:seconds);
+    label:runState("hidden");
+}

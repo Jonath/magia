@@ -10,7 +10,7 @@ private {
 
 /// Initialize the default font
 void initFont() {
-    _veraFont = new TrueTypeFont(veraFontData);
+    _veraFont = new TrueTypeFont(veraFontData, 26, 2);
     _defaultFont = _veraFont;
 }
 

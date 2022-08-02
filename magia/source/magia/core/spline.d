@@ -6,17 +6,17 @@
     Authors: Enalye
 */
 
-module magia.core.tween;
+module magia.core.spline;
 
 import std.math;
 
 import magia.common;
 import magia.core.util;
 
-alias EasingFunction = float function(float);
+alias SplineFunc = float function(float);
 
-/// Easing behaviour.
-enum Ease {
+/// Courbes d’interpolation
+enum Spline {
     linear,
     sineIn,
     sineOut,
@@ -51,8 +51,8 @@ enum Ease {
 }
 
 /// Returns an easing function.
-EasingFunction getEasingFunction(Ease ease = Ease.linear) {
-    final switch (ease) with (Ease) {
+SplineFunc getSplineFunc(Spline ease = Spline.linear) {
+    final switch (ease) with (Spline) {
     case linear:
         return &easeLinear;
     case sineIn:
@@ -290,7 +290,7 @@ float easeOutBounce(float t) {
     else if (t < 8f / 11f)
         return (363f / 40f * t * t) - (99f / 10f * t) + 17f / 5f;
     else if (t < 9f / 10f)
-        return (4356f / 361f * t * t) - (35442f / 1805f * t) + 16061f / 1805f;
+        return (4_356f / 361f * t * t) - (35_442f / 1_805f * t) + 16_061f / 1_805f;
     return (54f / 5f * t * t) - (513f / 25f * t) + 268f / 25f;
 }
 

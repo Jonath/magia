@@ -102,6 +102,7 @@ void runApplication() {
             _engine.process();
 
         updateScene(_deltatime);
+        updateUI(_deltatime);
 
         // Rendu
         // 3D

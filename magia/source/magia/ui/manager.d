@@ -68,10 +68,12 @@ void initUI() {
     glLinkProgram(_shaderProgram);
     _colorUniform = glGetUniformLocation(_shaderProgram, "color");
     _modelUniform = glGetUniformLocation(_shaderProgram, "model");
+}
 
-    auto t = new TestUI();
-    t._children ~= new Test2UI();
-    appendRoot(t);
+void updateUI(float deltaTime) {
+    foreach (UIElement element; _roots) {
+        updateUI(deltaTime, element);
+    }
 }
 
 void drawUI() {
@@ -82,11 +84,6 @@ void drawUI() {
     b.scale(1f / screenSize().x, 1f / screenSize().y, 1.0f);
     transform = a * b;
 
-    /*drawFilledRect(Vec2f(10f, 200f), Vec2f(100f, 150f), Color.blue, 1f);*/
-    //drawTest(transform, 10f, 200f, 400f, 400f);
-
-    //import magia.render.text;
-
     foreach (UIElement element; _roots) {
         drawUI(transform, element);
     }
@@ -94,6 +91,34 @@ void drawUI() {
 
 void appendRoot(UIElement element) {
     _roots ~= element;
+}
+
+private void updateUI(float deltaTime, UIElement element, UIElement parent = null) {
+    // Calcul des transitions
+    if (element.timer.isRunning) {
+        element.timer.update(deltaTime);
+
+        SplineFunc splineFunc = getSplineFunc(element.targetState.spline);
+        const float t = splineFunc(element.timer.value01);
+
+        element.offsetX = lerp(element.initState.offsetX, element.targetState.offsetX, t);
+        element.offsetY = lerp(element.initState.offsetY, element.targetState.offsetY, t);
+
+        element.scaleX = lerp(element.initState.scaleX, element.targetState.scaleX, t);
+        element.scaleY = lerp(element.initState.scaleY, element.targetState.scaleY, t);
+
+        element.angle = lerp(element.initState.angle, element.targetState.angle, t);
+        element.alpha = lerp(element.initState.alpha, element.targetState.alpha, t);
+
+        if (!element.timer.isRunning) {
+            //if (element.targetState.callback.length)
+            //    element.onCallback(element.targetState.callback);
+        }
+    }
+
+    foreach (UIElement ui; element._children) {
+        updateUI(deltaTime, ui, element);
+    }
 }
 
 private void drawUI(mat4 transform, UIElement element, UIElement parent = null) {
@@ -113,30 +138,29 @@ private void drawUI(mat4 transform, UIElement element, UIElement parent = null) 
         element.sizeY * element.scaleY * element.pivotY * 2f,
         0f);
 
-    float x, y;
+    float x = element.posX + element.offsetX;
+    float y = element.posY + element.offsetY;
     float parentW = parent ? parent.sizeX : screenWidth();
     float parentH = parent ? parent.sizeY : screenHeight();
 
     final switch (element.alignX) with (UIElement.AlignX) {
     case left:
-        x = element.posX;
         break;
     case right:
-        x = parentW - (element.posX + (element.sizeX * element.scaleX));
+        x = parentW - (x + (element.sizeX * element.scaleX));
         break;
     case center:
-        x = parentW / 2f + element.posX;
+        x = parentW / 2f + x;
         break;
     }
     final switch (element.alignY) with (UIElement.AlignY) {
     case bottom:
-        y = element.posY;
         break;
     case top:
-        y = parentH - (element.posY + (element.sizeY * element.scaleY));
+        y = parentH - (y + (element.sizeY * element.scaleY));
         break;
     case center:
-        y = parentH / 2f + element.posY;
+        y = parentH / 2f + y;
         break;
     }
     local.translate(x * 2f, y * 2f, 0f);
@@ -145,56 +169,6 @@ private void drawUI(mat4 transform, UIElement element, UIElement parent = null) 
     element.draw(transform);
     foreach (UIElement child; element._children) {
         drawUI(transform, child, element);
-    }
-}
-
-final class TestUI : UIElement {
-    private {
-    }
-    this() {
-        posX = 50f;
-        posY = 50f;
-        sizeX = 400f;
-        sizeY = 400f;
-        //scaleX = .5f;
-        //angle = 90f * (PI / 180.0);
-        //alignX = AlignX.right;
-        //alignY = AlignY.top;
-
-        import magia.ui.label;
-
-        auto a = new Label;
-        a.sizeX = 50f;
-        a.sizeX = 50f;
-        a.text = "Test de label !";
-        _children ~= a;
-    }
-
-    override void draw(mat4 transform) {
-        //angle += .05f;
-        drawTest(transform, 0f, 0f, sizeX, sizeY, Color.red);
-        //drawTest(transform, 10f, 200f, 400f, 400f);
-        //drawText(transform, "HEllo World", 10f, 10f);
-    }
-}
-
-final class Test2UI : UIElement {
-    this() {
-        posX = 20f;
-        posY = 20f;
-        sizeX = 50f;
-        sizeY = 50f;
-        scaleX = 2f;
-        scaleY = 2f;
-        //angle = 45f * (PI / 180.0);
-        //alignX = AlignX.right;
-        //alignY = AlignY.top;
-    }
-
-    override void draw(mat4 transform) {
-        angle += .05f;
-        drawTest(transform, 0f, 0f, sizeX, sizeY, Color.green);
-        //drawTest(transform, 10f, 200f, 400f, 400f);
     }
 }
 

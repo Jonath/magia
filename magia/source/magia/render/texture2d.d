@@ -238,7 +238,6 @@ final class Texture2D {
         local.translate(posX * 2f + sizeX, posY * 2f + sizeY, 0f);
         transform = transform * local;
 
-        glUniform4f(_colorUniform, color.r, color.g, color.b, 1f);
         glUniformMatrix4fv(_modelUniform, 1, GL_TRUE, transform.value_ptr);
 
         glBindVertexArray(_vao);

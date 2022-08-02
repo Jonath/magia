@@ -53,8 +53,7 @@ final class Label : UIElement {
 
     override void draw(mat4 transform) {
         Color color = getBaseColor();
-        const alpha = getBaseAlpha();
-        Vec2f pos = Vec2f(posX, posY);
+        Vec2f pos = Vec2f.zero;
         dchar prevChar;
         foreach (dchar ch; _text) {
             if (ch == '\n') {
