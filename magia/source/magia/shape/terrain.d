@@ -21,7 +21,6 @@ final class TerrainInstance : Entity3D {
         Mesh _mesh;
         vec2 _gridPos;
 
-        int   _seed;
         int   _nbOctaves;
         float _amplitude;
         float _roughness;
@@ -29,7 +28,6 @@ final class TerrainInstance : Entity3D {
 
     this(vec2 gridPos, vec2 size, int nbVertices, int tiling, string[] textureFilePaths) {
         // @TODO parametrize
-        _seed = 42_424_242;
         _nbOctaves = 3;
         _amplitude = 70f;
         _roughness = 0.3f;
@@ -147,19 +145,14 @@ final class TerrainInstance : Entity3D {
     }
 
     private float getSmoothNoise(int x, int z) {
-        float corners = (getNoise(x - 1, z - 1) + getNoise(x + 1, z - 1) +
-                         getNoise(x - 1, z + 1) + getNoise(x + 1, z + 1)) / 16f;
+        float corners = (noise(x - 1, z - 1) + noise(x + 1, z - 1) +
+                         noise(x - 1, z + 1) + noise(x + 1, z + 1)) / 16f;
 
-        float sides = (getNoise(x - 1, z) + getNoise(x + 1, z) +
-                       getNoise(x, z - 1) + getNoise(x, z + 1)) / 8f;
+        float sides = (noise(x - 1, z) + noise(x + 1, z) +
+                       noise(x, z - 1) + noise(x, z + 1)) / 8f;
 
-        float middle = getNoise(x, z) / 4f;
+        float middle = noise(x, z) / 4f;
         return corners + sides + middle;
-    }
-
-    private float getNoise(int x, int z) {
-        Random random = Random(16_807u * x + 48_271u * z + _seed);
-        return uniform!"[]"(-1.0f, 1.0f, random);
     }
 
     /// Render the terrain
