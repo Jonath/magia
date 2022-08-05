@@ -122,10 +122,14 @@ final class Mesh : Renderable {
 
         if (_instances == 1) {
             glUniformMatrix4fv(glGetUniformLocation(shader.id, "model"), 1, GL_TRUE, transform.model.value_ptr);
+            //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             glDrawElements(GL_TRIANGLES, cast(int) _indices.length, GL_UNSIGNED_INT, null);
+            //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         } else {
             glUniformMatrix4fv(glGetUniformLocation(shader.id, "model"), 1, GL_TRUE, mat4.identity.value_ptr);
+            //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             glDrawElementsInstanced(GL_TRIANGLES, cast(int) _indices.length, GL_UNSIGNED_INT, null, _instances);
+            //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
     }
 }

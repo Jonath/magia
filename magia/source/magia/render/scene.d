@@ -8,12 +8,13 @@ import gl3n.linalg;
 import magia.core, magia.render;
 import magia.common.event;
 import magia.shape.light;
+import magia.shape.terrain;
 
 alias Entities = Entity3D[];
 
 private {
     // Camera, light
-    Camera _camera, _defaultCamera;
+    Camera _camera;
     LightInstance _globalLight;
 
     // 3D entity containers
@@ -23,6 +24,9 @@ private {
     // Skybox
     Skybox _skybox;
 
+    // Terrain
+    Terrain _terrain;
+
     // Processing
     ShadowMap _shadowMap;
     PostProcess _postProcess;
@@ -31,17 +35,22 @@ private {
     Shader _defaultShader;
     Shader _lightShader;
     Shader _shadowShader;
+    Shader _terrainShader;
 
     // Flags
     bool _showShadows = false;
 }
 
 void setCamera(Camera camera) {
-    _camera = camera ? camera : _defaultCamera;
+    _camera = camera;
 }
 
 void setSkybox(Skybox skybox) {
     _skybox = skybox;
+}
+
+void setTerrain(Terrain terrain) {
+    _terrain = terrain;
 }
 
 void setGlobalLight(LightInstance globalLight) {
@@ -61,17 +70,20 @@ void addEntity(Entity3D entity) {
 }
 
 void initializeScene() {
-    _defaultCamera = new Camera(screenWidth, screenHeight, Vec3f.zero);
-    _camera = _defaultCamera;
     _shadowMap = new ShadowMap();
     _postProcess = new PostProcess(screenWidth, screenHeight);
     
     _defaultShader = new Shader("default.vert", "default.frag");
     _lightShader = new Shader("light.vert", "light.frag");
     _shadowShader = new Shader("shadow.vert", "shadow.frag");
+    _terrainShader = new Shader("terrain.vert", "terrain.frag");
 }
 
 void updateScene(float deltaTime) {
+    if (!_camera) {
+        return;
+    }
+
     _camera.update();
 
     if (getButtonDown(KeyButton.escape)) {
@@ -146,6 +158,11 @@ void updateScene(float deltaTime) {
 }
 
 void drawScene() {
+    if (!_camera) {
+        return;
+    }
+
+    // @TODO reference default shader and terrain shader together in a list "material shaders"
     _camera.passToShader(_defaultShader);
     _globalLight.setupShaders(_lightShader, _defaultShader);
 
@@ -168,6 +185,10 @@ void drawScene() {
 
     _shadowMap.bind(_defaultShader);
 
+    if (_terrain) {
+        _terrain.draw(_defaultShader);
+    }
+
     foreach(entity; _entities) {
         entity.draw(_defaultShader);
     }
@@ -176,20 +197,6 @@ void drawScene() {
 
     renderWindow();
 }
-
-/// Draw call
-/*void drawScene() {
-    foreach (Model model; modelEntityMap.keys) {
-        Entity3DArray entityBatch = modelEntityMap[model];
-        // Bind entity data
-
-        foreach (Entity3D entity; entityBatch) {
-            // Draw
-        }
-
-        // Unbind entity data
-    }
-}*/
 
 /// @TODO: Bouger ça à un endroit plus approprié.
 alias Quaternionf = Quaternion!(float);

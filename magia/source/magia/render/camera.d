@@ -64,10 +64,10 @@ class Camera {
     }
 
     /// Constructor
-    this(int width_, int height_, Vec3f position_) {
+    this(int width_, int height_, vec3 position_ = vec3(0f, 0f, 0f)) {
         _width = width_;
         _height = height_;
-        _position = vec3(position_.x, position_.y, position_.z);
+        _position = position_;
     }
 
     /// Setting up camera matrices operations

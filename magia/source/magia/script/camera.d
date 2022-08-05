@@ -14,11 +14,14 @@ package(magia.script) void loadMagiaLibCamera(GrLibrary library) {
     library.addFunction(&_getCamera, "getCamera", [], [cameraType]);
     library.addFunction(&_setCameraPosition, "position", [cameraType, grReal, grReal, grReal]);
     library.addFunction(&_getCameraPosition, "position", [cameraType], [grReal, grReal, grReal]);
+    library.addFunction(&_setCameraOrientation, "orientation", [cameraType, grReal, grReal, grReal]);
+    library.addFunction(&_getCameraOrientation, "orientation", [cameraType], [grReal, grReal, grReal]);
     library.addFunction(&_update, "update", [cameraType], []);
 }
 
 private void _camera(GrCall call) {
-    Camera camera = new Camera(screenWidth, screenHeight, Vec3f(0f, 0f, 2f));
+    Camera camera = new Camera(screenWidth, screenHeight);
+    setCamera(camera);
     call.setForeign(camera);
 }
 
@@ -53,6 +56,26 @@ private void _getCameraPosition(GrCall call) {
     call.setReal(camera.position.x);
     call.setReal(camera.position.y);
     call.setReal(camera.position.z);
+}
+
+private void _setCameraOrientation(GrCall call) {
+    Camera camera = call.getForeign!Camera(0);
+    if (!camera) {
+        call.raise("NullError");
+        return;
+    }
+    camera.forward(vec3(call.getReal(1), call.getReal(2), call.getReal(3)));
+}
+
+private void _getCameraOrientation(GrCall call) {
+    Camera camera = call.getForeign!Camera(0);
+    if (!camera) {
+        call.raise("NullError");
+        return;
+    }
+    call.setReal(camera.forward.x);
+    call.setReal(camera.forward.y);
+    call.setReal(camera.forward.z);
 }
 
 private void _update(GrCall call) {

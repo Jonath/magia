@@ -3,8 +3,10 @@ function randf() (real) {
 }
 
 event onLoad() {
-    let camera = getCamera();
-    camera:position(0., .5, 2.);
+    let camera = Camera();
+    //camera:position(0., .5, 2.);
+    camera:position(-22., 20., 11.);
+    camera:orientation(1., -0.25, 0.29);
 
     Light light = loadLight(LightKind.DIRECTIONAL);
     light:position(0., 1., 0.);

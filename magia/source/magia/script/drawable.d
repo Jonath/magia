@@ -141,7 +141,7 @@ private void _terrain(GrCall call) {
     string[] textureFiless;
     textureFiless ~= call.getString(6);
 
-    TerrainInstance terrainInstance = new TerrainInstance(vec2(gridX, gridZ), vec2(sizeX, sizeZ), nbVertices, tiling, textureFiless);
-    call.setForeign(terrainInstance);
-    addEntity(terrainInstance);
+    Terrain terrain = new Terrain(vec2(gridX, gridZ), vec2(sizeX, sizeZ), nbVertices, tiling, textureFiless);
+    call.setForeign(terrain);
+    setTerrain(terrain);
 }
