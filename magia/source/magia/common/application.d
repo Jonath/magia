@@ -8,6 +8,8 @@
 
 module magia.common.application;
 
+import std.conv : to;
+import std.stdio : writeln;
 import bindbc.sdl;
 
 import core.thread;
@@ -32,6 +34,8 @@ private {
     uint _nominalFPS = 60u;
 
     GrEngine _engine;
+    GrLibrary _stdlib;
+    GrLibrary _magialib;
 }
 
 /// Actual framerate divided by the nominal framerate
@@ -57,8 +61,6 @@ uint setNominalFPS(uint fps) {
 }
 
 void print(GrString message) {
-    import std.stdio : writeln;
-
     writeln(message);
 }
 
@@ -75,31 +77,37 @@ void runApplication() {
     initUI();
 
     // Script
-    GrLibrary stdlib = grLoadStdLibrary();
-    GrLibrary magialib = loadMagiaLibrary();
+    _stdlib = grLoadStdLibrary();
+    _magialib = loadMagiaLibrary();
     grSetOutputFunction(&print);
 
-    GrCompiler compiler = new GrCompiler;
-    compiler.addLibrary(stdlib);
-    compiler.addLibrary(magialib);
-    GrBytecode bytecode = compiler.compileFile("assets/script/main.gr", GrOption.none, GrLocale.fr_FR);
-    if (!bytecode)
-        throw new Exception(compiler.getError().prettify());
-
-    _engine = new GrEngine;
-    _engine.addLibrary(stdlib);
-    _engine.addLibrary(magialib);
-    _engine.load(bytecode);
-
-    if (_engine.hasEvent("onLoad"))
-        _engine.callEvent("onLoad");
+    loadScript();
 
     while (processEvents()) {
         // Màj
         updateEvents(_deltatime);
 
-        if (_engine.hasTasks)
-            _engine.process();
+        if (getButtonDown(KeyButton.f5)) {
+            loadScript();
+        }
+
+        if (_engine) {
+            if (_engine.hasTasks)
+                _engine.process();
+
+            if (_engine.isPanicking) {
+                writeln(_engine.prettifyProfiling());
+
+                string err = "panique: " ~ _engine.panicMessage ~ "\n";
+                foreach (trace; _engine.stackTraces) {
+                    err ~= "[" ~ to!string(
+                        trace.pc) ~ "] dans " ~ trace.name ~ " à " ~ trace.file ~ "(" ~ to!string(
+                        trace.line) ~ "," ~ to!string(trace.column) ~ ")\n";
+                }
+                _engine = null;
+                writeln(err);
+            }
+        }
 
         updateScene(_deltatime);
         updateUI(_deltatime);
@@ -125,6 +133,32 @@ void runApplication() {
         _currentFps = (_deltatime == .0f) ? .0f : (10_000_000f / cast(float)(deltaTicks));
         _tickStartFrame = Clock.currStdTime();
     }
+}
+
+void loadScript() {
+    resetScene();
+    removeRoots();
+
+    GrCompiler compiler = new GrCompiler;
+    compiler.addLibrary(_stdlib);
+    compiler.addLibrary(_magialib);
+
+    GrBytecode bytecode = compiler.compileFile(
+        "assets/script/main.gr", GrOption.profile | GrOption.symbols, GrLocale.fr_FR);
+
+    if (!bytecode) {
+        writeln(compiler.getError().prettify());
+        _engine = null;
+        return;
+    }
+
+    _engine = new GrEngine;
+    _engine.addLibrary(_stdlib);
+    _engine.addLibrary(_magialib);
+    _engine.load(bytecode);
+
+    if (_engine.hasEvent("onLoad"))
+        _engine.callEvent("onLoad");
 }
 
 /// Cleanup and kill the application

@@ -71,6 +71,10 @@ void initializeScene() {
     _shadowShader = new Shader("shadow.vert", "shadow.frag");
 }
 
+void resetScene() {
+    _entities.length = 0;
+}
+
 void updateScene(float deltaTime) {
     _camera.update();
 

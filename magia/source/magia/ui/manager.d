@@ -93,6 +93,10 @@ void appendRoot(UIElement element) {
     _roots ~= element;
 }
 
+void removeRoots() {
+    _roots.length = 0;
+}
+
 private void updateUI(float deltaTime, UIElement element, UIElement parent = null) {
     // Calcul des transitions
     if (element.timer.isRunning) {
