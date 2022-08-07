@@ -40,7 +40,7 @@ package void loadMagiaLibUI(GrLibrary library) {
             uiType, alignXType, alignYType
         ]);
 
-    library.addFunction(&_ui_state_make, "UIState", [grString], [stateType]);
+    library.addConstructor(&_ui_state_new, stateType, [grString]);
     library.addFunction(&_ui_state_offset, "offset", [
             stateType, grReal, grReal
         ]);
@@ -68,7 +68,7 @@ package void loadMagiaLibUI(GrLibrary library) {
     library.addFunction(&_ui_append_child, "append", [uiType, uiType]);
 
     // Labels
-    library.addFunction(&_label_make, "Label", [grString], [labelType]);
+    library.addConstructor(&_label_new, labelType, [grString]);
     library.addFunction(&_label_text, "text", [labelType, grString]);
 }
 
@@ -147,7 +147,7 @@ private void _ui_align(GrCall call) {
     ui.alignY = call.getEnum!(UIElement.AlignY)(2);
 }
 
-private void _ui_state_make(GrCall call) {
+private void _ui_state_new(GrCall call) {
     UIElement.State state = new UIElement.State;
     state.name = call.getString(0);
     call.setForeign(state);
@@ -296,7 +296,7 @@ private void _ui_append_child(GrCall call) {
     uiParent._children ~= uiChild;
 }
 
-private void _label_make(GrCall call) {
+private void _label_new(GrCall call) {
     Label label = new Label(call.getString(0));
     call.setForeign(label);
 }

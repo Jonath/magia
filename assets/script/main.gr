@@ -78,12 +78,12 @@ M = World * Local
 */
 
 function testUI() {
-    let label = Label("Hello World !");
+    let label = new Label("Hello World !");
     label:position(200., 200.);
     label:align(AlignX.right, AlignY.top);
     appendUI(label);
 
-    let state = UIState("hidden");
+    let state = new UIState("hidden");
     state:time(.25);
     state:spline(Spline.sineInOut);
     state:alpha(.0);

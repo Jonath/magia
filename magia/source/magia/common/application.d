@@ -115,7 +115,7 @@ void runApplication() {
         // Rendu
         // 3D
         setup3DRender();
-        drawScene();
+        drawScene(); /// @ERROR: crash ici quand le script ne compile pas
 
         // 2D
         setup2DRender();
