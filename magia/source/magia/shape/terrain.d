@@ -72,7 +72,7 @@ final class Terrain : Entity3D {
             }
         }
 
-        int count2 = (nbVertices - 1) * (nbVertices - 1);
+        int count2 = nbRemaining * nbRemaining;
         GLuint[] indices = new uint[count2 * 6];
 
         // Counter-clockwise indice mapping 

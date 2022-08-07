@@ -28,6 +28,7 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     GrType lightType = library.addForeign("Light", [], "Entity");
     GrType modelType = library.addForeign("Model", [], "Entity");
     GrType quadType = library.addForeign("Quad", [], "Entity");
+    GrType sphereType = library.addForeign("Sphere", [], "Entity");
     GrType skyboxType = library.addForeign("Skybox", [], "Entity");
     GrType terrainType = library.addForeign("Terrain", [], "Entity");
 
@@ -43,6 +44,7 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     library.addFunction(&_model1, "loadModel", [grString], [modelType]);
     library.addFunction(&_model2, "loadModel", [grString, grInt, grArray(mat4Type)], [modelType]);
     library.addFunction(&_quad, "loadQuad", [], [quadType]);
+    library.addFunction(&_sphere, "loadSphere", [grInt], [sphereType]);
     library.addFunction(&_skybox, "loadSkybox", [], [skyboxType]);
     library.addFunction(&_terrain, "loadTerrain", [grInt, grInt, grInt, grInt, grInt, grInt], [terrainType]);
 }
@@ -122,6 +124,14 @@ private void _quad(GrCall call) {
     QuadInstance quadInstance = new QuadInstance();
     call.setForeign(quadInstance);
     addEntity(quadInstance);
+}
+
+private void _sphere(GrCall call) {
+    const int resolution = call.getInt32(0);
+
+    Sphere sphere = new Sphere(resolution);
+    call.setForeign(sphere);
+    addEntity(sphere);
 }
 
 private void _skybox(GrCall call) {
