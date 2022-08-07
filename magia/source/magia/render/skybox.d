@@ -32,8 +32,8 @@ final class Skybox {
 
         /// Indices
         GLuint[] _indices = [
-            // RightglUniform1f(glGetUniformLocation(_shader.id, "gamma"), gamma);
             6, 5, 1,
+            1, 2, 6,
             // Left
             0, 4, 7,
             7, 3, 0,

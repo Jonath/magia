@@ -11,7 +11,7 @@ event onLoad() {
     Light light = loadLight(LightKind.DIRECTIONAL);
     light:position(0., 1., 0.);
 
-    //Skybox skybox = loadSkybox();
+    Skybox skybox = loadSkybox();
 
     //Quad quad = loadQuad();
     //Model tree = loadModel("tree/scene");

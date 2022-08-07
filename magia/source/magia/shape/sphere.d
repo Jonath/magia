@@ -67,6 +67,7 @@ final class Sphere : Entity3D {
                 vec3 surfacePoint = directionY + ratioScale.x * directionX + ratioScale.y * directionZ; 
                 vertices[vertexIdx].position = surfacePoint.normalized;
                 vertices[vertexIdx].texUV = vec2(fx / fResolution2, fy / fResolution2);
+                vertices[vertexIdx].color = vec3(1, 0, 0);
 
                 if (x != resolution2 && y != resolution2) {
                     // Map first triangle

@@ -102,7 +102,8 @@ vec4 directionalLight() {
     float noShadow = 1.0f - shadow;
 
     // Combining lightings, keeping alpha
-    vec4 lightColor = (texture(diffuse0, texCoords) * (diffuse * noShadow + ambient) + texture(specular0, texCoords).r * specular * noShadow) * lightColor;
+    vec4 baseColor = vec4(color, 1.0f);
+    vec4 lightColor = baseColor * (texture(diffuse0, texCoords) * (diffuse * noShadow + ambient) + texture(specular0, texCoords).r * specular * noShadow) * lightColor;
     lightColor.a = 1.0f;
 
     return lightColor;
