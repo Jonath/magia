@@ -100,17 +100,18 @@ final class Mesh : Renderable {
         foreach (Texture texture; _textures) {
             const string type = texture.type;
 
-            uint num;
+            string name;
             if (type == "diffuse") {
+                name = type ~ to!string(nbDiffuseTextures);
                 ++nbDiffuseTextures;
-                num = nbDiffuseTextures;
-            }
-            else if ("specular") {
+            } else if (type == "specular") {
+                name = type ~ to!string(nbSpecularTextures);
                 ++nbSpecularTextures;
-                num = nbSpecularTextures;
+            } else {
+                name = type;
             }
 
-            texture.forwardToShader(shader, type ~ to!string(num), textureId);
+            texture.forwardToShader(shader, name, textureId);
             texture.bind();
             ++textureId;
         }

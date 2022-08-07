@@ -24,7 +24,7 @@ event onLoad() {
     //jupiter:position(vec3(1., 0., 1.));
     //jupiter:scale(vec3(0.05, 0.05, 0.05));
     //Model crow = loadModel("crow/scene");
-    Terrain terrain = loadTerrain(0, 0, 800, 800, 128, 10, "grass.png");
+    Terrain terrain = loadTerrain(0, 0, 800, 800, 128, 3);
 
     int nbAsteroids = 500;
 

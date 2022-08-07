@@ -164,7 +164,9 @@ void drawScene() {
 
     // @TODO reference default shader and terrain shader together in a list "material shaders"
     _camera.passToShader(_defaultShader);
+    _camera.passToShader(_terrainShader);
     _globalLight.setupShaders(_lightShader, _defaultShader);
+    _globalLight.setupShaders(_lightShader, _terrainShader);
 
     if (_showShadows) {
         _shadowMap.register(_entities, vec3(-20.0, -20.0, -20.0)); // _globalLight.transform.position
@@ -186,7 +188,7 @@ void drawScene() {
     _shadowMap.bind(_defaultShader);
 
     if (_terrain) {
-        _terrain.draw(_defaultShader);
+        _terrain.draw(_terrainShader);
     }
 
     foreach(entity; _entities) {

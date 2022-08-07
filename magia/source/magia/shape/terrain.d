@@ -26,7 +26,7 @@ final class Terrain : Entity3D {
         float _roughness;
     }
 
-    this(vec2 gridPos, vec2 size, int nbVertices, int tiling, string[] textureFilePaths) {
+    this(vec2 gridPos, vec2 size, int nbVertices, int tiling) {
         // @TODO parametrize
         _nbOctaves = 3;
         _amplitude = 70f;
@@ -39,9 +39,11 @@ final class Terrain : Entity3D {
         string pathPrefix = "assets/texture/"; // @TODO factorize
 
         Texture[] textures;
-        foreach (string textureFilePath; textureFilePaths) {
-            textures ~= new Texture(pathPrefix ~ textureFilePath, "diffuse", 0);
-        }
+        textures ~= new Texture(pathPrefix ~ "grass.png", "backgroundTexture", 0);
+        textures ~= new Texture(pathPrefix ~ "sand.png", "rTexture", 1);
+        textures ~= new Texture(pathPrefix ~ "flowers.png", "gTexture", 2);
+        textures ~= new Texture(pathPrefix ~ "bricks.png", "bTexture", 3);
+        textures ~= new Texture(pathPrefix ~ "blendmap.png", "blendMap", 4);
 
         int count = nbVertices * nbVertices;
         Vertex[] vertices = new Vertex[count];

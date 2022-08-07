@@ -44,7 +44,7 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     library.addFunction(&_model2, "loadModel", [grString, grInt, grArray(mat4Type)], [modelType]);
     library.addFunction(&_quad, "loadQuad", [], [quadType]);
     library.addFunction(&_skybox, "loadSkybox", [], [skyboxType]);
-    library.addFunction(&_terrain, "loadTerrain", [grInt, grInt, grInt, grInt, grInt, grInt, grString], [terrainType]);
+    library.addFunction(&_terrain, "loadTerrain", [grInt, grInt, grInt, grInt, grInt, grInt], [terrainType]);
 }
 
 private void _quat(GrCall call) {
@@ -138,10 +138,7 @@ private void _terrain(GrCall call) {
     const int nbVertices = call.getInt32(4);
     const int tiling = call.getInt32(5);
 
-    string[] textureFiless;
-    textureFiless ~= call.getString(6);
-
-    Terrain terrain = new Terrain(vec2(gridX, gridZ), vec2(sizeX, sizeZ), nbVertices, tiling, textureFiless);
+    Terrain terrain = new Terrain(vec2(gridX, gridZ), vec2(sizeX, sizeZ), nbVertices, tiling);
     call.setForeign(terrain);
     setTerrain(terrain);
 }
