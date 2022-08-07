@@ -44,7 +44,7 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     library.addFunction(&_model1, "loadModel", [grString], [modelType]);
     library.addFunction(&_model2, "loadModel", [grString, grInt, grArray(mat4Type)], [modelType]);
     library.addFunction(&_quad, "loadQuad", [], [quadType]);
-    library.addFunction(&_sphere, "loadSphere", [grInt], [sphereType]);
+    library.addFunction(&_sphere, "loadSphere", [grInt, grReal, vec3Type, grReal, grReal], [sphereType]);
     library.addFunction(&_skybox, "loadSkybox", [], [skyboxType]);
     library.addFunction(&_terrain, "loadTerrain", [grInt, grInt, grInt, grInt, grInt, grInt], [terrainType]);
 }
@@ -128,8 +128,15 @@ private void _quad(GrCall call) {
 
 private void _sphere(GrCall call) {
     const int resolution = call.getInt32(0);
+    const float radius = call.getReal(1);
 
-    Sphere sphere = new Sphere(resolution);
+    GrObject offset = call.getObject(2);
+    const vec3 noiseOffset = vec3(offset.getReal("x"), offset.getReal("y"), offset.getReal("z"));
+
+    const float strength = call.getReal(3);
+    const float roughness = call.getReal(4);
+
+    Sphere sphere = new Sphere(resolution, radius, noiseOffset, strength, roughness);
     call.setForeign(sphere);
     addEntity(sphere);
 }

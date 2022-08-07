@@ -32,6 +32,7 @@ final class Skybox {
 
         /// Indices
         GLuint[] _indices = [
+            // Right
             6, 5, 1,
             1, 2, 6,
             // Left
