@@ -48,5 +48,8 @@ abstract class UIElement {
     State initState, targetState;
     Timer timer;
 
+    // Propriétés
+    bool isHovered, isClicked;
+
     void draw(mat4);
 }

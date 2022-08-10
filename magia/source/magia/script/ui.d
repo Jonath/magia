@@ -18,47 +18,48 @@ package void loadMagiaLibUI(GrLibrary library) {
     GrType labelType = library.addForeign("Label", [], "UI");
 
     // Commun aux UI
-    library.addFunction(&_ui_position, "position", [
-            uiType, grReal, grReal
-        ]);
-    library.addFunction(&_ui_size, "size", [
-            uiType, grReal, grReal
-        ]);
-    library.addFunction(&_ui_scale, "scale", [
-            uiType, grReal, grReal
-        ]);
-    library.addFunction(&_ui_pivot, "pivot", [
-            uiType, grReal, grReal
-        ]);
-    library.addFunction(&_ui_angle, "angle", [
-            uiType, grReal
-        ]);
-    library.addFunction(&_ui_alpha, "alpha", [
-            uiType, grReal
-        ]);
-    library.addFunction(&_ui_align, "align", [
-            uiType, alignXType, alignYType
-        ]);
+    library.addFunction(&_ui_pos, "pos", [uiType, grReal, grReal]);
+    library.addProperty(&_ui_posX!"get", &_ui_posX!"set", "posX", uiType, grReal);
+    library.addProperty(&_ui_posY!"get", &_ui_posY!"set", "posY", uiType, grReal);
+
+    library.addFunction(&_ui_size, "size", [uiType, grReal, grReal]);
+    library.addProperty(&_ui_sizeX!"get", &_ui_sizeX!"set", "sizeX", uiType, grReal);
+    library.addProperty(&_ui_sizeY!"get", &_ui_sizeY!"set", "sizeY", uiType, grReal);
+
+    library.addFunction(&_ui_scale, "scale", [uiType, grReal, grReal]);
+    library.addProperty(&_ui_scaleX!"get", &_ui_scaleX!"set", "scaleX", uiType, grReal);
+    library.addProperty(&_ui_scaleY!"get", &_ui_scaleY!"set", "scaleY", uiType, grReal);
+
+    library.addFunction(&_ui_pivot, "pivot", [uiType, grReal, grReal]);
+    library.addProperty(&_ui_pivotX!"get", &_ui_pivotX!"set", "pivotX", uiType, grReal);
+    library.addProperty(&_ui_pivotY!"get", &_ui_pivotY!"set", "pivotY", uiType, grReal);
+
+    library.addProperty(&_ui_angle!"get", &_ui_angle!"set", "angle", uiType, grReal);
+
+    library.addProperty(&_ui_alpha!"get", &_ui_alpha!"set", "alpha", uiType, grReal);
+
+    library.addFunction(&_ui_align, "align", [uiType, alignXType, alignYType]);
+    library.addProperty(&_ui_alignX!"get", &_ui_alignX!"set", "alignX", uiType, alignXType);
+    library.addProperty(&_ui_alignY!"get", &_ui_alignY!"set", "alignY", uiType, alignYType);
+
+    library.addProperty(&_ui_isHovered, null, "hover?", uiType, grBool);
+    library.addProperty(&_ui_isClicked, null, "click?", uiType, grBool);
 
     library.addConstructor(&_ui_state_new, stateType, [grString]);
-    library.addFunction(&_ui_state_offset, "offset", [
-            stateType, grReal, grReal
-        ]);
-    library.addFunction(&_ui_state_scale, "scale", [
-            stateType, grReal, grReal
-        ]);
-    library.addFunction(&_ui_state_angle, "angle", [
-            stateType, grReal
-        ]);
-    library.addFunction(&_ui_state_alpha, "alpha", [
-            stateType, grReal
-        ]);
-    library.addFunction(&_ui_state_time, "time", [
-            stateType, grReal
-        ]);
-    library.addFunction(&_ui_state_spline, "spline", [
-            stateType, splineType
-        ]);
+
+    library.addFunction(&_ui_state_offset, "offset", [stateType, grReal, grReal]);
+    library.addProperty(&_ui_state_offsetX!"get", &_ui_state_offsetX!"set", "offsetX", stateType, grReal);
+    library.addProperty(&_ui_state_offsetY!"get", &_ui_state_offsetY!"set", "offsetY", stateType, grReal);
+
+    library.addFunction(&_ui_state_scale, "scale", [stateType, grReal, grReal]);
+    library.addProperty(&_ui_state_scaleX!"get", &_ui_state_scaleX!"set", "scaleX", stateType, grReal);
+    library.addProperty(&_ui_state_scaleY!"get", &_ui_state_scaleY!"set", "scaleY", stateType, grReal);
+
+    library.addProperty(&_ui_state_angle!"get", &_ui_state_angle!"set", "angle", stateType, grReal);
+    library.addProperty(&_ui_state_alpha!"get", &_ui_state_alpha!"set", "alpha", stateType, grReal);
+
+    library.addProperty(&_ui_state_time!"get", &_ui_state_time!"set", "time", stateType, grReal);
+    library.addProperty(&_ui_state_spline!"get", &_ui_state_spline!"set", "spline", stateType, splineType);
 
     library.addFunction(&_ui_addState, "addState", [uiType, stateType]);
     library.addFunction(&_ui_setState, "setState", [uiType, grString]);
@@ -72,7 +73,7 @@ package void loadMagiaLibUI(GrLibrary library) {
     library.addFunction(&_label_text, "text", [labelType, grString]);
 }
 
-private void _ui_position(GrCall call) {
+private void _ui_pos(GrCall call) {
     UIElement ui = call.getForeign!UIElement(0);
     if (!ui) {
         call.raise("NullError");
@@ -81,6 +82,30 @@ private void _ui_position(GrCall call) {
 
     ui.posX = call.getReal(1);
     ui.posY = call.getReal(2);
+}
+
+private void _ui_posX(string op)(GrCall call) {
+    UIElement ui = call.getForeign!UIElement(0);
+    if (!ui) {
+        call.raise("NullError");
+        return;
+    }
+    static if (op == "set") {
+        ui.posX = call.getReal(1);
+    }
+    call.setReal(ui.posX);
+}
+
+private void _ui_posY(string op)(GrCall call) {
+    UIElement ui = call.getForeign!UIElement(0);
+    if (!ui) {
+        call.raise("NullError");
+        return;
+    }
+    static if (op == "set") {
+        ui.posY = call.getReal(1);
+    }
+    call.setReal(ui.posY);
 }
 
 private void _ui_size(GrCall call) {
@@ -94,6 +119,30 @@ private void _ui_size(GrCall call) {
     ui.sizeY = call.getReal(2);
 }
 
+private void _ui_sizeX(string op)(GrCall call) {
+    UIElement ui = call.getForeign!UIElement(0);
+    if (!ui) {
+        call.raise("NullError");
+        return;
+    }
+    static if (op == "set") {
+        ui.sizeX = call.getReal(1);
+    }
+    call.setReal(ui.sizeX);
+}
+
+private void _ui_sizeY(string op)(GrCall call) {
+    UIElement ui = call.getForeign!UIElement(0);
+    if (!ui) {
+        call.raise("NullError");
+        return;
+    }
+    static if (op == "set") {
+        ui.sizeY = call.getReal(1);
+    }
+    call.setReal(ui.sizeY);
+}
+
 private void _ui_scale(GrCall call) {
     UIElement ui = call.getForeign!UIElement(0);
     if (!ui) {
@@ -103,6 +152,30 @@ private void _ui_scale(GrCall call) {
 
     ui.scaleX = call.getReal(1);
     ui.scaleY = call.getReal(2);
+}
+
+private void _ui_scaleX(string op)(GrCall call) {
+    UIElement ui = call.getForeign!UIElement(0);
+    if (!ui) {
+        call.raise("NullError");
+        return;
+    }
+    static if (op == "set") {
+        ui.scaleX = call.getReal(1);
+    }
+    call.setReal(ui.scaleX);
+}
+
+private void _ui_scaleY(string op)(GrCall call) {
+    UIElement ui = call.getForeign!UIElement(0);
+    if (!ui) {
+        call.raise("NullError");
+        return;
+    }
+    static if (op == "set") {
+        ui.scaleY = call.getReal(1);
+    }
+    call.setReal(ui.scaleY);
 }
 
 private void _ui_pivot(GrCall call) {
@@ -116,24 +189,52 @@ private void _ui_pivot(GrCall call) {
     ui.pivotY = call.getReal(2);
 }
 
-private void _ui_angle(GrCall call) {
+private void _ui_pivotX(string op)(GrCall call) {
     UIElement ui = call.getForeign!UIElement(0);
     if (!ui) {
         call.raise("NullError");
         return;
     }
-
-    ui.angle = call.getReal(1);
+    static if (op == "set") {
+        ui.pivotX = call.getReal(1);
+    }
+    call.setReal(ui.pivotX);
 }
 
-private void _ui_alpha(GrCall call) {
+private void _ui_pivotY(string op)(GrCall call) {
     UIElement ui = call.getForeign!UIElement(0);
     if (!ui) {
         call.raise("NullError");
         return;
     }
+    static if (op == "set") {
+        ui.pivotY = call.getReal(1);
+    }
+    call.setReal(ui.pivotY);
+}
 
-    ui.alpha = call.getReal(1);
+private void _ui_angle(string op)(GrCall call) {
+    UIElement ui = call.getForeign!UIElement(0);
+    if (!ui) {
+        call.raise("NullError");
+        return;
+    }
+    static if (op == "set") {
+        ui.angle = call.getReal(1);
+    }
+    call.setReal(ui.angle);
+}
+
+private void _ui_alpha(string op)(GrCall call) {
+    UIElement ui = call.getForeign!UIElement(0);
+    if (!ui) {
+        call.raise("NullError");
+        return;
+    }
+    static if (op == "set") {
+        ui.alpha = call.getReal(1);
+    }
+    call.setReal(ui.alpha);
 }
 
 private void _ui_align(GrCall call) {
@@ -145,6 +246,50 @@ private void _ui_align(GrCall call) {
 
     ui.alignX = call.getEnum!(UIElement.AlignX)(1);
     ui.alignY = call.getEnum!(UIElement.AlignY)(2);
+}
+
+private void _ui_alignX(string op)(GrCall call) {
+    UIElement ui = call.getForeign!UIElement(0);
+    if (!ui) {
+        call.raise("NullError");
+        return;
+    }
+    static if (op == "set") {
+        ui.alignX = call.getEnum!(UIElement.AlignX)(1);
+    }
+    call.setEnum!(UIElement.AlignX)(ui.alignX);
+}
+
+private void _ui_alignY(string op)(GrCall call) {
+    UIElement ui = call.getForeign!UIElement(0);
+    if (!ui) {
+        call.raise("NullError");
+        return;
+    }
+    static if (op == "set") {
+        ui.alignY = call.getEnum!(UIElement.AlignY)(1);
+    }
+    call.setEnum!(UIElement.AlignY)(ui.alignY);
+}
+
+private void _ui_isHovered(GrCall call) {
+    UIElement ui = call.getForeign!UIElement(0);
+    if (!ui) {
+        call.raise("NullError");
+        return;
+    }
+
+    call.setBool(ui.isHovered);
+}
+
+private void _ui_isClicked(GrCall call) {
+    UIElement ui = call.getForeign!UIElement(0);
+    if (!ui) {
+        call.raise("NullError");
+        return;
+    }
+
+    call.setBool(ui.isClicked);
 }
 
 private void _ui_state_new(GrCall call) {
@@ -164,6 +309,30 @@ private void _ui_state_offset(GrCall call) {
     state.offsetY = call.getReal(2);
 }
 
+private void _ui_state_offsetX(string op)(GrCall call) {
+    UIElement.State state = call.getForeign!(UIElement.State)(0);
+    if (!state) {
+        call.raise("NullError");
+        return;
+    }
+    static if (op == "set") {
+        state.offsetX = call.getReal(1);
+    }
+    call.setReal(state.offsetX);
+}
+
+private void _ui_state_offsetY(string op)(GrCall call) {
+    UIElement.State state = call.getForeign!(UIElement.State)(0);
+    if (!state) {
+        call.raise("NullError");
+        return;
+    }
+    static if (op == "set") {
+        state.offsetY = call.getReal(1);
+    }
+    call.setReal(state.offsetY);
+}
+
 private void _ui_state_scale(GrCall call) {
     UIElement.State state = call.getForeign!(UIElement.State)(0);
     if (!state) {
@@ -175,44 +344,76 @@ private void _ui_state_scale(GrCall call) {
     state.scaleY = call.getReal(2);
 }
 
-private void _ui_state_angle(GrCall call) {
+private void _ui_state_scaleX(string op)(GrCall call) {
     UIElement.State state = call.getForeign!(UIElement.State)(0);
     if (!state) {
         call.raise("NullError");
         return;
     }
-
-    state.angle = call.getReal(1);
+    static if (op == "set") {
+        state.scaleX = call.getReal(1);
+    }
+    call.setReal(state.scaleX);
 }
 
-private void _ui_state_alpha(GrCall call) {
+private void _ui_state_scaleY(string op)(GrCall call) {
     UIElement.State state = call.getForeign!(UIElement.State)(0);
     if (!state) {
         call.raise("NullError");
         return;
     }
-
-    state.alpha = call.getReal(1);
+    static if (op == "set") {
+        state.scaleY = call.getReal(1);
+    }
+    call.setReal(state.scaleY);
 }
 
-private void _ui_state_time(GrCall call) {
+private void _ui_state_angle(string op)(GrCall call) {
     UIElement.State state = call.getForeign!(UIElement.State)(0);
     if (!state) {
         call.raise("NullError");
         return;
     }
-
-    state.time = call.getReal(1);
+    static if (op == "set") {
+        state.angle = call.getReal(1);
+    }
+    call.setReal(state.angle);
 }
 
-private void _ui_state_spline(GrCall call) {
+private void _ui_state_alpha(string op)(GrCall call) {
     UIElement.State state = call.getForeign!(UIElement.State)(0);
     if (!state) {
         call.raise("NullError");
         return;
     }
+    static if (op == "set") {
+        state.alpha = call.getReal(1);
+    }
+    call.setReal(state.alpha);
+}
 
-    state.spline = call.getEnum!Spline(1);
+private void _ui_state_time(string op)(GrCall call) {
+    UIElement.State state = call.getForeign!(UIElement.State)(0);
+    if (!state) {
+        call.raise("NullError");
+        return;
+    }
+    static if (op == "set") {
+        state.time = call.getReal(1);
+    }
+    call.setReal(state.time);
+}
+
+private void _ui_state_spline(string op)(GrCall call) {
+    UIElement.State state = call.getForeign!(UIElement.State)(0);
+    if (!state) {
+        call.raise("NullError");
+        return;
+    }
+    static if (op == "set") {
+        state.spline = call.getEnum!Spline(1);
+    }
+    call.setEnum!Spline(state.spline);
 }
 
 private void _ui_addState(GrCall call) {

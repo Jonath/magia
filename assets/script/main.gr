@@ -79,16 +79,19 @@ M = World * Local
 
 function testUI() {
     let label = new Label("Hello World !");
-    label:position(200., 200.);
+    label:pos(200., 200.);
     label:align(AlignX.right, AlignY.top);
     appendUI(label);
 
+    //label.hover? = true;
+
     let state = new UIState("hidden");
-    state:time(.25);
-    state:spline(Spline.sineInOut);
-    state:alpha(.0);
-    state:offset(-100., .0);
-    state:angle(rad(45.0));
+    state.time = .25;
+    state.time += 2.;
+    state.spline = Spline.sineInOut;
+    state.alpha = .0;
+    state.offsetX = -100.;
+    state.angle = rad(45.0);
     label:addState(state);
 
     sleep(2:seconds);

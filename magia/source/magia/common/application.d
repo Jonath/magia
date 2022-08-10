@@ -152,6 +152,8 @@ void loadScript() {
         return;
     }
 
+    //writeln(grDump(bytecode));
+
     _engine = new GrEngine;
     _engine.addLibrary(_stdlib);
     _engine.addLibrary(_magialib);
