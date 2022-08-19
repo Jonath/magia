@@ -8,9 +8,11 @@ import gl3n.linalg;
 import magia.core, magia.render;
 import magia.common.event;
 import magia.shape.light;
+import magia.shape.line;
 import magia.shape.terrain;
 
 alias Entities = Entity3D[];
+alias Lines = Line[];
 
 private {
     // Camera, light
@@ -27,6 +29,9 @@ private {
     // Terrain
     Terrain _terrain;
 
+    // Lines
+    Lines _lines;
+
     // Processing
     ShadowMap _shadowMap;
     PostProcess _postProcess;
@@ -36,6 +41,7 @@ private {
     Shader _lightShader;
     Shader _shadowShader;
     Shader _terrainShader;
+    Shader _lineShader;
 
     // Flags
     bool _showShadows = false;
@@ -69,6 +75,10 @@ void addEntity(Entity3D entity) {
     _entities ~= entity;
 }
 
+void addLine(Line line) {
+    _lines ~= line;
+}
+
 void initializeScene() {
     _shadowMap = new ShadowMap();
     _postProcess = new PostProcess(screenWidth, screenHeight);
@@ -77,6 +87,7 @@ void initializeScene() {
     _lightShader = new Shader("light.vert", "light.frag");
     _shadowShader = new Shader("shadow.vert", "shadow.frag");
     _terrainShader = new Shader("terrain.vert", "terrain.frag");
+    _lineShader = new Shader("line.vert", "line.frag");
 }
 
 void updateScene(float deltaTime) {
@@ -165,6 +176,7 @@ void drawScene() {
     // @TODO reference default shader and terrain shader together in a list "material shaders"
     _camera.passToShader(_defaultShader);
     _camera.passToShader(_terrainShader);
+    _camera.passToShader(_lineShader);
     _globalLight.setupShaders(_lightShader, _defaultShader);
     _globalLight.setupShaders(_lightShader, _terrainShader);
 
@@ -193,6 +205,10 @@ void drawScene() {
 
     foreach(entity; _entities) {
         entity.draw(_defaultShader);
+    }
+
+    foreach(line; _lines) {
+        line.draw(_lineShader);
     }
 
     _postProcess.draw();

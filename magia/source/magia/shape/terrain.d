@@ -106,8 +106,7 @@ final class Terrain : Entity3D {
         float heightU = getHeight(x, z + 1);
 
         vec3 normal = vec3(heightL - heightR, 2f, heightD - heightU);
-        normal.normalize();
-        return normal;
+        return normal.normalized;
     }
 
     private float getHeight(int x, int z) {

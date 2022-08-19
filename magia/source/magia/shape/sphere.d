@@ -32,19 +32,26 @@ final class Sphere : Entity3D {
 
         // Noise parameters
         vec3 _noiseOffset;
+        int _nbLayers;
         float _strength;
         float _roughness;
+        float _persistence;
+        float _minHeight;
     }
 
-    this(int resolution, float radius, vec3 noiseOffset, float strength, float roughness) {
+    this(int resolution, float radius, vec3 noiseOffset, int nbLayers,
+        float strength, float roughness, float persistence, float minHeight) {
         transform = Transform.identity;
 
         _resolution = resolution;
         _radius = radius;
 
         _noiseOffset = noiseOffset;
+        _nbLayers = nbLayers;
         _strength = strength;
         _roughness = roughness;
+        _persistence = persistence;
+        _minHeight = minHeight;
 
         string pathPrefix = "assets/texture/"; // @TODO factorize
 
@@ -102,12 +109,12 @@ final class Sphere : Entity3D {
             }
         }
 
-        /*for (int y = 0; y < _resolution; ++y) {
+        for (int y = 0; y < _resolution; ++y) {
             for (int x = 0; x < _resolution; ++x) {
                 int vertexIdx = getVertexIdx(x, y);
                 vertices[vertexIdx].normal = computeNormals(x, y, vertices);
             }
-        }*/
+        }
 
         _meshes ~= new Mesh(vertices, indices, _textures);
     }
@@ -116,12 +123,12 @@ final class Sphere : Entity3D {
         return x + y * _resolution;
     }
 
-    /*private vec3 computeNormals(int x, int y, Vertex[] vertices) {
+    private vec3 computeNormals(int x, int y, Vertex[] vertices) {
         int xa = x + 1 < _resolution ? x + 1 : 0;
-        int xb = x - 1 > 0 ? x - 1 : _resolution;
+        int xb = x - 1 > 0 ? x - 1 : _resolution - 1;
 
         int ya = y + 1 < _resolution ? y + 1 : 0;
-        int yb = y - 1 > 0 ? y - 1 : _resolution;
+        int yb = y - 1 > 0 ? y - 1 : _resolution - 1;
 
         int leftIdx = getVertexIdx(xb, y);
         int rightIdx = getVertexIdx(xa, y);
@@ -136,15 +143,29 @@ final class Sphere : Entity3D {
         vec3 normal = vec3(heightL - heightR, 2f, heightD - heightU);
         normal.normalize();
         return normal;
-    }*/
+    }
 
     private vec3 generateSpherePoint(vec3 surfacePoint) {
-        return surfacePoint * getHeight(surfacePoint);
+        return surfacePoint * evaluate(surfacePoint);
+    }
+
+    private float evaluate(vec3 point) {
+        float noiseValue = 0;
+        float frequency = 1;
+        float amplitude = 1;
+
+        for (int layerId = 0; layerId < _nbLayers; ++layerId) {
+            noiseValue = getHeight(point * frequency + _noiseOffset);
+            frequency *= _roughness;
+            amplitude *= _persistence;
+        }
+
+        noiseValue = max(0, noiseValue - _minHeight);
+        return noiseValue * _strength;
     }
     
     private float getHeight(vec3 point) {
-        vec3 roughedPoint = point * _roughness + _noiseOffset;
-        float elevation = noise(roughedPoint.x, roughedPoint.y, roughedPoint.z) * _strength;
+        float elevation = noise(point.x, point.y, point.z) * _strength;
         return _radius * (1 + elevation);
     }
 

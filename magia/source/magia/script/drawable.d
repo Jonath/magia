@@ -27,6 +27,7 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     GrType entityType = library.addForeign("Entity");
     GrType lightType = library.addForeign("Light", [], "Entity");
     GrType modelType = library.addForeign("Model", [], "Entity");
+    GrType lineType = library.addForeign("Line", [], "Entity");
     GrType quadType = library.addForeign("Quad", [], "Entity");
     GrType sphereType = library.addForeign("Sphere", [], "Entity");
     GrType skyboxType = library.addForeign("Skybox", [], "Entity");
@@ -44,7 +45,8 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     library.addFunction(&_model1, "loadModel", [grString], [modelType]);
     library.addFunction(&_model2, "loadModel", [grString, grInt, grArray(mat4Type)], [modelType]);
     library.addFunction(&_quad, "loadQuad", [], [quadType]);
-    library.addFunction(&_sphere, "loadSphere", [grInt, grReal, vec3Type, grReal, grReal], [sphereType]);
+    library.addFunction(&_sphere, "loadSphere", [grInt, grReal, vec3Type, grInt, grReal, grReal, grReal, grReal], [sphereType]);
+    library.addFunction(&_line, "loadLine", [vec3Type, vec3Type, vec3Type], [lineType]);
     library.addFunction(&_skybox, "loadSkybox", [], [skyboxType]);
     library.addFunction(&_terrain, "loadTerrain", [grInt, grInt, grInt, grInt, grInt, grInt], [terrainType]);
 }
@@ -120,6 +122,20 @@ private void _model2(GrCall call) {
     addEntity(modelInstance);
 }
 
+private void _line(GrCall call) {
+    GrObject startObj = call.getObject(0);
+    GrObject endObj = call.getObject(1);
+    GrObject colorObj = call.getObject(2);
+
+    const vec3 start = vec3(startObj.getReal("x"), startObj.getReal("y"), startObj.getReal("z"));
+    const vec3 end = vec3(endObj.getReal("x"), endObj.getReal("y"), endObj.getReal("z"));
+    const vec3 color = vec3(colorObj.getReal("x"), colorObj.getReal("y"), colorObj.getReal("z"));
+
+    Line line = new Line(start, end, color);
+    call.setForeign(line);
+    addLine(line);
+}
+
 private void _quad(GrCall call) {
     QuadInstance quadInstance = new QuadInstance();
     call.setForeign(quadInstance);
@@ -133,10 +149,13 @@ private void _sphere(GrCall call) {
     GrObject offset = call.getObject(2);
     const vec3 noiseOffset = vec3(offset.getReal("x"), offset.getReal("y"), offset.getReal("z"));
 
-    const float strength = call.getReal(3);
-    const float roughness = call.getReal(4);
+    const int nbLayers = call.getInt32(3);
+    const float strength = call.getReal(4);
+    const float roughness = call.getReal(5);
+    const float persistence = call.getReal(6);
+    const float minHeight = call.getReal(7);
 
-    Sphere sphere = new Sphere(resolution, radius, noiseOffset, strength, roughness);
+    Sphere sphere = new Sphere(resolution, radius, noiseOffset, nbLayers, strength, roughness, persistence, minHeight);
     call.setForeign(sphere);
     addEntity(sphere);
 }
