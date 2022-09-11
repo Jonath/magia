@@ -144,8 +144,15 @@ void updateScene(float deltaTime) {
         _showShadows = !_showShadows;
     }
 
+    /// Left click to select objects in the scene
+    if (isButtonDown(MouseButton.left)) {
+        // @TODO Get mouse position, create a Ray from it (cached as private variable)
+
+        // @TODO Use ray to query entities in the scene, fetch the one closest to the camera near plane
+    }
+
     /// Look
-    const Vec2f deltaPos = getRelativeMousePos();
+    const Vec2f deltaPos = getRelativeMousePos(); // @TODO mouse pos here
 
     const float rotX = sensitivity * deltaPos.y;
     const float rotY = sensitivity * deltaPos.x;

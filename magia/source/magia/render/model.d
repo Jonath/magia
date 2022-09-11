@@ -237,6 +237,8 @@ final class Model : Renderable {
 
         const JSONValue[] jsonTextures = getJsonArray(_json, "images");
 
+        // @TODO handle case where the jsonTextures array is empty by using default texture
+
         foreach (const JSONValue jsonTexture; jsonTextures) {
             const string path = _fileDirectory ~ getJsonStr(jsonTexture, "uri");
 

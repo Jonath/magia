@@ -40,7 +40,8 @@ JSONValue getJson(JSONValue json, string tag) {
 /// Get a JSONValue array associated to tag (throws if not found)
 JSONValue[] getJsonArray(JSONValue json, string tag) {
     if (!(tag in json.object)) {
-        throw new Exception("JSON: \'" ~ tag ~ "\'' does not exist in JSON.");
+        //throw new Exception("JSON: \'" ~ tag ~ "\'' does not exist in JSON.");
+        return [];
     }
 
     return json.object[tag].array;
