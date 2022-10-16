@@ -11,6 +11,10 @@ import magia.render.shader;
 import magia.render.texture;
 import magia.render.vertex;
 
+// @TODO remove
+import magia.shape.line;
+import magia.render.scene;
+
 import std.stdio;
 
 vec3 up      = vec3( 0,  1,  0);
@@ -21,8 +25,8 @@ vec3 forward = vec3( 0,  0,  1);
 vec3 back    = vec3( 0,  0, -1);
 
 /// Instance of sphere
-final class Sphere : Entity3D {
-    private {
+class Sphere : Entity3D {
+    protected {
         Mesh[]    _meshes;
         Texture[] _textures;
 
@@ -30,28 +34,15 @@ final class Sphere : Entity3D {
         int   _resolution;
         float _radius;
 
-        // Noise parameters
-        vec3 _noiseOffset;
-        int _nbLayers;
-        float _strength;
-        float _roughness;
-        float _persistence;
-        float _minHeight;
+        // Debug params
+        bool _debug;
     }
 
-    this(int resolution, float radius, vec3 noiseOffset, int nbLayers,
-        float strength, float roughness, float persistence, float minHeight) {
+    this(int resolution, float radius) {
         transform = Transform.identity;
 
         _resolution = resolution;
         _radius = radius;
-
-        _noiseOffset = noiseOffset;
-        _nbLayers = nbLayers;
-        _strength = strength;
-        _roughness = roughness;
-        _persistence = persistence;
-        _minHeight = minHeight;
 
         string pathPrefix = "assets/texture/"; // @TODO factorize
 
@@ -85,12 +76,10 @@ final class Sphere : Entity3D {
 
                 int vertexIdx = getVertexIdx(x, y);
 
-                vec2 ratio = vec2(x, y) / resolution2;
-                vec2 ratioScale = (ratio - vec2(0.5f, 0.5f)) * 2;
-                vec3 surfacePoint = directionY + ratioScale.x * directionX + ratioScale.y * directionZ; 
-                vertices[vertexIdx].position = generateSpherePoint(surfacePoint.normalized);
+                vertices[vertexIdx].position = generateSurfacePoint(directionX, directionY, directionZ, x, y, resolution2);
                 vertices[vertexIdx].texUV = vec2(fx / fResolution2, fy / fResolution2);
                 vertices[vertexIdx].color = vec3(1, 0, 0);
+                vertices[vertexIdx].normal = computeNormal(vertices[vertexIdx].position);
 
                 if (x != resolution2 && y != resolution2) {
                     // Map first triangle
@@ -109,64 +98,34 @@ final class Sphere : Entity3D {
             }
         }
 
-        for (int y = 0; y < _resolution; ++y) {
-            for (int x = 0; x < _resolution; ++x) {
-                int vertexIdx = getVertexIdx(x, y);
-                vertices[vertexIdx].normal = computeNormals(x, y, vertices);
-            }
-        }
-
         _meshes ~= new Mesh(vertices, indices, _textures);
     }
 
-    private int getVertexIdx(int x, int y) {
+    /// Generate a point on the sphere's surface
+    protected vec3 generateSurfacePoint(vec3 directionX, vec3 directionY, vec3 directionZ,
+                                        int x, int y, int resolution) {
+        vec2 ratio = vec2(x, y) / resolution;
+        vec2 ratioScale = (ratio - vec2(0.5f, 0.5f)) * 2;
+        vec3 surfacePoint = directionY + ratioScale.x * directionX + ratioScale.y * directionZ;
+        return surfacePoint.normalized;
+    }
+
+    /// Get vertex id for position (x, y)
+    protected int getVertexIdx(int x, int y) {
         return x + y * _resolution;
     }
 
-    private vec3 computeNormals(int x, int y, Vertex[] vertices) {
-        int xa = x + 1 < _resolution ? x + 1 : 0;
-        int xb = x - 1 > 0 ? x - 1 : _resolution - 1;
-
-        int ya = y + 1 < _resolution ? y + 1 : 0;
-        int yb = y - 1 > 0 ? y - 1 : _resolution - 1;
-
-        int leftIdx = getVertexIdx(xb, y);
-        int rightIdx = getVertexIdx(xa, y);
-        int downIdx = getVertexIdx(x, yb);
-        int upIdx = getVertexIdx(x, ya);
-
-        float heightL = getHeight(vertices[leftIdx].position);
-        float heightR = getHeight(vertices[rightIdx].position);
-        float heightD = getHeight(vertices[downIdx].position);
-        float heightU = getHeight(vertices[upIdx].position);
-
-        vec3 normal = vec3(heightL - heightR, 2f, heightD - heightU);
+    // Compute normals 
+    private vec3 computeNormal(vec3 surfacePoint) {
+        vec3 center = transform.position;
+        vec3 normal = surfacePoint - center;
         normal.normalize();
-        return normal;
-    }
 
-    private vec3 generateSpherePoint(vec3 surfacePoint) {
-        return surfacePoint * evaluate(surfacePoint);
-    }
-
-    private float evaluate(vec3 point) {
-        float noiseValue = 0;
-        float frequency = 1;
-        float amplitude = 1;
-
-        for (int layerId = 0; layerId < _nbLayers; ++layerId) {
-            noiseValue = getHeight(point * frequency + _noiseOffset);
-            frequency *= _roughness;
-            amplitude *= _persistence;
+        if (_debug) {
+            addLine(new Line(surfacePoint, surfacePoint + normal * _radius / 100, vec3(0., 1., 0.)));
         }
 
-        noiseValue = max(0, noiseValue - _minHeight);
-        return noiseValue * _strength;
-    }
-    
-    private float getHeight(vec3 point) {
-        float elevation = noise(point.x, point.y, point.z) * _strength;
-        return _radius * (1 + elevation);
+        return normal;
     }
 
     /// Render the sphere

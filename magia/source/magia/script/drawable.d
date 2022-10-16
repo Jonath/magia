@@ -29,7 +29,7 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     GrType modelType = library.addForeign("Model", [], "Entity");
     GrType lineType = library.addForeign("Line", [], "Entity");
     GrType quadType = library.addForeign("Quad", [], "Entity");
-    GrType sphereType = library.addForeign("Sphere", [], "Entity");
+    GrType planetType = library.addForeign("Planet", [], "Entity");
     GrType skyboxType = library.addForeign("Skybox", [], "Entity");
     GrType terrainType = library.addForeign("Terrain", [], "Entity");
 
@@ -45,7 +45,7 @@ package(magia.script) void loadMagiaLibDrawable(GrLibrary library) {
     library.addFunction(&_model1, "loadModel", [grString], [modelType]);
     library.addFunction(&_model2, "loadModel", [grString, grInt, grArray(mat4Type)], [modelType]);
     library.addFunction(&_quad, "loadQuad", [], [quadType]);
-    library.addFunction(&_sphere, "loadSphere", [grInt, grReal, vec3Type, grInt, grReal, grReal, grReal, grReal], [sphereType]);
+    library.addFunction(&_planet, "loadPlanet", [grInt, grReal, vec3Type, grInt, grReal, grReal, grReal, grReal], [planetType]);
     library.addFunction(&_line, "loadLine", [vec3Type, vec3Type, vec3Type], [lineType]);
     library.addFunction(&_skybox, "loadSkybox", [], [skyboxType]);
     library.addFunction(&_terrain, "loadTerrain", [grInt, grInt, grInt, grInt, grInt, grInt], [terrainType]);
@@ -142,7 +142,7 @@ private void _quad(GrCall call) {
     addEntity(quadInstance);
 }
 
-private void _sphere(GrCall call) {
+private void _planet(GrCall call) {
     const int resolution = call.getInt32(0);
     const float radius = call.getReal(1);
 
@@ -155,9 +155,10 @@ private void _sphere(GrCall call) {
     const float persistence = call.getReal(6);
     const float minHeight = call.getReal(7);
 
-    Sphere sphere = new Sphere(resolution, radius, noiseOffset, nbLayers, strength, roughness, persistence, minHeight);
-    call.setForeign(sphere);
-    addEntity(sphere);
+    Planet planet = new Planet(resolution, radius, noiseOffset, nbLayers, strength, roughness, persistence, minHeight);
+    //Sphere planet = new Sphere(resolution, radius);
+    call.setForeign(planet);
+    addEntity(planet);
 }
 
 private void _skybox(GrCall call) {

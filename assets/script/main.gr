@@ -8,8 +8,8 @@ event onLoad() {
     //camera:position(-22., 20., 11.);
     //camera:orientation(1., -0.25, 0.29);
 
-    Light light = loadLight(LightKind.DIRECTIONAL);
-    light:position(0., 1., 0.);
+    Light light = loadLight(LightKind.SPOT);
+    light:position(0., 5., 0.);
 
     Skybox skybox = loadSkybox();
 
@@ -27,12 +27,12 @@ event onLoad() {
     //Terrain terrain = loadTerrain(0, 0, 800, 800, 128, 3);
 
     // Sphere(resolution, radius, noiseOffset, nbLayers, strength, roughness, persistence, minHeight);
-    //Sphere sphere = loadSphere(10, 2.72, vec3(0., 0., 0.), 5, 0.24, 1.84, 0.5, 1.22);
-    Line line = loadLine(vec3(0., 0., 0.), vec3(1., 0., 0.), vec3(1., 0., 0.));
-    Line line = loadLine(vec3(0., 0., 0.), vec3(0., 1., 0.), vec3(0., 1., 0.));
-    Line line = loadLine(vec3(0., 0., 0.), vec3(0., 0., 1.), vec3(0., 0., 1.));
+    Planet planet = loadPlanet(10, 2.72, vec3(0., 0., 0.), 5, 0.24, 1.84, 0.5, 1.22);
+    //Line line = loadLine(vec3(0., 0., 0.), vec3(1., 0., 0.), vec3(1., 0., 0.));
+    //Line line = loadLine(vec3(0., 0., 0.), vec3(0., 1., 0.), vec3(0., 1., 0.));
+    //Line line = loadLine(vec3(0., 0., 0.), vec3(0., 0., 1.), vec3(0., 0., 1.));
 
-    Model cubeBlender = loadModel("cube/cube");
+    //Model cubeBlender = loadModel("cube/cube");
 
     int nbAsteroids = 500;
 
